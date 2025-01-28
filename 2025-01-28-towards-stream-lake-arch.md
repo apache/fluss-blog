@@ -14,6 +14,8 @@ Fluss is designed to address the demands of real-time analytics with the followi
 - **Real-Time Lookup Queries:** Facilitates instant lookup queries on primary keys.
 - **Streaming & Lakehouse Unification:** Seamlessly integrates streaming and lakehouse storage for unified data processing.
 
+<!-- truncate -->
+
 ### Fluss Unified Streaming & Lakehouse Architecture
 ![Unification Solutions](assets/unified_lake_stream_arch/img1.png)
 The Fluss architecture is designed to provide millisecond-level end-to-end latency, ensuring high-performance real-time data writing and reading. A core component of this architecture is the **Tiering Service**, which continuously offloads data in Fluss into a standard lakehouse format, such as `Apache Paimon` or `Apache Iceberg`. This tiering ensures that external query engines can directly analyze data in the Lakehouse format, enabling efficient batch and real-time analytics.
