@@ -73,7 +73,7 @@ I implemented this architecture using the following technology stack:
 
 ### Data flow
 
-![architecture](assets/fluss_fraud_detection/flussfraudarch.png)
+![architecture](./assets/fluss_fraud_detection/flussfraudarch.png)
 
 The Fluss Java Client initializes the Fluss tables on the Fluss cluster and generates live records.
 Specifically, three tables are created at startup:
@@ -372,7 +372,7 @@ public class FraudDetectionJob {
 ```
 Each step of the streaming pipeline, such as reading from the source, applying transformations, and writing to the sink, has been modeled as a strategy. These strategies are combined into the ```FraudPipeline``` which implements the ```FlinkPipeline``` interface. The ```FlinkPipeline``` interface is accountable to hold and combine the strategies, exposing the ```compose``` and ```run``` signatures. The ```compose``` method is used to chain the strategies together, while the ```run``` method triggers the Flink execution environment.
 
-<img src="assets/fluss_fraud_detection/flinkpipe.jpg" width="100%" height="100%" />
+![flinkpipe](./assets/fluss_fraud_detection/flinkpipe.jpg)
 
 ```java
 public class FraudPipeline implements FlinkPipeline {
@@ -418,7 +418,7 @@ There are 4 strategies interfaces with different accountability explained in the
 #### 1. InitCatalogStrategy interface and InitFlinkCatalogStrategy implementation
 This interface defines the catalog initialization, exposing the ```init``` method.
 
-<img src="assets/fluss_fraud_detection/catstr.png"  width="35%" height="35%" />
+![catstr](./assets/fluss_fraud_detection/catstr.png)
 
 The ```InitFlinkCatalogStrategy``` implementation, which extends ```InitCatalogStrategy```, overrides the ```init``` method to define and activate a Flink catalog, enabling the use of the Fluss tables.
 
@@ -440,7 +440,7 @@ public void init() {
 #### 2. SourceStrategy interface and TransactionFlussSourceStrategy implementation
 This interface represents the reading from a source and returning records with a DataStream Flink API of type `DataStream<T>`, exposing the `createSource` signature.
 
-<img src="assets/fluss_fraud_detection/soustr.png" width="35%" height="35%" />
+![soustr](./assets/fluss_fraud_detection/soustr.png)
 
 The `TransactionFlussSourceStrategy` implementation overrides the `createSource` method to read from the Fluss Transaction table using the [FlussSource](https://fluss.apache.org/docs/engine-flink/datastream/#datastream-source) connector and return a `DataStream<Transaction>`.
 
@@ -480,7 +480,7 @@ public Transaction deserialize(LogRecord record) throws Exception {
 #### 3. TransformStrategy interface and FraudTransformStrategy implementation
 This interface models the transformation applied to a Datastreams. It takes a `Datastream<I>`, returns `Datastream<O>` exposing the `transform` method.
 
-<img src="assets/fluss_fraud_detection/fraudstr.png" width="35%" height="35%" />
+![fraudstr](./assets/fluss_fraud_detection/fraudstr.png)
 
 The `FraudTransformStrategy` implementation overrides the `transform` method, which takes a `DataStream<Transaction>` as a parameter and returns a `DataStream<Fraud>` after applying the following transformations:
 1. ```keyBy(Transaction::getAccountId)```: groups the Transaction stream by ```accountId``` so that all transactions with the same ```accountId``` go to the same parallel subtask. After keyBy, you get a KeyedStream, which enables per-key state and timers.
@@ -544,7 +544,7 @@ public void processElement(Transaction transaction, Context context, Collector<F
 
 #### 4. EnrichedFraudTransformStrategy implementation
 
-<img src="assets/fluss_fraud_detection/enfraudstr.png" width="35%" height="35%" />
+![enfraudstr](./assets/fluss_fraud_detection/enfraudstr.png)
 
 The `EnrichedFraudTransformStrategy` implementation reads the `Datastream<Fraud>` and perform an enrichment adding the account name for each record.
 This is done switching from Flink Datastream API to Flink Table API and performing a temporal look up join against the the Fluss Account table which acts as a dimension.
@@ -595,7 +595,7 @@ Enriched records are converted back and returned as a `DataStream<EnrichedFraud>
 ### 5. SinkStrategy interface and FraudFlussSinkStrategy implementation
 This interface models the writing of a `Datastream<T>` to the FlinkSink, exposing the `createSink` method.
 
-<img src="assets/fluss_fraud_detection/sinkstr.png" width="35%" height="35%" />
+![sinkstr](./assets/fluss_fraud_detection/sinkstr.png)
 
 `FraudFlussSinkStrategy` reads the `Datastream<Fraud>` and sinks record to Fluss Fraud table leveraging [FlussSink](https://fluss.apache.org/docs/engine-flink/datastream/#datastream-sink) sink connector.
 
