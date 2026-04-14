@@ -44,7 +44,7 @@ Each additional layer of glue compounds latency, increases costs, and heightens 
 The traditional pipeline based on Kafka, Flink and Paimon exposed three critical pain points under Taobao Instant Commerce’s massive scale, high concurrency, and strict real-time requirements. 
 These issues became the core focus areas for the subsequent Fluss implementation: 
 * **Surging Memory Pressure from Dual-Stream Joins:** Kafka lacks native support for dimension table lookups. Consequently, order information had to be fully loaded into Flink State. During promotional events, over 100 million orders caused the state size of single jobs to surge to hundreds of GBs, leading to Checkpoint timeouts and frequent task failures.
-* **"Explosive Tree" Complexity in Wide Table Construction:** The product-store analysis wide table depended on 5+ upstream systems. Using TT required writing to a new Topic after every Join operation. This resulted in an overly complex pipeline with extremely high operational and maintenance costs. 
+* **"Explosive Tree" Complexity in Wide Table Construction:** The product-store analysis wide table depended on 5+ upstream systems. Using Kafka required writing to a new Topic after every Join operation. This resulted in an overly complex pipeline with extremely high operational and maintenance costs. 
 * **Core Resource Drain from Lakehouse Synchronization:** Each table synced to Paimon required maintaining an independent Flink consumption job. During peak events, dozens of these "data transfer" jobs ran simultaneously, competing with core computing tasks for resources and causing overall performance degradation.
 
 ![](assets/taobao_realtime_decisions/arch.png)
@@ -207,7 +207,7 @@ Fluss addresses these issues by leveraging Partial Update. It refactors the comp
 ### Pain Points of Traditional Solutions
 ![](assets/taobao_realtime_decisions/painpoints2.png)
 
-The legacy solution constructed the wide table using TT (Time Tunnel) Multi-stream Joins, resulting in a complex fan-in architecture. Its core pain points are as follows:
+The legacy solution constructed the wide table using Kafka Multi-stream Joins, resulting in a complex fan-in architecture. Its core pain points are as follows:
 * **Full-Row Write I/O Waste:** Even if only a single behavior metric (e.g., "clicks" or "impressions") is updated, the system must write all 100+ columns of the full row. This causes severe redundancy in both network and storage I/O. 
 * **High Operational Complexity:** The architecture resembles an "explosive tree" structure, requiring the maintenance of N upstream jobs and M join jobs. Adding a new field necessitates modifications across multiple jobs, significantly increasing operational overhead. 
 * **Latency Coupling (Straggler Problem):** The write latency of the wide table is determined by the slowest upstream stream. A delay in any single data stream causes the entire row update to be delayed, leading to inconsistent real-time visibility. 
@@ -374,7 +374,7 @@ The Fluss KV Streaming-Lakehouse Unification solution achieves unified source in
 ![](assets/taobao_realtime_decisions/results3.png)
 
 ## Scenario 4: Gray-Scale Monitoring — Efficient Log Processing via Log Table and Column Pruning
-In the context of Taobao Instant Commerce’s high-frequency iteration cycle, frontend telemetry data—covering the full user journey from app launch, site entry, impressions, traffic redirection, store visits, cart additions, orders, to fulfillment—serves as the core basis for evaluating release quality, monitoring marketing effectiveness, and optimizing search and recommendation strategies. To mitigate release risks, canary releases have become the standard procedure, with canary monitoring acting as the critical "safety valve." This process aims to detect data collection anomalies or business logic defects within seconds by real-time analysis of discrepancies between canary traffic and baseline traffic. However, facing TB-scale log throughput and millisecond-level alerting requirements, the traditional "TT + Flink" architecture has gradually revealed bottlenecks such as severe I/O waste, redundant pipelines, and data silos across multiple sources.
+In the context of Taobao Instant Commerce’s high-frequency iteration cycle, frontend telemetry data—covering the full user journey from app launch, site entry, impressions, traffic redirection, store visits, cart additions, orders, to fulfillment—serves as the core basis for evaluating release quality, monitoring marketing effectiveness, and optimizing search and recommendation strategies. To mitigate release risks, canary releases have become the standard procedure, with canary monitoring acting as the critical "safety valve." This process aims to detect data collection anomalies or business logic defects within seconds by real-time analysis of discrepancies between canary traffic and baseline traffic. However, facing TB-scale log throughput and millisecond-level alerting requirements, the traditional "Kafka + Flink" architecture has gradually revealed bottlenecks such as severe I/O waste, redundant pipelines, and data silos across multiple sources.
 
 Fluss has refactored the data foundation for canary monitoring by leveraging: 
 * High-throughput writes via Log Tables; 
@@ -385,7 +385,7 @@ This transformation upgrades the architecture from "reactive firefighting" to "p
 ### Pain Points of Traditional Solutions
 ![](assets/taobao_realtime_decisions/painpoints3.png)
 
-The legacy architecture utilized TT as the message queue, Flink for real-time consumption and computation, and Paimon for storing detailed data. However, as data volumes surged and business complexity increased, this architecture exposed several core pain points:
+The legacy architecture utilized Kafka as the message queue, Flink for real-time consumption and computation, and Paimon for storing detailed data. However, as data volumes surged and business complexity increased, this architecture exposed several core pain points:
 
 | **Dimension** | **Specific Technical Challenge** |
 | --- | --- |
