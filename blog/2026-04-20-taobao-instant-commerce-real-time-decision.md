@@ -15,7 +15,9 @@ Taobao Instant Commerce has scaled from a single-category food delivery service 
 * **Algorithms:** Order prediction models must iterate at minute-level granularity.
 * **Quality Assurance:** Canary release anomalies must be detected within seconds and trigger instant alerts.
 
-The existing pipeline (built on Kafka, Flink, Paimon, and StarRocks) handled this at one scale. But as the business grew, three fundamental bottlenecks emerged: unbounded state growth from stream joins, mounting complexity in building multi-stream denormalized tables, and excessive resource consumption from lakehouse synchronization. Together they formed an **impossible triangle**: no matter how the team tuned the system, latency, consistency, and cost could not all be optimized at once.
+The existing pipeline (built on Kafka, Flink, Paimon, and StarRocks) handled this at one scale.
+
+> **Note:** In Alibaba's internal infrastructure, **TT (TimeTunnel)** is the internal equivalent of Apache Kafka — a high-throughput distributed message queue. Throughout this post, "Kafka" refers to TT in the Taobao Instant Commerce context. But as the business grew, three fundamental bottlenecks emerged: unbounded state growth from stream joins, mounting complexity in building multi-stream denormalized tables, and excessive resource consumption from lakehouse synchronization. Together they formed an **impossible triangle**: no matter how the team tuned the system, latency, consistency, and cost could not all be optimized at once.
 
 Fluss broke this impasse. By replacing the fragmented stream-batch architecture with a unified storage layer, its features (Delta Join, Partial Update, Streaming-Lakehouse Unification, Column Pruning, and Auto-Increment Columns) systematically eliminated all three bottlenecks and fundamentally reshaped how Taobao Instant Commerce handles real-time decision-making at scale.
 
@@ -220,16 +222,16 @@ To address the aforementioned pain points, our solution utilizes Fluss KV Tables
 
 ```sql
 CREATE TABLE shop_stat_wide (
-                                shop_id      BIGINT NOT NULL,
-                                stat_date    STRING NOT NULL,
-                                stat_hour    STRING NOT NULL,
-                                exp_cnt      BIGINT,   -- Exposure Count
-                                page_cnt     BIGINT,   -- Page View Count
-                                PRIMARY KEY (shop_id, stat_date, stat_hour) NOT ENFORCED
+    shop_id    BIGINT NOT NULL,
+    stat_date  STRING NOT NULL,
+    stat_hour  STRING NOT NULL,
+    exp_cnt    BIGINT,  -- Exposure Count
+    page_cnt   BIGINT,  -- Page View Count
+    PRIMARY KEY (shop_id, stat_date, stat_hour) NOT ENFORCED
 ) WITH (
-      'bucket.num' = '${BUCKET_NUM}',
-      'bucket.key' = 'shop_id'
-      );
+    'bucket.num' = '${BUCKET_NUM}',
+    'bucket.key' = 'shop_id'
+);
 
 -- Write Exposure Data
 INSERT INTO shop_stat_wide (shop_id, stat_date, stat_hour, exp_cnt)
@@ -582,18 +584,17 @@ WITH (
 -- Note: N is a power of 2 and should be dynamically configured based on cluster scale.
 INSERT INTO fluss_catalog.db.ads_uv_agg
 SELECT
-  t1.ds 
-  ,t1.hh 
-  ,t1.mm 
-  ,CAST(t2.uid_int64 % N AS INT) AS shard_id
-  ,BITMAP_TO_BYTES(BITMAP_BUILD_AGG(CAST((t2.uid_int64 / N) AS INT))) AS uv_bitmap
+    t1.ds,
+    t1.hh,
+    t1.mm,
+    CAST(t2.uid_int64 % N AS INT)                                    AS shard_id,
+    BITMAP_TO_BYTES(BITMAP_BUILD_AGG(CAST((t2.uid_int64 / N) AS INT))) AS uv_bitmap
 FROM `fluss_catalog`.`db`.`log_exp_ri` t1
-LEFT JOIN `fluss_catalog`.`db`.`user_mapping` 
-  /*+ OPTIONS('lookup.cache' = 'PARTIAL','lookup.partial-cache.max-rows' = '500000') */
-  FOR SYSTEM_TIME AS OF PROCTIME() AS t2 
+LEFT JOIN `fluss_catalog`.`db`.`user_mapping`
+    /*+ OPTIONS('lookup.cache' = 'PARTIAL', 'lookup.partial-cache.max-rows' = '500000') */
+    FOR SYSTEM_TIME AS OF PROCTIME() AS t2
 ON t1.user_id = t2.user_id
-GROUP BY t1.ds, t1.hh, t1.mm, CAST(t2.uid_int64 % N AS INT)
-;
+GROUP BY t1.ds, t1.hh, t1.mm, CAST(t2.uid_int64 % N AS INT);
 ```
 
 #### Implementation of Solution B: Fluss Auto Tiering + StarRocks Native Deduplication
