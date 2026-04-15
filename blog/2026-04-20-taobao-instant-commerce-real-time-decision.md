@@ -2,8 +2,9 @@
 slug: taobao-instant-commerce-real-time-decision
 title: "Taobao Real-Time Decisions at Scale with Fluss"
 sidebar_label: "Taobao Instant Commerce: Real-Time Decisions at Scale with Fluss"
-authors: [jark]
+authors: [matrixsparse]
 ---
+![](assets/taobao_realtime_decisions/banner.jpg)
 
 Every autumn in China, social media floods with posts about "The First Cup of Milk Tea in Autumn." With a tap on their phone, consumers expect their order delivered within 30 minutes. That effortless experience is no accident: it is the result of Taobao Instant Commerce making thousands of data-driven decisions every second.
 
