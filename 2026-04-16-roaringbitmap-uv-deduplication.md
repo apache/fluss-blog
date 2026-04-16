@@ -1,7 +1,7 @@
 ---
 slug: roaringbitmap-uv-deduplication
 date: 2026-04-16
-title: "Real-Time Unique User Counting at Scale with Apache Fluss"
+title: "Real-Time Multi-Dimensional Unique Visitor Deduplication in Practice"
 authors: [yangwang]
 ---
 
