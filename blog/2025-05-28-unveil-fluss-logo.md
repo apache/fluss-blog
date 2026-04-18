@@ -4,7 +4,7 @@ title: "The Story of Fluss Logo"
 authors: [jark]
 ---
 
-![](@site/static/img/logo/png/colored_logo.png)
+![](assets/fluss_logo/colored_logo.png)
 
 ## Introducing the Little Otter
 

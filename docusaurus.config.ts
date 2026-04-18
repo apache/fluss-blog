@@ -19,8 +19,6 @@ const config: Config = {
     }
   },
 
-  // Serve blog-dependent static resources (avatars, logos) from blog/static/
-  staticDirectories: ['blog/static'],
 
   i18n: {
     defaultLocale: 'en',
