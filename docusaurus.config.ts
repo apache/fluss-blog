@@ -12,6 +12,8 @@ const config: Config = {
 
   onBrokenLinks: 'warn',
 
+  staticDirectories: ['static', 'blog/static'],
+
   markdown: {
     hooks: {
       onBrokenMarkdownLinks: 'warn',

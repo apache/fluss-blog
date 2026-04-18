@@ -28,3 +28,13 @@ real-time-analytics:
   label: 'Real-time Analytics'
 apache-fluss:
   label: 'Apache Fluss'
+fluss-rust:
+  label: 'Fluss Rust'
+fluss-rs:
+  label: 'fluss-rs'
+pyfluss:
+  label: 'PyFluss'
+fluss-cpp:
+  label: 'Fluss C++'
+arrow:
+  label: 'Arrow'
