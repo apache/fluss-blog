@@ -5,10 +5,14 @@ title: "Real-Time Multi-Dimensional Unique Visitor Deduplication in Practice"
 authors: [yangwang]
 ---
 
+![](assets/realtime_uv/image.png)
+
 **UV (Unique Visitors)** measures the count of distinct users who visited a page or triggered an event within a given time window — unlike **PV (Page Views)**, which counts every request regardless of who made it. For any product or platform, accurate real-time UV statistics across dimensions like channel, city, date, and hour are a core analytical requirement.
 The full combination of four dimensions means **16 grouping methods**; when the dimension count increases to seven, the number of possible groupings reaches **128**.
 
 How can multi-dimensional deduplication be both accurate and flexible while maintaining real-time performance? Behind this challenge lie two very different computing paradigms: direct deduplication of raw data, or set operations based on bitmaps.
+
+<!-- truncate -->
 
 ## Problems with Traditional Deduplication Schemes
 
@@ -23,8 +27,6 @@ This approach works well with smaller data volumes and fewer dimensions, but as 
 **Insufficient query flexibility.** Pre-aggregation schemes must fix dimension combinations in advance. When a business team needs a new dimension on the fly (such as adding **device type**), adjusting the entire data processing pipeline is often required instead of simply modifying a query.
 
 These three limitations share a root cause: storing and computing on raw user identities at every dimension combination does not scale.
-
-<!-- truncate -->
 
 Put it another way: what if instead of storing the raw ID of each user, we represented the entire user set as a compact structure — one bit per user?
 
