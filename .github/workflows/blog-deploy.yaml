@@ -31,10 +31,15 @@ jobs:
     steps:
       - name: Send Event to Trigger Deploy
         run: |
-          curl -L \
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -L \
             -X POST \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             https://api.github.com/repos/apache/fluss-website/dispatches \
-            -d '{"event_type":"website-deploy","client_payload":{"repository": "apache/fluss-blog"}}'
+            -d '{"event_type":"website-deploy","client_payload":{"repository": "apache/fluss-blog"}}')
+          if [ "$HTTP_STATUS" -ne 204 ]; then
+            echo "::error::Failed to trigger deploy. HTTP status: $HTTP_STATUS"
+            exit 1
+          fi
+          echo "Successfully triggered deploy (HTTP $HTTP_STATUS)"
