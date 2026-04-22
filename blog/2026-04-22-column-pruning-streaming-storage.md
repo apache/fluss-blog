@@ -1,7 +1,7 @@
 ---
 slug: column-pruning-streaming-storage
 title: "How Apache Fluss Achieves True Pruning in Streaming Storage"
-date: 2026-04-20
+date: 2026-04-22
 authors: [yunhongzheng]
 tags: [fluss, column-pruning, arrow, streaming, kafka, performance]
 image: ./assets/column_pruning/banner.png
