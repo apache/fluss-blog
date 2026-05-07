@@ -1,7 +1,7 @@
 ---
 slug: taobao-instant-commerce-real-time-decision
-title: "Taobao Instant Commerce: Real-Time Decisions at Scale with Fluss"
-sidebar_label: "Taobao Instant Commerce: Real-Time Decisions at Scale with Fluss"
+title: "Taobao Instant Commerce: Real-Time Decisions at Scale with Apache Fluss"
+sidebar_label: "Taobao Instant Commerce: Real-Time Decisions at Scale with Apache Fluss"
 authors: [matrixsparse]
 ---
 ![](assets/taobao_realtime_decisions/banner.jpg)
