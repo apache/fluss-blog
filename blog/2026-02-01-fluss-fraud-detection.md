@@ -461,7 +461,7 @@ public DataStream<Transaction> createSource() {
       .name("transactions-datastream");
 }
 ```
-As you can see in the snippet below , the deserialization of the Fluss `LogRecord` from the Transaction table into the `Transaction` POJO required by the DataStream type is handled by the `TransactionDeserializationSchema` class, which extends `FlussDeserializationSchema` to override the `deserialize` method. The `record` is used to instanciate a `Transaction` POJO. The corresponding changeLog type is mapped into the `kind` field and since the Fluss source is a Log Table it always equals to an insert.
+As you can see in the snippet below , the deserialization of the Fluss `LogRecord` from the Transaction table into the `Transaction` POJO required by the DataStream type is handled by the `TransactionDeserializationSchema` class, which extends `FlussDeserializationSchema` to override the `deserialize` method. The `record` is used to instantiate a `Transaction` POJO. The corresponding changeLog type is mapped into the `kind` field and since the Fluss source is a Log Table it always equals to an insert.
 
 Snippet from TransactionDeserializationSchema.java
 ```java
@@ -590,7 +590,7 @@ public DataStream<EnrichedFraud> transform(DataStream<Fraud> fraudsDs) {
 The ```fraudsView``` is a dynamic table created on top of the fraud stream.
 It exposes a processing-time attribute.
 For each record in ```f``` (```fraudsView```), the corresponding account row is looked up as it existed at the processing time of ```f``` (```f.procTime```).
-Enriched records are converted back and returned as a `DataStream<EnrichedFraud>` in order to be written to the Fluss sink by the next startegy.
+Enriched records are converted back and returned as a `DataStream<EnrichedFraud>` in order to be written to the Fluss sink by the next strategy.
 
 ### 5. SinkStrategy interface and FraudFlussSinkStrategy implementation
 This interface models the writing of a `Datastream<T>` to the FlinkSink, exposing the `createSink` method.

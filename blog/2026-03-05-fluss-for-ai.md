@@ -108,7 +108,7 @@ As these capabilities came together, we started noticing a recurring pattern: te
 
 At its core, a feature store exists to compute and serve features, the structured inputs consumed by machine learning models. These features might represent recent activity, aggregated behavior, derived metrics, or continuously updated scores that capture how an entity changes over time.
 
-The reason feature stores exist at all is a well-known failure mode in production ML systems. Trainin data is often computed offline using batch pipelines, while inference data is computed online using streaming or request-time logic. Over time, these two paths drift apart in logic, timing, or semantics.
+The reason feature stores exist at all is a well-known failure mode in production ML systems. Training data is often computed offline using batch pipelines, while inference data is computed online using streaming or request-time logic. Over time, these two paths drift apart in logic, timing, or semantics.
 
 This divergence is commonly referred to as **training–serving skew**. It’s subtle, hard to detect early, and is responsible for a large number of models underperforming in production despite looking correct during training and evaluation.
 

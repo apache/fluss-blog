@@ -244,7 +244,7 @@ LogScanner logScanner = readingsTable.newScan()
 ```
 
 ```java
-Lookuper sensorInforLookuper = sensorInfoTable
+Lookuper sensorInfoLookuper = sensorInfoTable
         .newLookup()
         .createLookuper();
 ```
@@ -270,7 +270,7 @@ and creating a **SensorReadingEnriched** record.
             
             logger.info("Received reading from sensor '{}' at '{}'.", row.getInt(0), row.getTimestampNtz(1, 6).toString());
             logger.info("Performing lookup to get the information for sensor '{}'. ", row.getInt(0));
-            LookupResult lookupResult = sensorInforLookuper.lookup(row).get();
+            LookupResult lookupResult = sensorInfoLookuper.lookup(row).get();
             SensorInfo sensorInfo = lookupResult.getRowList().stream().map(r -> new SensorInfo(
                     r.getInt(0),
                     r.getString(1).toString(),
