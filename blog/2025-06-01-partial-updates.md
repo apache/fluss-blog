@@ -137,7 +137,7 @@ INSERT INTO clicks VALUES
 
 > **Note:** 🚨 So far the jobs we run were bounded jobs, so they will finish after inserting the records. Moving forward we will run some streaming jobs. 
 So keep in mind that each job runs with a `parallelism of 3` and our environment is set up `with 10 slots total`. 
-So make sure to keep an eye to the Flink Web UI to see how many slots are used and how many are available and stop some jobs when are no longer needed to free up resourecs.
+So make sure to keep an eye to the Flink Web UI to see how many slots are used and how many are available and stop some jobs when are no longer needed to free up resources.
 
 
 **Step 4:** At this point let's open up a separate terminal and start the Flink SQL CLI.
