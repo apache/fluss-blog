@@ -98,6 +98,8 @@ Every ten minutes by default (`kv.snapshot.interval=10min`), the tablet server t
 
 **Step two** is the one that actually moves data. Those files, plus a bit of metadata, get uploaded to remote storage. The remote copy is the durable one; the local staging directory is there so the uploader sees a frozen, consistent view of the files while RocksDB keeps writing and compacting underneath it. The snapshot is considered durable once the upload finishes.
 
+![](assets/storage_hierarchy/fig5.png)
+
 Fluss keeps the last two snapshots in remote storage by default. When a new snapshot supersedes an old one, the old one is deleted, with one guard: if anything (most commonly a long-running lakehouse tiering job on its first round) is still reading the older snapshot, a lease prevents the cleanup from removing it underneath the reader. This sounds like a detail, and it is most of the time. It becomes load-bearing the first time a large primary-key table takes longer to tier than the gap between snapshots, and the lease is what keeps the system from racing itself.
 
 ### Structure 3: The Changelog
@@ -110,7 +112,7 @@ Two things make the changelog different from the rest of the primary-key table.
 
 **Deleting old changelog segments has no effect on the live store.** The live store is complete on its own; it doesn't need the log to know the current value of any key. The log is there for replay (when a tablet needs to recover) and for downstream feed (when something is reading change events). **It is not a place where state lives.**
 
-![](assets/storage_hierarchy/fig5.png)
+![](assets/storage_hierarchy/fig6.png)
 
 > **Note:** This is a simplified version of the changelog for illustrative purposes. 
 
@@ -122,7 +124,7 @@ Recovery on a fresh tablet server works in two stages. The snapshot brings the l
 
 If remote-log tiering is off, that changelog tail lives only on the failed tablet server's local disk, which is the disk you just lost. The snapshot, however durably stored, can only restore the state as of its own offset. Everything written since then is gone.
 
-![](assets/storage_hierarchy/fig6.png)
+![](assets/storage_hierarchy/fig7.png)
 
 **The two upload tracks are independent on the way in. The recovery story stitches them back together on the way out, and breaks if either piece is missing.**
 
@@ -136,13 +138,13 @@ When the leader fails, the controller promotes the standby. **The standby's live
 
 This refines the framing of remote storage. Calling it the recovery substrate and the durability floor was accurate. It just isn't the recovery path you exercise most often in healthy production. **The everyday path is one replica picking up where another left off**, which is precisely why **running with replication factor 1 in production is a bad idea, however durable your snapshots are**.
 
-![](assets/storage_hierarchy/fig7.png)
+![](assets/storage_hierarchy/fig8.png)
 
 ## Combining Tiers
 
 There are four ways to combine **remote-log tiering** and **Lakehouse tiering**. Three are useful; one isn't.
 
-![](assets/storage_hierarchy/fig8.png)
+![](assets/storage_hierarchy/fig9.png)
 
 | Remote | Lakehouse | What you get | When to use                                                                                                                                                           |
 |--------|---|---|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
