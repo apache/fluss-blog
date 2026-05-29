@@ -12,15 +12,19 @@ image: ./assets/storage_hierarchy/banner.png
 
 <!-- truncate -->
 
-This post walks through that layering. We'll cover what each tier holds, the two background tasks that move data between them, what changes for primary-key tables, and how recovery actually works when a tablet server loses its disk. By the end you should be able to look at a Fluss deployment and say, for any given record, where it lives right now and where it will live in an hour.
+This post walks through that layering. We'll cover what each tier holds, the two background tasks that move data between them, what changes for primary-key tables, and how recovery actually works when a tablet server loses its disk. 
+
+By the end you should be able to look at a Fluss deployment and say, for any given record, where it lives right now and where it will live in an hour.
 
 ## The Three-Tier Storage Hierarchy
 
 **Tier 1 is local disk on the tablet server.** It holds the hot data: recent log segments, the full live RocksDB state for every primary-key table, and a staging view of the most recent KV snapshots (hard links to live SST files while uploads are in flight). Reads from this tier are in milliseconds.
 
-**Tier 2 is remote object storage** (S3, GCS, or similar), used for two distinct purposes that share the same `remote.data.dir` filesystem. **First:** older log segments uploaded by the `remote-log tiering task` in Fluss's native binary format, which extends local retention without growing local disk. **Second:** durable KV snapshots for every primary-key table, uploaded periodically so that a tablet server can recover after disk loss.
+**Tier 2 is remote object storage** (S3, GCS, or similar), used for two distinct purposes that share the same `remote.data.dir` filesystem. 
+* **First:** older log segments uploaded by the `remote-log tiering task` in Fluss's native binary format, which extends local retention without growing local disk. 
+* **Second:** durable KV snapshots for every primary-key table, uploaded periodically so that a tablet server can recover after disk loss.
 
-Remote log storage is **enabled by default**. It's controlled by `remote.log.task-interval-duration` (default `1min`), and is only disabled when that value is set to `0`. KV snapshot upload is independent of remote-log tiering and is governed by `kv.snapshot.interval` (default `10min`). Note that `remote.data.dir` itself has no default — you must configure it before either of these tracks can do anything useful.
+Remote log storage is **enabled by default**. It's controlled by `remote.log.task-interval-duration` (default `1min`), and is only disabled when that value is set to `0`. KV snapshot upload is independent of remote-log tiering and is governed by `kv.snapshot.interval` (default `10min`). 
 
 **Tier 3 is the lakehouse.** Paimon, Iceberg, Hudi, or Lance are holding data in analytical file formats queryable by any engine. Reads from the lakehouse cost seconds.
 
@@ -28,23 +32,21 @@ Remote log storage is **enabled by default**. It's controlled by `remote.log.tas
 
 ### A Note On Single-Copy Storage
 
-**Fluss is single-copy in steady state.** Hot data lives on the server, cold data lives in the lakehouse, and there is no permanent duplication.
+**A Fluss table is a single logical abstraction across all three tiers, each holding data at a different freshness level.** Local disk has the hot, most recent data; remote object storage extends retention beyond what fits locally; the lakehouse holds the analytical projection. Across those tiers, each record has one home at a time and no tier permanently holds a second copy of what another tier already owns.
 
-**There is only one small exception**, when lakehouse tiering is enabled, a remote log segment is only deleted once **both** its TTL has expired **and** the lakehouse has ingested it. That's a safety net against lakehouse lag, and it creates a bounded window where the same data lives in both Tier 2 and Tier 3 simultaneously, governed by `table.log.ttl` (default 7 days). Shorten the TTL if strict single-copy matters more to you than a long lakehouse catch-up window. 
+**There is one temporary exception**: when lakehouse tiering is enabled, a remote log segment is only deleted once **both** its TTL has expired **and** the lakehouse has ingested it. That's a safety net against lakehouse lag, and it creates a bounded transition window where the same data exists in both Tier 2 and Tier 3, governed by `table.log.ttl` (default 7 days). Shorten the TTL if minimizing that overlap matters more to you than a long lakehouse catch-up window.
 
-The overlap is a configurable, time-bounded transition, **not another copy** of your data.
+Once the lakehouse catches up, the remote copy is removed and the overlap closes.
 
 ## Log Tables on Local Disk
 
 A log table on disk is a sequence of log segments. Each segment is a `.log` file holding raw records alongside a small set of companion files: a `.index` offset index and a `.timeindex` time index for fast seek, plus per-segment writer-state snapshots used for idempotent producers. The active segment is open for appends; every other segment is immutable and named by its starting offset.
 
 What happens to those sealed segments is governed by two retention controls.
+* `table.log.ttl` (default 7 days) is the global retention contract for the log. It defines the maximum age of any log data in the table, regardless of which tier it currently lives on.
+* `table.log.tiered.local-segments` (default 2) is a count-based floor for local disk, only meaningful when remote-log tiering is on. The remote-log task keeps at least this many recent segments on local disk after upload, so consumers reading near the head don't pay an S3 round-trip for the freshest data.
 
-`table.log.ttl` (default 7 days) is the global retention contract for the log. It defines the maximum age of any log data in the table, regardless of which tier it currently lives on.
-
-`table.log.tiered.local-segments` (default 2) is a count-based floor for local disk, only meaningful when remote-log tiering is on. The remote-log task keeps at least this many recent segments on local disk after upload, so consumers reading near the head don't pay an S3 round-trip for the freshest data.
-
-A segment becomes a candidate for upload **the moment it is sealed and its records are below the high watermark** (i.e., committed/acked). Sealing happens when the active segment hits its size threshold, fills the offset or time index, or can no longer encode records as relative offsets, and then rolls over: Fluss closes the current active segment (which becomes immutable) and opens a new one for subsequent writes. The freshly-closed segment is now something the remote-log task can pick up on its next pass. This is the same model Kafka uses for tiered storage, and it has the same operational consequence: **data sitting in the active segment lives only on the local Fluss server until rollover**, which means the active segment's size threshold sets a lower bound on how recent your "remote-only" reads can be.
+A segment becomes a candidate for upload **the moment it is sealed and its records are below the high watermark** (i.e., committed/acked). Sealing happens when the active segment hits its size threshold, fills the offset or time index, or can no longer encode records as relative offsets, and then rolls over: Fluss closes the current active segment (which becomes immutable) and opens a new one for subsequent writes. The freshly-closed segment is now something the remote-log task can pick up on its next pass. This is the same model Kafka uses for tiered storage, and it has the same operational consequence: **data sitting in the active segment lives only on the local Fluss server until rollover**, which means the active segment's size threshold sets an upper bound on how fresh remote-tier data can be. Anything newer than the current rollover is local-only.
 
 ### What remote-log Tiering Actually Does
 
@@ -92,7 +94,7 @@ The role to understand here is "what serves traffic," not "what is durably store
 
 ### Structure 2: KV Snapshots
 
-Every ten minutes by default (`kv.snapshot.interval=10min`), the tablet server takes a snapshot of the live RocksDB and writes it to remote storage. **This is the system's only durable record of the table's current state.** If the tablet server's local disk evaporates, the most recent snapshot is what brings the data back.
+Every ten minutes by default (`kv.snapshot.interval=10min`), the tablet server takes a snapshot of the live RocksDB and writes it to remote storage. **This is the system's only durable record of the table's merged state at a point in time.** If the tablet server's local disk evaporates, recovery begins from the most recent snapshot and then replays the changelog forward from that snapshot's offset to reach the present. The two-stage process described in the Recovery section below.
 
 **Step one** happens locally and completes immediately. The tablet server hard-links the current RocksDB SST files into a staging directory. **No bytes are copied, just new pointers to existing files.** This is what lets a snapshot start instantly regardless of how large the table is, because nothing is being duplicated on disk.
 
@@ -132,7 +134,7 @@ If remote-log tiering is off, that changelog tail lives only on the failed table
 
 Everything described so far is the cold-start path; the one that runs when no other copy of a bucket is still alive. Most production recoveries aren't cold restarts.
 
-**Fluss replicates each bucket across multiple tablet servers**: one leader handling writes, plus followers continuously tailing the same log. One of those followers is the designated **standby**, the replica the controller will promote on leader failure, and the one that maintains a live RocksDB kept current with the leader's in near real time.
+**Fluss replicates each bucket across multiple tablet servers**: one leader handling writes, plus followers continuously tailing the same log. One of those followers is the designated **standby**, the replica the controller will promote on leader failure, and the one that maintains a live RocksDB kept current with the leader in near real time.
 
 When the leader fails, the controller promotes the standby. **The standby's live RocksDB is already current, so traffic resumes in seconds, with no S3 download and no log replay.** The snapshot path still matters, it's the safety net when an entire replica set is lost at once, when a bucket gets reassigned to a brand-new tablet server, or when a fresh follower is bootstrapping into the cluster. But that path is the fallback, not the everyday failure handler.
 
@@ -161,7 +163,9 @@ Fluss's storage layer is structurally simple -- three tiers, two background task
 
 * **Tier 1** looks like the tier that matters, because it's the only one on the live query path. 
 * **Tier 2** looks like an implementation detail, because it's **"just S3"**. 
-* **Tier 3** looks like a destination, because it's the lakehouse. Each shortcut is wrong in a way that only becomes visible after you've configured something based on it.
+* **Tier 3** looks like a destination, because it's the lakehouse.
+
+Each shortcut is wrong in a way that only becomes visible after you've configured something based on it.
 
 The model here is: three tiers with three different jobs, two background tasks that should be reasoned about independently, a small set of defaults deliberately tuned for production. 
 
