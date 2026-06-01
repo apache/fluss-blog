@@ -26,7 +26,7 @@ By the end you should be able to look at a Fluss deployment and say, for any giv
 
 Remote log storage is **enabled by default**. It's controlled by `remote.log.task-interval-duration` (default `1min`), and is only disabled when that value is set to `0`. KV snapshot upload is independent of remote-log tiering and is governed by `kv.snapshot.interval` (default `10min`). 
 
-**Tier 3 is the lakehouse.** Paimon, Iceberg, Hudi, or Lance are holding data in analytical file formats queryable by any engine. Reads from the lakehouse cost seconds.
+**Tier 3 is the lakehouse.** Paimon, Iceberg, or Lance are holding data in analytical file formats queryable by any engine. Hudi support is in active development under [FIP-24](https://github.com/apache/fluss/issues/3254). Reads from the lakehouse cost seconds.
 
 ![](assets/storage_hierarchy/fig1.png)
 
@@ -131,6 +131,8 @@ If remote-log tiering is off, that changelog tail lives only on the failed table
 **The two upload tracks are independent on the way in. The recovery story stitches them back together on the way out, and breaks if either piece is missing.**
 
 ## Standby Replicas
+
+Standby replicas are a new feature. The election machinery that designates a follower as the standby has landed ([#2828](https://github.com/apache/fluss/issues/2828)). The **hot-standby path** that keeps the standby's RocksDB current with the leader, and the bootstrap path that downloads the latest KV snapshot when a fresh server becomes a standby, are tracked by PR [#2835](https://github.com/apache/fluss/pull/2835). The description below reflects the target behavior once those land.
 
 Everything described so far is the cold-start path; the one that runs when no other copy of a bucket is still alive. Most production recoveries aren't cold restarts.
 
