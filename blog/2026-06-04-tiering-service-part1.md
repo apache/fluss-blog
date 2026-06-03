@@ -134,7 +134,7 @@ Five minutes have passed since the last tiering round for `orders`. The coordina
 
 #### T+0s the Flink job sends its heartbeat. 
 
-The job is idle, there is no work in progress, so its heartbeat says **"give me something"**. The coordinator pops `orders` off the queue, transitions it to `TIERING`, and replies **"your next table is `orders`**, epoch 7"**. The epoch was already set when the table entered the queue. `requestTable()` just reads it and hands it back, it doesn't bump it again.
+The job is idle, there is no work in progress, so its heartbeat says **"give me something"**. The coordinator pops `orders` off the queue, transitions it to `TIERING`, and replies **"your next table is `orders`, epoch 7"**. The epoch was already set when the table entered the queue. `requestTable()` just reads it and hands it back, it doesn't bump it again.
 
 #### T+0s the Flink job plans the work. 
 
