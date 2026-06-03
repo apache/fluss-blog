@@ -1,7 +1,7 @@
 ---
 slug: fluss-tiering-service-deep-dive-part2
 title: "Tiering Service Deep Dive Part 2: Tuning"
-date: 2026-06-10
+date: 2026-06-09
 authors: [giannis]
 image: ./assets/tiering_service_dd_part2/banner.png
 ---
@@ -214,7 +214,7 @@ Now customers is next in the commit order. The enumerator generates 12 splits (s
 
 But notice one thing here. clicks committed at **T=30s**; with a 1-minute freshness, its next round was scheduled for **T=90s**, so it's been waiting in the queue since **T=90s**. Its reads may well start earlier (spare readers can pick up clicks round 2 while customers is still being read), but its *commit* can't land until orders and customers have committed ahead of it.
 So clicks' round-2 commit doesn't land until around **T=220s**, putting its actual lake lag near 3.2 minutes despite being configured for 1-minute freshness.
-The fact that clicks uses all 16 readers when it does run didn't help. The constraint isn't how fast any one table reads; it's that the job commits one table at a time, in queue order.
+The fact that clicks uses all 16 readers when it does run didn't help. The constraint isn't how fast any one table reads; it's that the job dispatches one table at a time off the FIFO queue and commits one table at a time through a single-parallelism operator. Here clicks round 2 is re-queued only at **T=90s**, behind orders and customers, so it's both dispatched and committed last.
 The configured freshness value is the target; the queue is the constraint.
 
 **There's also a sizing lesson here**, but it's subtler than "don't over-provision." It's tempting to think that setting Flink parallelism to 16 wastes slots whenever a table has fewer than 16 buckets (8 for orders, 12 for customers). It mostly doesn't: because spare readers pipeline onto the next queued table, those slots get spent reading ahead as long as there's a backlog. Parallelism above your largest table's bucket count isn't automatically wasted: with several tables queued, the extra readers stay busy on other tables' reads. It only goes to waste when you rarely have more than one table's worth of work in flight at once.
@@ -234,9 +234,9 @@ So reads overlap across tables. Commits don't.
 
 The mechanism is simple. The enumerator maintains one shared `pendingSplits` list across all in-flight tables plus a set of `readersAwaitingSplit`. It asks the coordinator for the next table only when both `pendingSplits` is empty and at least one reader is idle. While clicks (16 splits) is running, that pair of conditions never holds simultaneously: all readers stay busy until the splits drain together at **T=30s**. But the moment orders (8 splits) is assigned, 8 readers are idle and `pendingSplits` is empty, so the enumerator immediately pulls customers from the queue, and those 8 idle readers start chewing through customers' snapshot splits while orders is still being read. The same pattern repeats when orders finishes: the freed readers pick up the remaining customers splits and then clicks round 2 (which has entered the queue by then), so customers and clicks round 2 overlap during phase 3.
 
-The commits, however, can't overlap. The commit operator runs at parallelism 1 by design, processing one table's commit at a time, in queue order. So while reads pipeline cheerfully across the whole job, lake snapshots land strictly one after another. clicks commits, then orders, then customers, then clicks round 2: each one waits for the previous to be done.
+The commits, however, can't overlap. The commit operator runs at parallelism 1 by design, processing one table's commit at a time. It commits a table the moment it has collected all of that table's bucket write results for the round, so commits land in completion order, not coordinator-queue order: a later-dispatched but faster table can reach the committer first and commit before an earlier, slower one when their reads overlap. What is guaranteed is that commits never run concurrently, lake snapshots land strictly one after another. In our example the rounds happen to complete in queue order (clicks saturates all 16 readers and finishes first, then orders, then customers), but that ordering is a property of this workload, not a promise the committer makes.
 
-That's why queue position still dominates effective freshness, even with read overlap. clicks' round-2 reads can start while customers is still being read, but its round-2 commit can only land after customers' commit, which can only land after orders' commit, which can only land after clicks' round-1 commit. The lake-side appearance of "the round committed" is bottlenecked by the commit operator, not the readers, which is the exact mechanism the commit timeline was measuring.
+That's why queue position still dominates effective freshness, even with read overlap. clicks' round-2 reads can start while customers is still being read, but every commit is serialized through the single committer subtask, so a table's commit can't land until whatever the committer is currently working on is done. The lake-side appearance of "the round committed" is bottlenecked by the commit operator, not the readers, which is the exact mechanism the commit timeline was measuring.
 
 ### The General Rule
 For N tables sharing one tiering job, the effective worst-case freshness of any single table is roughly the sum of all the tiering round durations, not the configured value of that one table. Configured freshness is more of a target; the queue is the constraint.
