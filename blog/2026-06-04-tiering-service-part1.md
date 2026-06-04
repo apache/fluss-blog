@@ -126,11 +126,11 @@ Three concepts are important to understand when you're reading this:
 
 We have one table, called `orders`, with four buckets. It's a log table (we'll talk about what that means in Part 2, when we cover table kinds. For now, just think **"an append-only stream of records"**). Freshness is configured to five minutes. The Flink tiering job is up and running. 
 
-Here's what happens:.
+Here's what happens:
 
 #### T+0s the timer fires. 
 
-Five minutes have passed since the last tiering round for `orders`. The coordinator transitions the table from WAITING to READY and pushes it onto the back of the pending queue. The act of entering the pending queue is also what increments the table's tiering epoch · to (say) 7 · so every fresh attempt is stamped at enqueue time, before any job has picked it up. Right now the queue contains just `orders`.
+Five minutes have passed since the last tiering round for `orders`. The coordinator transitions the table from WAITING to READY and pushes it onto the back of the pending queue. The act of entering the pending queue is also what increments the table's tiering epoch, to (say) 7, so every fresh attempt is stamped at enqueue time, before any job has picked it up. Right now the queue contains just `orders`.
 
 #### T+0s the Flink job sends its heartbeat. 
 
@@ -172,7 +172,7 @@ The freshness timer is computed from when the round **completed**, not from when
 
 That's it. Round complete. The lake now contains `orders` data up to the offsets that were current at T+0s. In another ~five minutes, the whole process repeats.
 
-> **The most subtle point in this section: The "stopping offset" is decided at planning time, not at reading time.** When the enumerator asks the tablet servers "what's your latest offset?" at T+0s, those answers freeze. Any records written to Fluss after T+0s but before the readers actually start working are not part of this round · they'll be picked up in the next one. This is correct behavior, but it means the lake always lags by at least one round, even if your freshness is configured aggressively.
+> **The most subtle point in this section: The "stopping offset" is decided at planning time, not at reading time.** When the enumerator asks the tablet servers "what's your latest offset?" at T+0s, those answers freeze. Any records written to Fluss after T+0s but before the readers actually start working are not part of this round; they'll be picked up in the next one. This is correct behavior, but it means the lake always lags by at least one round, even if your freshness is configured aggressively.
 
 ## Next Up
 You've now got the mental model, the processes, the heartbeat conversation, the lifecycle, and what happens during one full round. 
