@@ -178,3 +178,4 @@ That's it. Round complete. The lake now contains `orders` data up to the offsets
 You've now got the mental model, the processes, the heartbeat conversation, the lifecycle, and what happens during one full round. 
 The next part takes that round and shows what changes when you start tuning the dials, and then what changes again when you stop thinking about one table at a time.
 
+
