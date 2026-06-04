@@ -1,319 +1,186 @@
 ---
-slug: fluss-tiering-service-deep-dive-part2
-title: "Tiering Service Deep Dive Part 2: Tuning"
-date: 2026-06-09
+slug: fluss-tiering-service-deep-dive-part3
+title: "Tiering Service Deep Dive Part 3: In Production"
+date: 2026-06-11
 authors: [giannis]
-image: ./assets/tiering_service_dd_part2/banner.png
+image: ./assets/tiering_service_dd_part3/banner.png
 ---
 
-![Banner](assets/tiering_service_dd_part2/banner.png)
+![Banner](assets/tiering_service_dd_part3/banner.png)
 
-[Part 1]() built the mental model. What tiering is, who does what, how the round runs end-to-end. 
+[Part 1](/blog/fluss-tiering-service-deep-dive-part1) and [Part 2](/blog/fluss-tiering-service-deep-dive-part2) built up everything you need to know about how tiering behaves: the mental model, the dials, the queue dynamics, the scale-out story. This part is about what to do with all of that. What breaks at runtime, and which of those failures self-heal versus need operator action. The design mistakes that look fine on day one but come back to bite you on day two. And the operator's daily view: which five numbers tell you whether tiering is healthy on a Tuesday afternoon, where each one comes from, and why two of them can only come from your Flink-side dashboards.
 
-This part adds the dials. Buckets and splits determine how a round parallelizes. 
-Log and PK tables behave so differently on round one that the difference deserves its own treatment. 
-The freshness setting, the one knob most users actually touch, does two different jobs that share the same value.
-Once a single job is handling many tables, queue position starts to dominate effective freshness more than any per-table setting.
-And once that happens, you have a deployment-shape decision: stay with one job, or scale out. By the end, you'll know which levers matter most and how to use them.
+**Tiering Service Deep Dive, 3-parts:**
+* **[Part 1 - The Mental Model](/blog/fluss-tiering-service-deep-dive-part1):** how one tiering round actually works, from timer fire to lake commit.
+* **[Part 2 - Tuning](/blog/fluss-tiering-service-deep-dive-part2):** per-table dials, multi-table dynamics, and scaling out.
+* **Part 3 - In Production:** failure modes, design pitfalls, and the dashboard that tells you everything is fine.
 
 <!-- truncate -->
 
-## Buckets, Splits, And How The Work Gets Divided
-In Part 1, we had a table with 4 buckets that ended up with 4 splits.
-That's not accidental: the rule is one split per bucket.
-Let's slow down and look at the parallelism story end-to-end, because this is where bucket count actually starts to matter.
+## Failure Modes: What Self-Heals And What Doesn't
+The tiering service has a small number of well-defined failure modes, and the design absorbs most of them gracefully. The point of this section isn't to enumerate every edge case. It's to give you a mental model for what self-heals and what doesn't, so when something goes wrong you know whether to wait, restart, or escalate.
 
-The mental model is straightforward: **buckets** are how the data is physically partitioned, **splits** are the chunks of work the tiering job hands out, and **readers** are the workers that consume splits.
-The number of buckets is fixed at table creation time. The number of readers is your Flink job parallelism. The number of splits per round equals the number of buckets.
+![](assets/tiering_service_dd_part3/fig1.png)
 
-![Buckets map one-to-one to splits, which are handed out to reader tasks](assets/tiering_service_dd_part2/fig1.png)
+### The Tiering Job Dies Mid-Round
+This is the most common failure and the easiest to reason about. Job A is halfway through tiering `orders`: readers have written some Parquet files, but the writer hasn't completed the lake commit yet. The Flink TaskManager crashes, or the JobManager loses leadership.
 
-What happens when the number of readers doesn't match the number of buckets? Two cases:
+From Fluss's perspective, heartbeats stop arriving. Roughly two minutes later (the 2-minute liveness threshold from [Part 2](/blog/fluss-tiering-service-deep-dive-part2), plus up to one 15-second checker tick, so detection lands at about 2 to 2.25 minutes), the coordinator declares the job dead, fences its in-flight assignment, and returns `orders` to the back of the pending queue, where it waits behind whatever else is already queued. The next tiering job to heartbeat picks up the table at the front of the queue, which may or may not be the fenced table, depending on what else was waiting. The interrupted writer's Parquet files in the lake are orphaned; they're committed to neither Fluss nor the lake catalog, so no reader will ever see them. They sit until an external lake-side garbage collector cleans them up.
 
-**More readers than buckets**. A table with 4 buckets and 16 readers means only 4 readers can work on *that* table. Bucket count caps how many readers a single table's round can use. The other 12 don't necessarily sit idle, though: if other tables are waiting in the queue, the enumerator hands those spare readers the next table's splits, and they start reading ahead (we'll see exactly how in the multi-table section). They only truly idle when there's no other work queued.
+The new job starts the round from the last committed lake offset, not from where the dead job left off. **That's the cost:** all the work since the last commit is redone. **The benefit:** you never get a half-committed table.
 
-**Fewer readers than buckets**. A table with 16 buckets and 4 readers means each reader will process 4 splits sequentially. Reader 0 takes one split, finishes it, asks for the next, takes another, and so on. The whole round takes roughly 4× longer than it would with 16 readers. This is the common production case, and it's fine, just slower.
+Three invariants hold throughout this recovery:
 
-One more thing: the splits are shuffled (randomized) before being assigned. This is a small but important detail. Without it, reader 0 would always get bucket 0, reader 1 would always get bucket 1, and so on. If bucket 0 is consistently the heaviest (because of a bad key distribution), reader 0 would consistently be the bottleneck. Shuffling spreads the bad luck around: over many rounds, every reader gets stuck with the heavy bucket about equally often.
+* **The lake never sees a partial commit.** Readers can't observe a half-written snapshot.
+* **The redo cannot be double-counted into Fluss.** The epoch fences the heartbeat path: the dead attempt's finish, fail, and heartbeat messages carry a stale epoch and are rejected by the coordinator (`validateTieringServiceRequest`). This fences the bookkeeping, not the lake write itself; the lake commit and the offset-advance RPC are not epoch-gated. Exactly-once into the lake is instead protected by per-snapshot atomicity plus a reconciliation check on the next round (`getMissingLakeSnapshot`), which detects and repairs the case where the lake advanced but Fluss didn't.
+* **The orphaned Parquet files are lake-side garbage.** They rely on an external lake-side garbage collector to clean them up; as of the Fluss version this series tracks, there is no Fluss-side reaper for orphaned lake files.
 
-## The Slow-Bucket Effect
-In the normal commit path, the commit operator waits for every split of a table before committing.
-If 3 readers finish quickly and the 4th is still processing a much larger bucket, the table's commit can't happen until that last bucket lands. The 3 fast readers move on to other queued tables (or idle, if there's nothing else queued), but this table's round isn't done until its slowest bucket is.
-The lake commit itself is always atomic. Readers can't see a half-written snapshot, and most of the time every bucket of a round lands in the same commit.
+These invariants assume the dead job stopped before its lake commit. A job that is fenced but still alive (a JobManager GC pause, or a JobManager-to-coordinator partition that doesn't affect the committer) can still complete its lake commit after the table was reassigned, because that write carries no fencing token derived from the 2-minute lease. In that narrow case, exactly-once depends on the lake committer's own idempotency.
 
-**The end result:** the slowest bucket determines how long a round takes. Skewed bucket keys can hurt you here. (There's one exception: when freshness fires and the round force-finishes, whatever each bucket has tiered so far gets committed, and the unread remainder rolls to the next round. We'll cover this in the freshness section.)
+![](assets/tiering_service_dd_part3/fig2.png)
 
+**Call to action:** If it's Kubernetes or any restart-on-failure scheduler there is no required action. The job comes back, registers, and pulls from the queue normally. The 2-minute fencing window is your only real cost.
 
-## Two Kinds of Tables: Log vs. Primary-Key Tables
+### A Reader Fails Inside A Healthy Job
+A single TaskManager dies while the JobManager keeps running. This isn't a localized restart: the tiering job runs with a full-restart failover strategy, so one failed task restarts the entire job, readers, enumerator, and committer together. The in-flight round's partial work, which lives only in memory, is thrown away.
 
-### Log Tables: The Simple Case
-A log table is exactly what it sounds like: an append-only stream. Records arrive, they get assigned an offset, and they sit there. You can't update or delete a record; you can only append. Examples: a clickstream, an event bus, an audit log.
+After the restart, the enumerator re-registers with the coordinator and asks for fresh work; it does not resume the table it was tiering. That table stays in `Tiering` on the coordinator until the same ~2-minute liveness timeout from the job-death case fences it (`Failed` to `Pending`, epoch bumped) and re-queues it. So a reader failure collapses into the same recovery path as a dead job: full restart, then the interrupted table waits out the ~2-minute fence before it is picked up again. What the surviving JobManager buys you is a faster restart of the job process, not faster recovery of that one table. No progress is lost and nothing double-commits, because the durable record of completed rounds lives in Fluss metadata (committed lake offsets).
 
-Tiering a log table is straightforward. Every round, the Flink job reads "everything since the last commit" (just the new offsets) and writes those records as Parquet files in the lake.
-The lake table grows monotonically. The work per round is proportional to how much you wrote since the last round.
+**Call to action:** nothing; it self-heals. Watch the job's restart count and the Fluss-side `tierLag` and queue depth: a healthy recovery is a brief restart followed by `tierLag` settling back down.
 
-### Primary-Key Tables: The Trickier Case
-A primary-key (PK) table is like a row-keyed materialized view. 
-Each record has a primary key and the latest value for that key replaces any previous value. 
-Internally, Fluss stores PK tables in two parts: **a changelog** (a log of all the upserts and deletes that have happened) and a **KV state** (the current value for each key, derived from the changelog). It's similar to how a database has a write-ahead log plus the actual table.
+### The Fluss Coordinator Restarts
+The coordinator holds the queue and the per-table assignment state in memory. When it restarts, the queue empties and the assignments are dropped. The durable truth lives in Fluss's persistent metadata (ZooKeeper for table-level configuration, with committed lake offsets recorded through the lake-snapshot commit path). On restart, `initWithLakeTables` rebuilds the in-memory state from cluster metadata and, importantly, resets every table's epoch counter to 0 as part of `registerLakeTable`.
 
-The changelog records every event using four operation codes you'll see throughout the Flink and Fluss world: `+I` for an insert, `-U` and `+U` together for an update (the old row going out, the new row coming in), and `-D` for a delete. 
-Apply all of those to an empty state in order and you get the current row for every key; that's the KV state. Here's a small example to make this concrete:
+Right after restart, any job that was mid-round holds a non-zero epoch, so its next heartbeat is fenced with `FencedTieringEpochException` (returned as a per-table error in the heartbeat response, which the enumerator treats as "throw away in-flight state and ask for fresh work"). One caveat worth knowing: this epoch lives only in the coordinator's memory and restarts from 0, so it is not monotonic across restarts. Fencing here relies on the stale job being detected and reassigned before the per-table epoch happens to climb back to the same value: in practice fine, but it's a lease-style guarantee, not an absolute one.
 
-![Applying a changelog of +I, -U/+U and -D events to derive the current KV state](assets/tiering_service_dd_part2/fig2.png)
+![](assets/tiering_service_dd_part3/fig3.png)
+
+Practically, any tiering job that was mid-round when the coordinator restarted loses its assignment, and the next freshness firing re-enqueues the affected tables. That can mean a freshness lag of up to the per-table target on the worst-affected table, but no data loss: the writes that were in flight just hadn't been committed to the lake yet, and they'll be re-tiered on the next round.
+
+**Call to action:** nothing on the tiering side. Coordinator availability is the broader story; in HA mode another coordinator takes over. The tiering jobs reconnect to the new leader through the same metadata path as everything else.
 
 
-Now think about what "tier this to the lake" means for a PK table.
-The lake needs the current state of every row, not just the log of what changed. 
-So the very first round of a PK table has to copy the entire KV state to the lake. 
-That can be huge: think 200 GB if you have a big customer-profile table.
-After that first round, subsequent rounds only need the changelog records since the last snapshot offset, because the lake's merge engine knows how to apply upserts and deletes to existing rows.
+### The Asymmetric Failure: Two Jobs, One Healthy
+You're running two tiering jobs (the scale-out pattern from [Part 2](/blog/fluss-tiering-service-deep-dive-part2)). Job A is healthy; Job B is in a crash loop because of some error. What happens?
 
-![A PK table's first round copies the full KV state; later rounds tier only the changelog since the last snapshot offset](assets/tiering_service_dd_part2/fig3.png)
+From the coordinator's perspective, Job B's heartbeats stop arriving. After roughly two minutes (the same 2-minute threshold plus up to one 15-second checker tick), the coordinator fences whatever Job B was holding. Job A picks up the slack: everything Job B would have done now flows through Job A. Effective throughput drops from two-job back to one-job behavior, with the queue-starvation pattern returning if your workload has the mixed-size shape.
 
-The numbers here are illustrative. A 200 GB PK table might take 10+ minutes to read on its first round (because all 200 GB must be copied). 
-The second round, where only the upserts and deletes from the last few minutes need to be applied, might take 30 seconds. 
-This is an important difference, and the single most important thing to understand about PK tiering: the first round is in a different category from every round that follows.
+This is the silent failure mode worth watching for. If you scaled out specifically to unblock a small table from a large one, and one of your jobs goes dark, the small table's freshness gets worse without anything obviously broken on the Fluss side. The challenge is that Fluss itself doesn't track tiering-job identity (as we saw when scaling out), so the coordinator cannot tell you **"I expected 2 jobs and only see 1"**. The monitoring signal has to come from your Flink-side dashboards (per-JobManager liveness, checkpoint health) combined with the Fluss-side queue and lag metrics from the operations section. If your Flink dashboard shows two healthy JobManagers but `pendingTablesCount` is climbing and `tierLag` on small tables is degrading, you have evidence that one of the jobs has effectively gone dark even if its process is alive.
 
-### The Summary Table
+![](assets/tiering_service_dd_part3/fig4.png)
 
-| Aspect | Log Table | Primary-Key Table |
+### The Pattern: What Self-Heals And What Doesn't
+Anything that's transient and respects the 2-minute liveness window self-heals: job crashes, network blips, reader restarts, coordinator failover. Anything structural (a bad catalog credential, a missing Iceberg table, a misconfigured lake bucket) will crash-loop your tiering job and not affect Fluss's hot tier at all. The hot tier keeps accepting writes regardless of lake health. **Your cluster doesn't break when tiering breaks; it just stops aging out.** That's the design's most important safety property, and also the reason monitoring the tiering side separately from the Fluss side matters.
+
+## Common Mistakes: What To Avoid In Production
+This section is the failure-modes section's sibling. Not **"what breaks when the system is healthy"** but **"what looks fine but is actually about to break"**. None of these will crash your cluster. All of them produce slow, expensive, or surprising behavior down the road. Worth catching at design time rather than three months in.
+
+### Mistake 1: Sizing Buckets For The Wrong Dimension
+The most common one. You pick bucket count based on ingest throughput: **"we have 200K writes/sec, give it 32 buckets"**. That sizes hot-path throughput just fine. What you didn't size for is the tiering round, which is per-bucket parallelism on a single Flink job. With 32 buckets, your tiering job needs 32 reader slots to run in parallel, otherwise the round serializes. And with 32 readers, the Flink-side write to the lake fans out to 32 concurrent writers, which means 32 concurrent S3 PUTs per round.
+
+And bucket count isn't something you can walk back: in current Fluss there's no online ALTER path to change a table's bucket count at all. It's part of the table's distribution, fixed at create time, not an alterable `table.*` property, so for both log and PK tables you're committing to the count you pick at creation. PK tables make this constraint conceptually sharper still: the hash function that assigns rows to buckets depends on the count, so even if a future release exposed a reshard, changing the count would invalidate every existing key's placement. 
+
+**The practical takeaway:** pick a bucket count at table creation time that reflects your steady-state volume, not your peak burst. Eight buckets handle a lot of throughput when the tiering round is healthy, and you'll thank yourself later when the round time stays predictable. For most tables, fewer buckets is better, until you have measured evidence that ingest is bucket-bound.
+
+### Mistake 2: One Tiering Job For Everything
+Covered at length in the multi-table and scale-out sections of [Part 2](/blog/fluss-tiering-service-deep-dive-part2), but worth repeating as a discrete anti-pattern: deploying one tiering job and pointing all 50 of your tables at it. It works, for a while. Then one table grows, its round duration extends, and every other table's effective freshness silently degrades because the queue gets longer. The fix when it bites is to scale out to multiple jobs, but the better play is to think about workload mix at the design stage. If you know you have a heavy table and a hot table, plan for two jobs from day one. The cost is two Flink deployments instead of one, which is marginal on most clusters. The benefit is that one bad week of growth on the heavy table doesn't take out your latency SLO on the hot one.
+
+### Mistake 3: Confusing Freshness Target With Freshness Guarantee
+The `table.datalake.freshness` config is the **"the maximum amount of time that the datalake table's content should lag behind updates"**, but it's also a **"target freshness"**. Those aren't the same thing. The coordinator schedules the next round as a re-enqueue delay (`freshness − (now − last_tiered)`), so freshness controls how often a table becomes eligible to tier again, not a hard ceiling on how stale the lake can get. **Under queue contention, the **"maximum"** is aspirational, not enforced.** If the queue ahead of your table is empty and the round is fast, you'll get something close to 1 minute. If the queue is full of bigger tables, you'll get whatever you get; the multi-table walkthrough in [Part 2](/blog/fluss-tiering-service-deep-dive-part2) goes through this case in detail.
+
+This can look confusing when users, set up dashboards that read directly from the lake and expect **"1-minute freshness"** to mean **"data is never more than 1 minute behind real time"**. It can mean that under light load. 
+
+Under realistic load it means **"this table is allowed to be re-tiered as often as every minute, queue permitting"**. If you genuinely need bounded freshness on a lake-side read, your options are: read from Fluss directly, or scale out tiering jobs to make sure your table never queues.
+
+### Mistake 4: Enabling Lake Tiering On A Tiny Table
+This one isn't so much a mistake as a waste. You have a `dim_country` table with 200 rows, updated once a month. Someone enables `table.datalake.enabled = true` on it because **"we tier everything"**. Now your tiering job is scheduling rounds on this 200-row table at the configured freshness cadence, each round writing a Parquet file that's mostly metadata overhead, each commit allocating a snapshot in the lake catalog. The lake-side Parquet directory fills up with thousands of tiny files. Compaction will eventually clean them up, but in the meantime your S3 LIST operations are paying for them and your catalog has thousands of unnecessary snapshot entries.
+
+For small, slow-changing reference tables, the correct play is usually to keep them in Fluss only (no lake tiering) and let lake-side queries do a join through the union-read path. Or, if they really need to be in the lake, materialize them once via a batch job and refresh on a much longer cadence. The tiering service is the wrong tool for low-velocity data.
+
+### Mistake 5: Ignoring The Cross-Table Effects Of Compaction
+The Fluss-specific hook is simple: because tiering parallelism is per-bucket, each round writes at least one Parquet file per bucket. So a 16-bucket table tiering at 1-minute freshness produces on the order of 16 small files a minute, roughly 960 an hour and 23,040 a day, per table. That count compounds fast.
+
+Everything past that point is standard lakehouse behavior, not a Fluss bug: small files degrade reads and bloat catalog metadata, and both Iceberg and Paimon lean on compaction to claw it back, which isn't free and isn't always automatic. The takeaway for a tiering deployment is just to size and schedule compaction deliberately rather than discover it reactively.
+
+### The Pattern: A Production-Readiness Checklist For Tiering
+Before you call a tiering deployment production-ready, walk through:
+
+1. Bucket counts are sized for round duration, not just ingest throughput, and you've explicitly defined that at table creation time.
+2. Tables of similar round duration are grouped onto the same tiering job; tables of dissimilar round duration are split across jobs.
+3. Freshness targets reflect what you actually need at the lake-tier read path, not **"we just tier everything"**.
+4. Compaction is configured on the lake side and you have a dashboard showing file count and snapshot count growth.
+6. You have Flink-side liveness monitoring on every tiering job you deployed (see the operations section on why Fluss itself can't tell you a job has gone dark).
+
+## What To Monitor: The Operator's View
+The previous sections covered design-time decisions and failure-mode reasoning. This one is about the running system: what to look at on a Tuesday afternoon when you're trying to figure out if tiering is healthy, slow, or quietly broken. The tiering service exposes its state through a combination of Flink metrics, Fluss coordinator metrics, and the lake catalog itself. 
+It's worth knowing which metrics matter.
+
+### What The Fluss Coordinator Actually Exposes
+A short list of the metrics actually registered in `LakeTableTieringManager`, so you know what you can build alarms against without inventing things.
+
+#### Cluster-level:
+
+* **pendingTablesCount:** how many tables are waiting in the pending queue right now.
+* **runningTablesCount:** how many tables are currently in `Tiering` (that is, assigned to some tiering job).
+
+#### Per-table:
+
+* **tierLag:** milliseconds since the last successful tiering of this table.
+* **tierDuration:** wall-clock duration of the last completed tiering round.
+* **pendingTime:** how long this table has been waiting in the pending queue right now.
+* **failuresTotal:** a counter of total tiering failures observed for this table.
+* **fileSize / recordCount:** cumulative lake-side size and record count after the last round.
+* **freshness:** the per-table configured freshness, in milliseconds.
+
+
+### Round Duration
+If you only watch one number, watch per-table `tierDuration` against the table's configured freshness. This is the metric that tells you whether your freshness targets are realistic. If `orders`'s configured freshness is 2 minutes and its observed `tierDuration` is 90 seconds, you have headroom. If `tierDuration` is 110 seconds and creeping up week over week, you have a problem coming.
+
+Build a per-table dashboard. The pattern you want to see is `tierDuration` < `freshness`, with stable variance round over round.
+
+### Queue Depth
+`pendingTablesCount` is the leading indicator of starvation. In a healthy system, the queue is usually short (0 to 2 tables): tables enter, get assigned, get committed, exit. When the queue starts growing (5 tables pending, then 10, then 15), you're past the point where adding tables can keep up with tiering throughput. Either tiering rounds are slowing down, or tables are being added to the cluster faster than they're being drained, or one of your tiering jobs has effectively gone dark.
+
+This is your cue to scale out tiering jobs (the multi-job pattern), or revisit bucket counts, or investigate a sick job. By the time freshness misses are showing up in the lake, queue depth has been climbing for hours. Watch it ahead of the symptom.
+
+### Remote-Tier Storage Growth
+It's tempting to assume a broken lake tier shows up as hot-tier (local) disk filling on the tablet servers. It usually doesn't. Local disk is bounded by `table.log.tiered.local-segments` (default 2): older local segments are continuously moved to the remote log tier no matter what the lakehouse tiering service is doing. The remote-log tier and the lakehouse tier are two independent mechanisms.
+
+What actually grows when lake tiering stalls is the remote log tier. With `table.datalake.enabled`, Fluss won't delete a TTL-expired remote segment until it has been tiered to the lake: cleanup only frees segments whose log end offset is at or below the lake-synced offset. So a stuck lake tier overrides `table.log.ttl`, expired segments pile up in remote storage, and your object-store footprint for that table's log climbs even though local disk looks fine.
+
+So the signal to watch is remote-tier storage size, not local disk. Remote log storage that keeps growing and never drops after `table.log.ttl` should have expired it, combined with a climbing `tierLag`, is the most direct "the lake side is failing" sign you have. For a table with no lake tiering enabled, `table.log.ttl` alone bounds remote growth and there's nothing lake-specific to watch here.
+
+
+The operator's dashboard is five tiles, each answering one question. If all five are green, tiering is healthy. If any is red, the section it points to tells you where to look.
+
+| Tile | Question | Where it points if red |
 |---|---|---|
-| **Round 1 reads** | Whatever offsets exist so far | Full KV state, up to 100s of GB |
-| **Round 2+ reads** | New offsets since round 1 | Changelog since round 1's snapshot offset |
-| **What the lake stores** | Append-only Parquet | Snapshot rows + applied upserts/deletes |
-| **Cost stability** | Roughly constant per round | Round 1 huge, rest tiny |
-| **Partial progress useful?** | Yes: committed buckets advance the lake; the rest roll to the next round | Round 1 snapshot: no (force-finish is ignored for snapshot splits, so they run to completion rather than committing partially). Round 2+: yes |
+| 1. `tierDuration` / freshness | Is any round time near its target? | Freshness and queue dynamics |
+| 2. `pendingTablesCount` | Is the queue growing? | Scale out, queue starvation |
+| 3. Remote-tier storage growth | Is TTL cleanup blocked by a stalled lake tier? | Lake outage, stuck commits |
+| 4. Lake-side file count | Is compaction keeping up? | Compaction misconfigured |
+| 5. Flink JobManager liveness | Are all deployed jobs still up? | Asymmetric failure pattern |
 
-## The Freshness Knob
-Every table that's enabled for tiering has a setting called `table.datalake.freshness`. 
-It's a duration, something like `5min` or `30s`, and the default is 3 minutes.
-This single number is the most common source of confusion in the tiering service, because it does two different jobs that share the same value.
+**The rule that ties it together:** four of these tiles come from Fluss and the lake catalog. Tiles 1 and 2 are Fluss coordinator metrics, tile 3 is the Fluss remote-log tier's storage footprint, and tile 4 comes from the lake catalog. Only tile 5 has to come from your Flink-side dashboard: because Fluss has no notion of tiering-job identity, no Fluss metric can answer "are all my deployed jobs still up?" That's why tile 5 lives outside Fluss, and why monitoring tiering means wiring both sides into one view.
 
-### Job 1: How Often Rounds Start
-The obvious meaning.
-After a round completes, the coordinator schedules the next round one full freshness interval later, measured from the moment that round *finished*. So with 5-minute freshness, the next round becomes eligible 5 minutes after the previous round committed. The round's own duration is *not* subtracted.
+### The Pattern: The Five-Number Daily Check
+A complete daily-operations view of the tiering service is five numbers:
 
-Under the hood the scheduler computes `freshness − (now − last_completion_time)`, which looks like it deducts elapsed time. But `last_completion_time` is reset to the instant the round just finished, so the subtracted term is ~0 for back-to-back rounds. That subtraction only bites after a coordinator restart, where the last completion can be well in the past and the next round may fire immediately.
+1. Per-table `tierDuration` vs freshness: is anything trending toward the limit?
+2. `pendingTablesCount`: is it growing?
+3. Remote-tier storage growth: is TTL cleanup stuck behind a stalled lake tier?
+4. Lake-side file count growth: is compaction keeping up?
+5. Flink-side JobManager liveness for every tiering job you provisioned: does it match what you deployed?
 
-The practical consequence: the effective start-to-start cadence is `round_duration + freshness`, not `freshness` on its own. A table with 5-minute freshness and 90-second rounds runs a round roughly every 6.5 minutes, not every 5.
+If all five are green, the tiering service is healthy. If any of them are red, the previous sections tell you where to look next. That's the whole operator's playbook for this subsystem.
 
-#### If You're Coming From a Flink Streaming Background
-Tiering cadence is driven by freshness; it is *not* tied to Flink checkpoints.
-A common mental model from Flink-CDC-style pipelines is "data lands in the sink when a checkpoint completes".
-That's not quite how the tiering service works. A tiering round commits to the lake when all the round's bucket results have arrived at the commit operator, which is driven by the round's own progress rather than by external checkpoint cadence. 
-Whatever checkpoint interval the Flink tiering job has configured doesn't bound when the lake sees new data. 
-The round itself does.
+## Where To Go From Here
+This three-part walkthrough was deliberately scoped to the tiering service, the mechanism that moves data from Fluss's hot tier into the lake. There are three adjacent topics worth exploring next, in roughly increasing order of depth.
 
-The correctness story has two layers worth separating. 
-Atomicity comes from the lake's own commit primitive (Paimon's snapshot commit, Iceberg's metadata swap). Consistency across attempts comes from the epoch fencing mechanism the coordinator uses, introduced in **Part 1**, in the heartbeat section, which rejects any commit from a stale attempt (an epoch-fencing error). 
-So you don't need to tune Flink checkpoint settings to get correct tiering; the defaults are fine.
+**Reading from the lake side.** The whole point of tiering is to make data queryable from Flink batch, Spark, Trino, or any other engine that speaks Paimon or Iceberg. The union-read path, which seamlessly stitches together lake-side historical data with Fluss-side hot data, is what makes this useful. It's separate machinery from the tiering service, but it depends on it.
 
-What you do still need is a healthy checkpoint cycle. 
-The Flink tiering job is configured with a full-restart strategy because the commit operator is stateless: it holds the per-table bucket results it has collected so far only in memory (nothing is checkpointed), so if it fails those in-flight committables are lost and the whole job restarts to collect them fresh.
+**Compaction on the lake side.** Mentioned several times across this series as a downstream concern. The actual mechanics of Paimon's compaction (full vs minor, the role of the dedicated compaction job) and Iceberg's (rewrite manifests, expire snapshots) are their own topics. If you're going to operate tiering in production, you need to operate compaction alongside it; they're a pair.
 
-That's deliberate. It keeps the all-or-nothing commit semantics simple. So checkpoints aren't your tuning knob, but they do need to complete; treat the tiering job's checkpoint cycle as load-bearing infrastructure rather than something you can ignore.
+**Schema evolution.** The tiering service handles schema changes by carrying the Fluss-side schema through to the lake on the next round. The lake-side catalog needs to accept the new schema; Paimon and Iceberg both support evolution, but with different rules. The interaction between Fluss schema changes (`ALTER TABLE` on the streaming side) and lake-side schema (the corresponding Paimon or Iceberg evolution) has its own corner cases and is worth a separate walkthrough.
 
-### Job 2: The Ceiling On A Round's Wall-clock Duration
-The less-obvious meaning. The same value also caps how much wall-clock time a single round of this table is allowed to consume before something gives. When freshness elapses mid-round, the Flink enumerator fires a force-finish: every log split that has started commits whatever it has read so far (advancing that bucket's offset), and buckets that hadn't started yet are skipped. The skipped buckets, and the remaining tail of any partially-read bucket, get re-read in the next round (which starts immediately, since the table is re-queued straight away).
-
-This is an important nuance and worth slowing down on: **force-finish is not a failure**. It's a partial commit. On the coordinator side, the table transitions `Tiering` → `Tiered` (with a `force_finished` flag) → `Pending`. It is not marked `Failed`. It does take a fresh tiering epoch on the way back into the queue: the `Tiered` → `Pending` transition bumps the epoch exactly as any normal re-enqueue does, but that's ordinary re-attempt bookkeeping, not a failure recorded against the table.
-The lake snapshot that lands contains every bucket that tiered any data this round, each up to wherever it reached, and that snapshot is still atomic. Readers never see a partial commit. Buckets that never started just roll forward to the next round.
-
-
-**One exception to highlight:** for the first round of a PK table, assuming a KV snapshot already exists (the normal case), that round reads the snapshot, and force-finish is suppressed for snapshot splits. (If no KV snapshot has been taken yet, the first round instead reads the changelog from the earliest offset as ordinary log splits, and force-finish applies as usual.)
-The reason force-finish is suppressed is that a snapshot split has to be read in full to yield the log offset that the snapshot ends at, and that offset is what anchors the next incremental round.
-Truncate the snapshot read part-way and you lose that offset. There's nothing for the following round to start from. 
-So when freshness fires during a PK snapshot round, the force-finish signal is sent but the snapshot reader simply ignores it; the splits keep running until the snapshot finishes naturally. 
-The lake commit lands whenever that happens, no matter how much longer it takes. Force-finish only meaningfully truncates work on log splits, not snapshot splits.
-
-### What The Freshness Gives You And What It Doesn't
-Freshness is a target scheduling cadence, not a guarantee of how stale the lake is.
-The actual lake lag is the time between when a record is written to Fluss and when it appears in the lake, and it oscillates in a sawtooth. The floor is one `round_duration`: a record written just before a round's cutoff lands in the lake about one round-length later. The peak is roughly `freshness + 2 × round_duration`: a record written just *after* a round's cutoff has to wait a full freshness interval for the next round to start, then that round's duration to commit. So a table with 5-minute freshness and 90-second tiering rounds gives you a lake that's between ~90 seconds and ~8 minutes behind.
-
-![Lake-lag sawtooth: lag drops to one round duration after each commit, then climbs until the next round commits](assets/tiering_service_dd_part2/fig4.png)
-
-So the rule of thumb to take away is: floor lag ≈ `round_duration`, and peak lag ≈ `freshness + ~2 × round_duration`, meaningfully more than the configured freshness once rounds get long.
-If your stakeholders say "the lake must never be more than 10 minutes behind", work backwards from the peak: with 90-second rounds, a freshness around 7 minutes keeps peak lag near 10 minutes (7 min + ~3 min). Leave yourself margin.
-
-### The Other Timeout You Should Know About
-There's a second timeout, set on the coordinator side and applied to every table regardless of its freshness. It's a 2-minute window, but the thing it measures is easy to misread. It's *not* a ceiling on how long a round can run; rather, it's a ceiling on how long the coordinator will wait between heartbeats from the Flink job about a given in-flight table.
-
-The coordinator runs a background sweep every 15 seconds. 
-For every table currently in `Tiering`, it checks `currentTime - lastHeartbeat`. 
-If that delta exceeds 2 minutes, the table is fenced and transitioned through `Failed` back to `Pending`, epoch bumped, any uncommitted lake files orphaned. 
-The `lastHeartbeat` timestamp gets refreshed on every heartbeat from the Flink job that mentions the table, which by default is every 30 seconds (controlled by `tiering.poll.table.interval`).
-
-So in a healthy Flink job, the 2-minute timer never fires for round duration. 
-The job heartbeats four times in every 2-minute window, each heartbeat lists the in-flight tables, the coordinator's `lastHeartbeat` stays fresh, and a single round can keep running for an hour without the coordinator ever raising an eyebrow. 
-The 2-minute window only catches Flink jobs that have genuinely stopped heartbeating; GC pause long enough to look like unavailable, network partition, JobManager crash, that kind of thing.
-
-### The Two Ceilings, Side By Side
-**Freshness** is set per table, fully tunable, and triggers a force-finish on log splits when it fires mid-round. 
-For PK snapshot splits, force-finish is ignored and those splits run to completion regardless, because the snapshot read has to finish to produce the log offset that anchors the next incremental round.
-**The 2-minute coordinator window** is hardcoded and applies to every table, but it measures heartbeat liveness, not round duration. 
-A healthy Flink job that heartbeats every 30 seconds can spend hours on a single round without ever triggering it. 
-The 2-minute window is the coordinator's safety net for a job that has actually stopped responding, which is the only failure mode that needs it.
-
-## Multiple Tables: How The Queue Actually Works
-Up until now we've talked about one table. Real deployments have many. So what happens when you have, say, three tables (two log tables and one PK table) all sharing a single tiering Flink job?
-
-
-The coordinator keeps one FIFO queue of pending tables. When a Flink job asks for work via heartbeat, the coordinator pops the table at the front of the queue and hands it over.
-The Flink job works that table's buckets in parallel and asks for the next table once its splits are all handed out. The coordinator gives out work one table per request. As we'll see, a job's spare readers can start a second table's reads before the first table's commit lands; what stays strictly one-at-a-time is the commit.
-
-This means the effective freshness for any single table is not just its own configured freshness. 
-It's also a function of where it sits in the queue and how long the tables ahead of it take.
-
-
-## A Concrete Walkthrough: Three Tables, One Job
-Here's the setup. Three tables sharing one Flink tiering job that's running with parallelism 16 (so up to 16 readers can run in parallel at any moment).
-Each table has its own bucket count, freshness target, and expected per-round duration:
-
-| Table | Type | Buckets | Freshness | Round duration |
-|---|---|---|---|---|
-| clicks | Log | 16 | 1 min | ~30 s |
-| orders | Log | 8 | 2 min | ~90 s |
-| customers | PK | 12 | 5 min | ~100 s first round, ~20 s after |
-
-Each table generates one split per bucket per round, so a clicks round produces 16 splits, an orders round produces 8 splits, and a customers round produces 12 splits. 
-When the Flink job processes clicks, all 16 of its readers are busy on it at once.
-orders has only 8 buckets, so at most 8 readers can work on orders itself, but the other 8 don't idle: once orders' splits are all assigned and none are left pending, the enumerator pulls the next queued table and hands its splits to those readers, which start reading ahead. Same with customers (12 buckets): the 4 spare readers pick up whatever is next in the queue.
-The bucket count is a per-table cap on *intra-table* parallelism (how many readers one table's round can use), not a cap on how busy the job is. The spare readers pipeline onto the next table (detailed in *Reads Pipeline: Commits Serialize*, below). What stays strictly one-table-at-a-time is the *commit*, not the reads.
-
-
-### What Determines Round Duration?
-Before we walk through the example, let's pin down what "30 seconds" or "100 seconds" actually means, because those numbers aren't magic.
-They emerge from three concrete inputs that every round has to negotiate with:
-
-1. **How much data the round has to read**. For a log table, this is the volume of writes since the last commit, roughly `write_rate × time_since_last_commit`. The longer the gap between rounds, the more data each round has to move. For a PK table's first round, the data is the entire KV state; every key in the table, regardless of how long it's been since the last anything. For a PK table's incremental rounds (round 2 and beyond), it's just the changelog records since the last snapshot offset, which is typically much smaller than the full state.
-2. **How parallel the work is**. Bucket count bounds the parallelism within a single round. With 16 buckets, the work is split 16 ways. With 4 buckets, it's split 4 ways, no matter how many Flink readers you have. The Flink job's parallelism setting only matters up to the bucket count of the table currently being tiered for that table's own splits; any extra readers don't wait around: they pick up the next queued table's splits (more on that in a moment).
-3. **How fast each reader can move data**. Bounded by network throughput from the Fluss tablet servers, deserialization speed, and write bandwidth to the lake (S3, GCS, etc.). Real-world numbers are usually a few tens of MB/s per reader.
-
-**Putting it together:** `round_duration ≈ data_to_read / (bucket_count × per_reader_throughput)`. 
-For our clicks table, which has been collecting writes for ~1 minute, has 16 buckets, and each reader pulls maybe 30 MB/s, a round of a few hundred MB of new clicks events takes roughly 30 seconds. 
-For customers' first round, the full KV state, let's say a few GB, 12 readers at 30 MB/s would take around 100 seconds. The exact numbers depend on your workload, but the shape of the formula is what matters: more buckets shortens a round, more data lengthens it.
-
-
-**One important thing this formula leaves out:** the slowest bucket determines when a round can commit, because the commit operator waits for all of them.
-If your bucketing key has bad distribution and one bucket holds 3× the data of the others, that one bucket sets the round duration: the other 15 readers finish their splits early and move on to the next queued table, but this table's commit still waits on that one straggler.
-The `shuffle` on split assignment doesn't fix this; it just makes the bad bucket land on a different reader each round.
-
-A newly created table doesn't tier immediately; it waits one freshness interval before its first round (the coordinator schedules it: `New` → `Scheduled` → `Pending`). So picture **T=0** as the moment all three tables have passed that initial wait and are sitting in the coordinator's pending queue, each awaiting its first-ever round. They entered the queue as each table's first scheduling timer fired, in ascending freshness order, so it reads `[clicks, orders, customers]`.
-
-The Flink job's first heartbeat asks for work and gets clicks.
-The enumerator generates 16 splits (one per bucket), shuffles them, and assigns one to each of the 16 readers. 
-All readers work in parallel; clicks finishes at **T=30s**.
-
-At **T=30s**, the Flink job asks for more work. It gets orders. The enumerator generates 8 splits and assigns them to 8 readers.
-The other 8 readers don't sit idle: with orders' 8 splits assigned and nothing left pending, the enumerator immediately pulls the next table and those readers begin reading ahead (this is the read pipelining we detail below). What we're tracking in this walkthrough is the *commit* order, and orders is the table committing next: it tiers for about 90 seconds and its commit lands at **T=120s**, comfortably inside its 2-minute freshness window.
-
-
-Now customers is next in the commit order. The enumerator generates 12 splits (since this is round 1 of a PK table, these are snapshot splits reading the full KV state). 12 readers can work on its splits at once; the 4 spare readers, again, pick up whatever's next in the queue rather than idling. The round takes roughly 100 seconds, and customers' commit lands at **T=220s**, well inside the configured 5-minute freshness.
-
-
-But notice one thing here. clicks committed at **T=30s**; with a 1-minute freshness, its next round was scheduled for **T=90s**, so it's been waiting in the queue since **T=90s**. Its reads may well start earlier (spare readers can pick up clicks round 2 while customers is still being read), but its *commit* can't land until orders and customers have committed ahead of it.
-So clicks' round-2 commit doesn't land until around **T=220s**, putting its actual lake lag near 3.2 minutes despite being configured for 1-minute freshness.
-The fact that clicks uses all 16 readers when it does run didn't help. The constraint isn't how fast any one table reads; it's that the job dispatches one table at a time off the FIFO queue and commits one table at a time through a single-parallelism operator. Here clicks round 2 is re-queued only at **T=90s**, behind orders and customers, so it's both dispatched and committed last.
-The configured freshness value is the target; the queue is the constraint.
-
-**There's also a sizing lesson here**, but it's subtler than "don't over-provision." It's tempting to think that setting Flink parallelism to 16 wastes slots whenever a table has fewer than 16 buckets (8 for orders, 12 for customers). It mostly doesn't: because spare readers pipeline onto the next queued table, those slots get spent reading ahead as long as there's a backlog. Parallelism above your largest table's bucket count isn't automatically wasted: with several tables queued, the extra readers stay busy on other tables' reads. It only goes to waste when you rarely have more than one table's worth of work in flight at once.
-
-What parallelism *can't* fix is the commit path. The commit operator runs at parallelism 1 and serializes one table at a time, so no amount of extra parallelism speeds up the rate at which lake snapshots actually land.
-
-**A reasonable rule of thumb:** set Flink parallelism at least as high as the largest bucket count of any single table (so your biggest table can use all its buckets in one round), and add more only if you routinely have several tables queued and want their reads to overlap. Size bucket counts at table-creation time based on each table's data volume and freshness target. And if you need more *commit* throughput than one job can deliver, that's the cue to run multiple tiering jobs (next section), not to crank up parallelism.
-
-![Commit timeline for three tables sharing one tiering job, showing how queue position inflates effective freshness](assets/tiering_service_dd_part2/fig5.png)
-
-### Reads Pipeline: Commits Serialize
-The diagram above shows when each table commits.
-The reads underneath those commits don't line up the same way; when a table doesn't have enough splits to keep all 16 readers busy, the Flink enumerator pulls the next table from the queue and the spare readers immediately start chewing through its splits. 
-So reads overlap across tables. Commits don't.
-
-![Reads overlap across tables while commits stay strictly serialized](assets/tiering_service_dd_part2/fig6.png)
-
-The mechanism is simple. The enumerator maintains one shared `pendingSplits` list across all in-flight tables plus a set of `readersAwaitingSplit`. It asks the coordinator for the next table only when both `pendingSplits` is empty and at least one reader is idle. While clicks (16 splits) is running, that pair of conditions never holds simultaneously: all readers stay busy until the splits drain together at **T=30s**. But the moment orders (8 splits) is assigned, 8 readers are idle and `pendingSplits` is empty, so the enumerator immediately pulls customers from the queue, and those 8 idle readers start chewing through customers' snapshot splits while orders is still being read. The same pattern repeats when orders finishes: the freed readers pick up the remaining customers splits and then clicks round 2 (which has entered the queue by then), so customers and clicks round 2 overlap during phase 3.
-
-The commits, however, can't overlap. The commit operator runs at parallelism 1 by design, processing one table's commit at a time. It commits a table the moment it has collected all of that table's bucket write results for the round, so commits land in completion order, not coordinator-queue order: a later-dispatched but faster table can reach the committer first and commit before an earlier, slower one when their reads overlap. What is guaranteed is that commits never run concurrently, lake snapshots land strictly one after another. In our example the rounds happen to complete in queue order (clicks saturates all 16 readers and finishes first, then orders, then customers), but that ordering is a property of this workload, not a promise the committer makes.
-
-That's why queue position still dominates effective freshness, even with read overlap. clicks' round-2 reads can start while customers is still being read, but every commit is serialized through the single committer subtask, so a table's commit can't land until whatever the committer is currently working on is done. The lake-side appearance of "the round committed" is bottlenecked by the commit operator, not the readers, which is the exact mechanism the commit timeline was measuring.
-
-### The General Rule
-For N tables sharing one tiering job, the effective worst-case freshness of any single table is roughly the sum of all the tiering round durations, not the configured value of that one table. Configured freshness is more of a target; the queue is the constraint.
-
-This is fine when your tables are similar in size and freshness. It's a disaster when you mix tiny fast tables with huge slow ones. The little ones get starved while the big one finishes.
-
-### The Escape Hatch
-There's a clean fix: run more than one tiering job. The coordinator's pending queue is a shared resource, and any Flink tiering job that's registered with the cluster can pull from it. Two jobs, two tables tier at once. Three jobs, three. The starvation pattern softens as soon as the number of concurrent jobs is at least as large as the number of latency tiers you actually care about. The next section is the operational walkthrough.
-
-## Scaling Out: Running Multiple Tiering Jobs
-**The previous section left us with a clean problem statement:** one Flink tiering job serializes work across all tables, so freshness for any one table is bounded by the queue depth ahead of it. 
-The available knob for scaling out is to run multiple Flink tiering jobs against the same Fluss cluster. 
-It works, but it's a blunter instrument than you might hope. 
-The current implementation gives you concurrency, not isolation, and the section below walks through exactly what's in the code and what scaling out can and can't do.
-
-### The Architectural Approach
-Up to **Fluss 0.6**, the tiering service was a single stateful Flink job. 
-The per-table sync offset, the last lake-committed offset for each bucket, was stored inside Flink's checkpointed state.
-Practically, that meant you could scale the one job up (more parallelism, more slots) but you couldn't run two jobs; they would have stomped on each other's state.
-
-
-**Fluss 0.7** [re-architected the service to be stateless](https://cwiki.apache.org/confluence/display/FLUSS/FIP-1%3A+Fluss+Lakehouse+Storage+Design). 
-The sync offset moved from Flink state into Fluss metadata. The coordinator owns it, durably, regardless of which Flink job most recently tiered a given table. 
-The `TieringSourceReader` is now explicitly stateless and its `snapshotState` returns an empty list by design. 
-All the truth about "where is this table in its tiering history" lives in Fluss, not in any particular Flink job.
-That single change is what makes horizontal scaling safe at all. Two jobs can both ask the coordinator "what's next?", and neither holds state that the other could clobber.
-
-### The Mechanics: One Queue, Undifferentiated Workers
-The coordinator maintains **exactly one in-memory FIFO queue** of pending tables; `pendingTieringTables` in `LakeTableTieringManager`. 
-When a heartbeat comes in carrying `request_table=true`, the coordinator's `requestTable()` just pops the head: `Long tableId = pendingTieringTables.poll()`. 
-There's no filter parameter, no caller identity, no routing logic. 
-The protobuf `LakeTieringHeartbeatRequest` doesn't carry any "which job am I" field, because the concept doesn't exist on the coordinator side.
-
-So from the coordinator's perspective, every Flink tiering job is indistinguishable. 
-There's no job ID, no database filter, no notion of "this table belongs to that job".
-All registered jobs are undifferentiated workers reaching into the same queue, and the head of the queue goes to whoever happens to heartbeat first. If you have two jobs, two tables can be in `Tiering` at the same time. If you have five, five can. But you cannot pin clicks to job A; the coordinator wouldn't know how to honor that pin even if you asked.
-
-The epoch mechanism from Part 1's heartbeat section keeps this safe regardless of how many jobs are running. Each table assignment carries a `tiering_epoch` stamped on it. If two jobs somehow ended up working on the same table (a rare edge case during coordinator failover, mainly), the coordinator only accepts the commit whose epoch matches its current record; the other is rejected with an epoch-fencing error. So multiple jobs running concurrently can never produce duplicate commits or corrupt lake state; the worst case is some wasted reader work that doesn't get committed.
-
-![Multiple tiering jobs pulling work from the coordinator's single shared FIFO queue](assets/tiering_service_dd_part2/fig7.png)
-
-## The Earlier Example, With Two Jobs
-Let's revisit the previous walkthrough with two tiering jobs instead of one. The setup is unchanged. Three tables: clicks (1-min target, 30s round), orders (2-min target, 90s round), and customers (5-min target, 100s first PK round). At **T=0** all three are sitting in the queue: `[clicks, orders, customers]`.
-
-**T=0s**. Both jobs heartbeat asking for work. Job A's heartbeat happens to land first and gets clicks. Job B's request gets orders (now head of queue). Both jobs work in parallel; the queue contains just customers.
-
-**T=30s**. Job A finishes clicks, asks for next, and gets customers. Job B is still working orders.
-
-
-**T=90s**. Job B finishes orders, asks for next. Queue is empty, so Job B is briefly idle. At the same moment, clicks' 1-minute freshness timer fires (last commit at **T=30s**). It enters the queue. Job B picks it up on its next heartbeat (≤30s later).
-
-**T=120s**. Job B finishes clicks round 2. Effective freshness gap for clicks: about 90 seconds, against a 1-min target. Compare with ~3.2 min on one job.
-
-**T=130s**. Job A finishes customers first round. Cold tier idle until the next freshness firing 5 minutes later.
-
-| Table | Configured | Effective (1 job) | Effective (2 jobs) |
-|---|---|---|---|
-| clicks | 1 min | ~3.2 min | ~1.5 min |
-| orders | 2 min | ~2 min | ~2 min |
-| customers | 5 min | ~5 min | ~5 min |
-
-
-The improvement is real, but notice it's stochastic, not architectural. Job A got clicks first only because its heartbeat happened to arrive first at **T=0**. You cannot promise "clicks always lands on the responsive job."
-
-In practice the pairing tends to be sticky: once a job has been running short rounds it keeps becoming idle first and keeps picking up the next short round, so over time you do see something close to "fast job handles fast tables." But it's an emergent property of round timing, not a configured guarantee: if the workload shape shifts (a previously fast table grows, a slow table is dropped, a new heavy table is enabled), the pairing reshuffles on its own. Don't lean on it as if it were a guarantee.
-
-### What Scaling Out Fixes And What It Doesn't
-**Scales:** queue throughput (with N jobs, up to N tables can be in `Tiering` simultaneously); failure-domain separation (if one job crashes, the others keep tiering against the same Fluss cluster); and capacity headroom (bursts of "many tables freshly ready at once" get absorbed across multiple jobs rather than stacking up serially behind one).
-
-**Does not scale:** any single table's round duration. If customers' first PK round takes 100 seconds with 12 buckets and one job, it still takes 100 seconds with two jobs, because only one job is working on customers at a time. Multiple jobs give concurrency across tables, not within one. The lever for a single round is bucket count and per-job parallelism, not job count.
-
-**Does not give you:** deterministic routing. There is no current Fluss configuration that lets you say "this table goes to Job A, that one to Job B." The coordinator cannot tell jobs apart; they're identical to it. If you need hard isolation between latency tiers, the current options are limited:
-
-**Does not bypass:** the 2-minute heartbeat-liveness window from the freshness section. Every job is subject to the same hardcoded check: if any one job stops heartbeating, the coordinator fences its in-flight tables and another job picks them up. Scaling out doesn't change this; it just spreads the heartbeat burden across multiple JobManagers.
-
-## What's Next?
-You now know all the dials, from per-table settings like bucket count and freshness, through the multi-table queue dynamics, to the deployment-shape choice between one tiering job and several. 
-Everything you've read so far has been about how the system behaves. Part 3 is about what you do with it.
-
-
+The tiering service is the kind of subsystem that's invisible when it works and confusing when it doesn't. The goal of this walkthrough was to give you the mental model that lets you reason about it without having to dig back through the source every time something looks off.
