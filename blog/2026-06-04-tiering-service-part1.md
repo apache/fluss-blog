@@ -13,7 +13,7 @@ This three-part walkthrough aims to bring some clarity to the confusing parts of
 
 **Part 1** builds the mental model from scratch and by the end of it you'll be able to describe, step by step, what happens between the moment a tiering timer fires and the moment a lake snapshot is committed. 
 
-**Parts 2 and 3** take that mental model and add the dials (parallelism, table kinds, freshness, multi-table behavior, scale-out) and then put it into a real production deployment (failures, pitfalls, monitoring).
+**[Part 2](/blog/fluss-tiering-service-deep-dive-part2) and Part 3** take that mental model and add the dials (parallelism, table kinds, freshness, multi-table behavior, scale-out) and then put it into a real production deployment (failures, pitfalls, monitoring).
 
 **Tiering Service Deep Dive, 3-parts:**
 * **Part 1 - The Mental Model:** how one tiering round actually works, from timer fire to lake commit. 
