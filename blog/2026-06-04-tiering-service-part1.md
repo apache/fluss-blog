@@ -17,7 +17,7 @@ This three-part walkthrough aims to bring some clarity to the confusing parts of
 
 **Tiering Service Deep Dive, 3-parts:**
 * **Part 1 - The Mental Model:** how one tiering round actually works, from timer fire to lake commit. 
-* **Part 2 - Tuning:** per-table dials, multi-table dynamics, and scaling out. 
+* **[Part 2 - Tuning](/blog/fluss-tiering-service-deep-dive-part2):** per-table dials, multi-table dynamics, and scaling out. 
 * **Part 3 - In Production** failure modes, design pitfalls, and monitoring.
 <!-- truncate -->
 

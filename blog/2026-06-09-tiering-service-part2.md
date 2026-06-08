@@ -8,7 +8,7 @@ image: ./assets/tiering_service_dd_part2/banner.png
 
 ![Banner](assets/tiering_service_dd_part2/banner.png)
 
-[Part 1]() built the mental model. What tiering is, who does what, how the round runs end-to-end. 
+[Part 1](/blog/fluss-tiering-service-deep-dive-part1) built the mental model. What tiering is, who does what, how the round runs end-to-end. 
 
 This part adds the dials. Buckets and splits determine how a round parallelizes. 
 Log and PK tables behave so differently on round one that the difference deserves its own treatment. 
@@ -19,7 +19,7 @@ And once that happens, you have a deployment-shape decision: stay with one job, 
 <!-- truncate -->
 
 ## Buckets, Splits, And How The Work Gets Divided
-In Part 1, we had a table with 4 buckets that ended up with 4 splits.
+In [Part 1](/blog/fluss-tiering-service-deep-dive-part1), we had a table with 4 buckets that ended up with 4 splits.
 That's not accidental: the rule is one split per bucket.
 Let's slow down and look at the parallelism story end-to-end, because this is where bucket count actually starts to matter.
 
@@ -63,7 +63,7 @@ Apply all of those to an empty state in order and you get the current row for ev
 ![Applying a changelog of +I, -U/+U and -D events to derive the current KV state](assets/tiering_service_dd_part2/fig2.png)
 
 
-Now think about what "tier this to the lake" means for a PK table.
+Now think about what **"tier this to the lake"** means for a PK table.
 The lake needs the current state of every row, not just the log of what changed. 
 So the very first round of a PK table has to copy the entire KV state to the lake. 
 That can be huge: think 200 GB if you have a big customer-profile table.
@@ -99,14 +99,14 @@ Under the hood the scheduler computes `freshness − (now − last_completion_ti
 The practical consequence: the effective start-to-start cadence is `round_duration + freshness`, not `freshness` on its own. A table with 5-minute freshness and 90-second rounds runs a round roughly every 6.5 minutes, not every 5.
 
 #### If You're Coming From a Flink Streaming Background
-Tiering cadence is driven by freshness; it is *not* tied to Flink checkpoints.
+Tiering cadence is driven by freshness; it is **not** tied to Flink checkpoints.
 A common mental model from Flink-CDC-style pipelines is "data lands in the sink when a checkpoint completes".
 That's not quite how the tiering service works. A tiering round commits to the lake when all the round's bucket results have arrived at the commit operator, which is driven by the round's own progress rather than by external checkpoint cadence. 
 Whatever checkpoint interval the Flink tiering job has configured doesn't bound when the lake sees new data. 
 The round itself does.
 
 The correctness story has two layers worth separating. 
-Atomicity comes from the lake's own commit primitive (Paimon's snapshot commit, Iceberg's metadata swap). Consistency across attempts comes from the epoch fencing mechanism the coordinator uses, introduced in **Part 1**, in the heartbeat section, which rejects any commit from a stale attempt (an epoch-fencing error). 
+Atomicity comes from the lake's own commit primitive (Paimon's snapshot commit, Iceberg's metadata swap). Consistency across attempts comes from the epoch fencing mechanism the coordinator uses, introduced in **Part 1**, in the [heartbeat section](/blog/fluss-tiering-service-deep-dive-part1#the-heartbeat), which rejects any commit from a stale attempt (an epoch-fencing error). 
 So you don't need to tune Flink checkpoint settings to get correct tiering; the defaults are fine.
 
 What you do still need is a healthy checkpoint cycle. 
