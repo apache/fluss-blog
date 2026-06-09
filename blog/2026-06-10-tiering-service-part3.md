@@ -1,7 +1,7 @@
 ---
 slug: fluss-tiering-service-deep-dive-part3
 title: "Tiering Service Deep Dive Part 3: In Production"
-date: 2026-06-11
+date: 2026-06-10
 authors: [giannis]
 image: ./assets/tiering_service_dd_part3/banner.png
 ---
