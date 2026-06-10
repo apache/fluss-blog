@@ -16,6 +16,11 @@ The freshness setting, the one knob most users actually touch, does two differen
 Once a single job is handling many tables, queue position starts to dominate effective freshness more than any per-table setting.
 And once that happens, you have a deployment-shape decision: stay with one job, or scale out. By the end, you'll know which levers matter most and how to use them.
 
+**Tiering Service Deep Dive, 3-parts:**
+* **[Part 1 - The Mental Model](/blog/fluss-tiering-service-deep-dive-part1):** how one tiering round actually works, from timer fire to lake commit.
+* **Part 2 - Tuning:** per-table dials, multi-table dynamics, and scaling out.
+* **[Part 3 - In Production](/blog/fluss-tiering-service-deep-dive-part3):** failure modes, design pitfalls, and monitoring.
+
 <!-- truncate -->
 
 ## Buckets, Splits, And How The Work Gets Divided
@@ -274,7 +279,7 @@ So from the coordinator's perspective, every Flink tiering job is indistinguisha
 There's no job ID, no database filter, no notion of "this table belongs to that job".
 All registered jobs are undifferentiated workers reaching into the same queue, and the head of the queue goes to whoever happens to heartbeat first. If you have two jobs, two tables can be in `Tiering` at the same time. If you have five, five can. But you cannot pin clicks to job A; the coordinator wouldn't know how to honor that pin even if you asked.
 
-The epoch mechanism from Part 1's heartbeat section keeps this safe regardless of how many jobs are running. Each table assignment carries a `tiering_epoch` stamped on it. If two jobs somehow ended up working on the same table (a rare edge case during coordinator failover, mainly), the coordinator only accepts the commit whose epoch matches its current record; the other is rejected with an epoch-fencing error. So multiple jobs running concurrently can never produce duplicate commits or corrupt lake state; the worst case is some wasted reader work that doesn't get committed.
+The epoch mechanism from [Part 1's heartbeat section](/blog/fluss-tiering-service-deep-dive-part1#the-heartbeat) keeps this safe regardless of how many jobs are running. Each table assignment carries a `tiering_epoch` stamped on it. If two jobs somehow ended up working on the same table (a rare edge case during coordinator failover, mainly), the coordinator only accepts the commit whose epoch matches its current record; the other is rejected with an epoch-fencing error. So multiple jobs running concurrently can never produce duplicate commits or corrupt lake state; the worst case is some wasted reader work that doesn't get committed.
 
 ![Multiple tiering jobs pulling work from the coordinator's single shared FIFO queue](assets/tiering_service_dd_part2/fig7.png)
 
@@ -314,6 +319,6 @@ In practice the pairing tends to be sticky: once a job has been running short ro
 
 ## What's Next?
 You now know all the dials, from per-table settings like bucket count and freshness, through the multi-table queue dynamics, to the deployment-shape choice between one tiering job and several. 
-Everything you've read so far has been about how the system behaves. Part 3 is about what you do with it.
+Everything you've read so far has been about how the system behaves. [Part 3](/blog/fluss-tiering-service-deep-dive-part3) is about what you do with it.
 
 

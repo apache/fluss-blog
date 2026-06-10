@@ -13,12 +13,12 @@ This three-part walkthrough aims to bring some clarity to the confusing parts of
 
 **Part 1** builds the mental model from scratch and by the end of it you'll be able to describe, step by step, what happens between the moment a tiering timer fires and the moment a lake snapshot is committed. 
 
-**[Part 2](/blog/fluss-tiering-service-deep-dive-part2) and Part 3** take that mental model and add the dials (parallelism, table kinds, freshness, multi-table behavior, scale-out) and then put it into a real production deployment (failures, pitfalls, monitoring).
+**[Part 2](/blog/fluss-tiering-service-deep-dive-part2) and [Part 3](/blog/fluss-tiering-service-deep-dive-part3)** take that mental model and add the dials (parallelism, table kinds, freshness, multi-table behavior, scale-out) and then put it into a real production deployment (failures, pitfalls, monitoring).
 
 **Tiering Service Deep Dive, 3-parts:**
 * **Part 1 - The Mental Model:** how one tiering round actually works, from timer fire to lake commit. 
 * **[Part 2 - Tuning](/blog/fluss-tiering-service-deep-dive-part2):** per-table dials, multi-table dynamics, and scaling out. 
-* **Part 3 - In Production** failure modes, design pitfalls, and monitoring.
+* **[Part 3 - In Production](/blog/fluss-tiering-service-deep-dive-part3):** failure modes, design pitfalls, and monitoring.
 <!-- truncate -->
 
 # Why tiering exists in the first place
@@ -94,7 +94,7 @@ So the worst-case lag of **"up to 30 seconds"** applies to mid-round status, not
 
 **Second, every message has an "epoch" number stamped on it**. Each time a table starts a new tiering attempt, its epoch goes up by one. 
 If a Flink job tries to report success with a stale epoch (because the coordinator already gave up on that attempt and handed the work to someone else), the coordinator just ignores the message. 
-This is how the system stays consistent even when things go sideways and we'll come back to it in **Part 3**, in the failure-modes section.
+This is how the system stays consistent even when things go sideways and we'll come back to it in **[Part 3](/blog/fluss-tiering-service-deep-dive-part3)**, in the failure-modes section.
 
 ## The Life Of A Table: Four States, Walked Through
 Every table that's enabled for lake tiering goes through the same lifecycle. 
@@ -104,7 +104,7 @@ The coordinator tracks each table's current state. For our purposes, four states
 
 > **Note:** The actual source code uses seven state names: `NEW`, `INITIALIZED`, `SCHEDULED`, `PENDING`, `TIERING`, `TIERED`, `FAILED`. Here we collapse them into four pedagogical states to keep the mental model small.
 
-**NEW** is only used for the very first time a lake-enabled table is created, and `INITIALIZED` is only used for tables the coordinator rediscovers after a restart. Both transition into `SCHEDULED` immediately, so we ignore them here. `FAILED` is the unhappy-path state we'll come back to in **Part 3**.
+**NEW** is only used for the very first time a lake-enabled table is created, and `INITIALIZED` is only used for tables the coordinator rediscovers after a restart. Both transition into `SCHEDULED` immediately, so we ignore them here. `FAILED` is the unhappy-path state we'll come back to in **[Part 3](/blog/fluss-tiering-service-deep-dive-part3)**.
 
 **WAITING.** The table has been tiered recently and the freshness timer is counting down. Nothing to do.
 
@@ -124,7 +124,7 @@ Three concepts are important to understand when you're reading this:
 
 ### Let's walk through a single tiering round with a concrete example.
 
-We have one table, called `orders`, with four buckets. It's a log table (we'll talk about what that means in Part 2, when we cover table kinds. For now, just think **"an append-only stream of records"**). Freshness is configured to five minutes. The Flink tiering job is up and running. 
+We have one table, called `orders`, with four buckets. It's a log table (we'll talk about what that means in [Part 2](/blog/fluss-tiering-service-deep-dive-part2), when we cover table kinds. For now, just think **"an append-only stream of records"**). Freshness is configured to five minutes. The Flink tiering job is up and running. 
 
 Here's what happens:
 
