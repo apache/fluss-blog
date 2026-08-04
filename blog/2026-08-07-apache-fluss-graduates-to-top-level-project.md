@@ -30,7 +30,7 @@ At the same time, Fluss has been deployed in production at **Alibaba, Xiaohongsh
 
 Apache Fluss is a Lakehouse-native streaming storage system for real-time analytics and AI. It connects continuous data streams, real-time updated tables, and historical Lakehouse data through a unified real-time data layer.
 
-![Apache Fluss streaming storage architecture](assets/fluss_tlp/core-capabilities.png)
+![Apache Fluss streaming storage architecture](assets/fluss_tlp/core-capabilities.jpg)
 
 - **Efficient columnar streaming storage:** Built on the Apache Arrow columnar format, with server-side column pruning and pushdown capabilities, Fluss reduces data reads and transfers for efficient streaming analytics.
 - **Real-time updates and low-latency queries:** Primary-key tables natively support streaming updates, partial updates, changelogs, key-value lookups, and Delta Join, allowing the same real-time data to serve both computation and point queries.
