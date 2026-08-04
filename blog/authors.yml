@@ -18,25 +18,25 @@
 
 jark:
   name: Jark Wu
-  title: PPMC member of Apache Fluss (Incubating)
+  title: PMC Chair of Apache Fluss
   url: https://github.com/wuchong
   image_url: /avatars/wuchong.png
 
 giannis:
   name: Giannis Polyzos
-  title: PPMC member of Apache Fluss (Incubating)
+  title: PMC member of Apache Fluss
   url: https://github.com/polyzos
   image_url: /avatars/polyzos.png
 
 yuxia:
   name: Luo Yuxia
-  title: PPMC member of Apache Fluss (Incubating)
+  title: PMC member of Apache Fluss
   url: https://github.com/luoyuxia
   image_url: /avatars/luoyuxia.png
 
 gyang94:
   name: Yang Guo
-  title: Contributor of Apache Fluss (Incubating)
+  title: Contributor of Apache Fluss
   url: https://github.com/gyang94
   image_url: /avatars/gyang94.png
 
@@ -52,7 +52,7 @@ zhangxinyu:
 
 mehulbatra:
   name: Mehul Batra
-  title: PPMC member of Apache Fluss (Incubating)
+  title: PMC member of Apache Fluss
   url: https://github.com/mehulbatra
   image_url: /avatars/mehulbatra.png
   
@@ -64,19 +64,19 @@ jacopogardini:
 
 anton:
   name: Anton Borisov
-  title: Contributor of Apache Fluss (Incubating)
+  title: PMC member of Apache Fluss
   url: https://github.com/fresh-borzoni
   image_url: /avatars/fresh-borzoni.png
 
 keithlee:
   name: Keith Lee
-  title: Apache Fluss (Incubating) Committer
+  title: PMC member of Apache Fluss
   url: https://github.com/leekeiabstraction
   image_url: /avatars/leekeiabstraction.png
 
 yangwang:
   name: Yang Wang
-  title: Apache Fluss (Incubating) Contributor
+  title: Apache Fluss Committer
   url: https://github.com/platinumhamburg
   image_url: /avatars/yangwang.jpeg
 
@@ -88,6 +88,6 @@ matrixsparse:
 
 yunhongzheng:
   name: Yunhong Zheng
-  title: PPMC member of Apache Fluss (Incubating)
+  title: PMC member of Apache Fluss
   url: https://github.com/swuferhong
   image_url: /avatars/yunhongzheng.png
