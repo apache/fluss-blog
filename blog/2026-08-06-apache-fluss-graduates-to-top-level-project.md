@@ -1,14 +1,16 @@
 ---
 slug: apache-fluss-graduates-to-top-level-project
 title: "Apache Fluss Graduates to a Top Level Project"
-date: 2026-08-07
+date: 2026-08-06
 authors: [jark]
-tags: [apache-fluss, streaming-lakehouse, real-time-analytics]
+tags: [apache-fluss, lakestream, real-time-analytics]
 ---
+
+![Apache Fluss Graduates to a Top Level Project](assets/fluss_tlp/banner.png)
 
 As [officially announced by the Apache Software Foundation](https://news.apache.org/foundation/entry/the-apache-software-foundation-announces-new-top-level-project-apache-fluss), we are thrilled to share that **Apache Fluss** has graduated from the Apache Incubator to become a **Top Level Project (TLP)**.
 
-The project's [graduation proposal](https://lists.apache.org/thread/kltvfrklyoqm9dj6dgwdzf82sm097427) received unanimous approval from the Apache Incubator Project Management Committee (IPMC) and was subsequently approved by the ASF Board of Directors. This milestone not only marks a new stage in Fluss's journey, but also further advances the convergence of streaming storage, the real-time Lakehouse, and AI data infrastructure—opening a new chapter for real-time data infrastructure.
+The project's [graduation proposal](https://lists.apache.org/thread/kltvfrklyoqm9dj6dgwdzf82sm097427) received unanimous approval from the Apache Incubator Project Management Committee (IPMC) and was subsequently approved by the ASF Board of Directors. This milestone not only marks a new stage in Fluss's journey, but also further advances the convergence of streaming storage, the real-time Lakehouse, and AI data infrastructure, opening a new chapter for real-time data infrastructure.
 
 <!-- truncate -->
 
