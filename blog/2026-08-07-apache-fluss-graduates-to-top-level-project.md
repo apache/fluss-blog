@@ -18,7 +18,7 @@ The project's [graduation proposal](https://lists.apache.org/thread/kltvfrklyoqm
 
 Fluss was initiated by the Flink team at Alibaba Cloud in July 2023 to address long-standing challenges in streaming storage for analytical workloads, including unified streaming and batch storage, Flink state management, and complex data pipelines. Its goal was to build a unified streaming storage system for real-time analytics in the Lakehouse era. The name “Fluss” comes from **Flink Unified Streaming Storage** and also means “river” in German, reflecting the vision of data flowing continuously like a river before eventually joining the open Lakehouse.
 
-After more than a year of development and large-scale production use within Alibaba, Fluss was officially open-sourced at Flink Forward Asia 2024 in Shanghai in November 2024. In June 2025, Fluss entered the Apache Incubator, evolving from a technology initiative originating at Alibaba into an open source project built by developers around the world.
+After more than a year of development and large-scale production use within Alibaba, Fluss was officially [open-sourced at Flink Forward Asia 2024](https://fluss.apache.org/blog/fluss-open-source/) in Shanghai in November 2024. In June 2025, [Fluss entered the Apache Incubator](https://fluss.apache.org/blog/fluss-joins-asf/), evolving from a technology initiative originating at Alibaba into an open source project built by developers around the world.
 
 During incubation, both the contributor community and interest in the project continued to grow. Today, the community includes **157 contributors**, and the project has earned **2,000+ stars on GitHub**, merged **1700+ pull requests**, bringing together developers from different countries and organizations in an active open source community.
 
@@ -26,16 +26,21 @@ At the same time, Fluss has been deployed in production at **Alibaba, Xiaohongsh
 
 "When we started Fluss, I believed strongly in the problem we were solving, but the project has grown faster and reached further than I expected," said **Jark Wu, PMC Chair of Apache Fluss**. "The energy of the community and the growing number of companies running Fluss in production have been especially encouraging. Graduation is a new beginning, and I am confident Fluss will become a foundational real-time data layer for lakehouse architectures and AI applications that depend on fresh, continuously updated data."
 
-## An Open Data Foundation for Real-Time Analytics and AI
+## From Lakehouse to Lakestream: Unify Stream and Lakehouse for the Agentic Era
 
-Apache Fluss is a Lakehouse-native streaming storage system for real-time analytics and AI. It connects continuous data streams, real-time updated tables, and historical Lakehouse data through a unified real-time data layer.
+In the Agentic era, AI is evolving from chatbots that answer questions into agents capable of making autonomous decisions, using tools, and executing tasks. Data is no longer just an input to analytics; it is the real-time context agents rely on to reason and act. That context must span the full historical record while accurately reflecting the latest state of the business. Traditional Lakehouse architectures excel at storing and governing massive volumes of historical data, but struggle to continuously meet data-freshness requirements measured in seconds or even milliseconds.
+
+As an open source pioneer of the Lakestream architecture, Apache Fluss adds a Lakehouse-native, real-time streaming storage layer on top of the data lake. It unifies continuously updated, real-time data with long-term history, giving AI agents fresh and complete context from the past through the present and enabling production-grade, real-time decisions and actions.
 
 ![Apache Fluss streaming storage architecture](assets/fluss_tlp/lakestream-arch.jpg)
 
-- **Efficient columnar streaming storage:** Built on the Apache Arrow columnar format, with server-side column pruning and pushdown capabilities, Fluss reduces data reads and transfers for efficient streaming analytics.
-- **Real-time updates and low-latency queries:** Primary-key tables natively support streaming updates, partial updates, changelogs, key-value lookups, and Delta Join, allowing the same real-time data to serve both computation and point queries.
-- **Stream and Lakehouse unification:** Fluss continuously tiers real-time data into open Lakehouse formats such as Apache Paimon, Apache Iceberg, and Lance, combining data freshness with cost-efficient long-term storage under a unified table abstraction.
-- **An open ecosystem with multi-language access:** Fluss works with compute engines such as Apache Flink, Apache Spark and StarRocks and provides Java, Rust, Python, and C++ clients, making it easy for real-time analytics and AI applications to connect.
+Apache Fluss brings the following core capabilities to the traditional Lakehouse, creating a unified Lakestream foundation that makes both historical and real-time data readily available:
+
+- **Lakestream:** Long-term historical data resides in open data lake formats such as Apache Paimon, Apache Iceberg, Apache Hudi, and Lance, while Fluss serves the latest data in real time. With Union Read, agents can access everything from historical data to the latest state through a unified table view, avoiding fragmented context.
+- **Columnar Streaming Storage:** Built on the Apache Arrow columnar format, Fluss supports server-side column pruning, predicate pushdown, and partition pruning, reducing data reads and transfers for efficient streaming and real-time analytics.
+- **Real-time Updates and Point Queries:** Primary-key tables natively support streaming updates, partial updates, changelogs, key-value lookups, and Delta Join, allowing the same real-time data to serve both stream processing and point queries.
+- **Real-time Context for Agents:** Fluss unifies continuously updated real-time state with long-term historical data, giving AI agents fresh, complete, low-latency, and trustworthy context for real-time decisions and actions.
+- **Open Ecosystem with Multi-Language Access:** Fluss works with compute engines such as Apache Flink, Apache Spark, and StarRocks and provides Java, Rust, Python, and C++ clients, making it easy for real-time analytics and AI applications to connect.
 
 ## Growing Community and Adoption
 
@@ -65,7 +70,7 @@ In the year since joining the Apache Software Foundation, Fluss has built an act
 
 As an Apache Top Level Project, Fluss will continue to advance Lakehouse-native streaming storage: providing stream processing with a more efficient and reusable storage foundation, bringing true real-time capabilities to the Lakehouse, and offering an open data foundation for AI applications that depend on real-time features, dynamic state, and continuous context.
 
-Thank you to everyone who has contributed code, improved documentation, participated in discussions, reported issues, shared production experience, or helped newcomers. We are also deeply grateful to our incubation mentors for their guidance and to every user and partner who chose Fluss for production and helped move the project forward through real-world challenges.
+Thank you to every contributor who has submitted code, improved documentation, participated in discussions, reported issues, shared their experience, or helped newcomers. Thank you as well to all the users and partners who chose Fluss for their production environments and helped move the project forward by bringing real-world challenges to the community. We would also like to extend our special thanks to the Apache Fluss incubation mentors: Yu Li (Champion), Zili Chen, Jingsong Li, Jiangjie Qin, and Jean-Baptiste Onofré, whose continued guidance and support throughout incubation helped the community better embrace the Apache Way and successfully complete the journey from incubation to graduation.
 
 ## Join the Apache Fluss Community
 
