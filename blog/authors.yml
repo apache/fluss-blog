@@ -86,6 +86,11 @@ matrixsparse:
   url: https://github.com/matrixsparse
   image_url: /avatars/matrixsparse.jpeg
 
+hanliu:
+  name: Han Liu
+  title: Head of Kafka & Fluss at Rednote
+  image_url: /avatars/hanliu.png
+
 yunhongzheng:
   name: Yunhong Zheng
   title: PMC member of Apache Fluss
