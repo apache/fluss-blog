@@ -2,7 +2,9 @@
 title: "Fluss × Iceberg (Part 1): Why Your Lakehouse Isn’t a Streamhouse Yet"
 authors: [mehulbatra, yuxia]
 date: 2025-12-11
-tags: [streaming-lakehouse, apache-iceberg, real-time-analytics, apache-fluss]
+tags: [engineering]
+description: "Why a Lakehouse needs a streaming layer, and how Fluss and Iceberg combine hot data with historical storage in a Streamhouse architecture."
+image: ./assets/fluss-x-iceberg/banner-1200x510.webp
 ---
 
 

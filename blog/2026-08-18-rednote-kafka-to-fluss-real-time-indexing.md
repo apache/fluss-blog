@@ -4,8 +4,8 @@ title: "From Kafka to Fluss: How Rednote Migrated a Core Real-Time Indexing Pipe
 sidebar_label: "From Kafka to Fluss: Rednote's Real-Time Indexing Migration"
 date: 2026-08-18
 authors: [hanliu]
-tags: [apache-fluss, real-time-analytics, streaming-lakehouse]
-image: ./assets/rednote_real_time_indexing/banner.png
+tags: [case-study]
+image: ./assets/rednote_real_time_indexing/banner-1200x510.webp
 description: "A production case study in columnar streaming, cold-data isolation, and lakehouse integration."
 ---
 

@@ -3,7 +3,9 @@ slug: apache-fluss-graduates-to-top-level-project
 title: "Apache Fluss Graduates to a Top Level Project"
 date: 2026-08-06
 authors: [jark]
-tags: [apache-fluss, lakestream, real-time-analytics]
+tags: [announcement]
+description: "Apache Fluss graduates to a Top-Level Project, marking a milestone in community growth and the evolution of real-time Lakehouse infrastructure."
+image: ./assets/fluss_tlp/banner-1200x510.webp
 ---
 
 ![Apache Fluss Graduates to a Top Level Project](assets/fluss_tlp/banner.png)

@@ -3,7 +3,9 @@ slug: fluss-joins-asf
 title: "Fluss Joins the Apache Incubator"
 sidebar_label: "Fluss Joins the Apache Incubator"
 authors: [jark]
-image: ./assets/fluss_asf/asf.png
+image: ./assets/fluss_asf/banner-1200x510.webp
+tags: [announcement]
+description: "Fluss joins the Apache Incubator, opening a new chapter in community governance, open development, and real-time data infrastructure."
 ---
 
 On June 5th, Fluss, the next-generation streaming storage project open-sourced and donated by Alibaba, successfully passed the [vote](https://lists.apache.org/thread/mnol4wxovpz6klt196d3x239t4mp6z5o) and officially became an incubator project of the Apache Software Foundation (ASF). This marks a significant milestone in the development of the Fluss community, symbolizing that the project has entered a new phase that is more open,

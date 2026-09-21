@@ -3,7 +3,9 @@ slug: fluss-tiering-service-deep-dive-part2
 title: "Tiering Service Deep Dive Part 2: Tuning"
 date: 2026-06-09
 authors: [giannis]
-image: ./assets/tiering_service_dd_part2/banner.png
+image: ./assets/tiering_service_dd_part2/banner-1200x510.webp
+tags: [engineering]
+description: "Tune lake tiering with a practical guide to parallelism, table types, freshness, multi-table scheduling, and scaling out tiering jobs."
 ---
 
 ![Banner](assets/tiering_service_dd_part2/banner.png)

@@ -3,6 +3,9 @@ slug: taobao-practice
 title: "How Taobao uses Apache Fluss (Incubating) for Real-Time Processing in Search and RecSys"
 sidebar_label: "Apache Fluss (Incubating) at Taobao"
 authors: [zhangxinyu, wanglilei]
+tags: [case-study]
+description: "How Taobao uses Fluss for search and recommendation workloads, reducing resource usage and streaming state in its real-time data warehouse."
+image: ./assets/taobao_practice/banner-1200x510.webp
 ---
 
 ## Streaming Storage More Suitable for Real-Time OLAP

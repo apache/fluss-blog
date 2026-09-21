@@ -3,6 +3,9 @@ slug: fluss-intro
 title: "Introducing Fluss: Streaming Storage for Real-Time Analytics"
 sidebar_label: "Introducing Fluss"
 authors: [jark]
+tags: [engineering]
+description: "An introduction to Fluss architecture, columnar streams, primary-key tables, and the design choices behind real-time analytical storage."
+image: ./assets/fluss_intro/banner-1200x510.webp
 ---
 
 We have discussed the challenges of using Kafka for real-time analytics in our previous [blog post](/blog/why-fluss/).

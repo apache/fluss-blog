@@ -3,6 +3,9 @@ slug: roaringbitmap-uv-deduplication
 date: 2026-04-16
 title: "Real-Time Multi-Dimensional Unique Visitor Deduplication in Practice"
 authors: [yangwang]
+tags: [guides]
+description: "Use Fluss aggregation tables and RoaringBitmap to count unique visitors across multiple dimensions with accurate, real-time deduplication."
+image: ./assets/realtime_uv/banner-1200x510.webp
 ---
 
 ![](assets/realtime_uv/image.png)

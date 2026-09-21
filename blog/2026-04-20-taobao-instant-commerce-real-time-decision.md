@@ -3,6 +3,9 @@ slug: taobao-instant-commerce-real-time-decision
 title: "Taobao Instant Commerce: Real-Time Decisions at Scale with Apache Fluss"
 sidebar_label: "Taobao Instant Commerce: Real-Time Decisions at Scale with Apache Fluss"
 authors: [matrixsparse]
+tags: [case-study]
+description: "How Taobao Instant Commerce uses Fluss for real-time decisions, from Delta Join and partial updates to lakehouse integration and UV statistics."
+image: ./assets/taobao_realtime_decisions/banner-1200x510.webp
 ---
 ![](assets/taobao_realtime_decisions/banner.jpg)
 

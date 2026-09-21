@@ -2,6 +2,9 @@
 slug: fluss-java-client
 title: "Apache Fluss Java Client: A Deep Dive"
 authors: [giannis]
+tags: [guides]
+description: "Build an IoT example with the Fluss Java client, from managing tables and writing records to scanning streams and looking up keys."
+image: ./assets/java_client/banner-1200x510.webp
 ---
 
 ![Banner](assets/java_client/banner.png)

@@ -3,8 +3,9 @@ slug: why-fluss-chose-rust-for-multi-language-sdk
 title: "Why Apache Fluss Chose Rust for Its Multi-Language SDK"
 date: 2026-04-09
 authors: [yuxia, keithlee, anton]
-tags: [fluss-rust, fluss-rs, pyfluss, fluss-cpp, arrow]
-image: ./assets/fluss_rust/banner.jpg
+tags: [engineering]
+image: ./assets/fluss_rust/banner-1200x510.webp
+description: "Why Fluss chose a shared Rust core for its multi-language SDK, and how thin bindings bring consistent capabilities to Python and C++."
 ---
 
 ![Banner](assets/fluss_rust/banner.jpg)

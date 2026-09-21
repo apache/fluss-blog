@@ -2,6 +2,9 @@
 slug: unveil-fluss-logo
 title: "The Story of Fluss Logo"
 authors: [jark]
+tags: [announcement]
+description: "Meet the Fluss surfing otter and follow the design journey, community feedback, and more than 30 iterations behind the project logo."
+image: ./assets/fluss_logo/banner-1200x510.webp
 ---
 
 ![](assets/fluss_logo/colored_logo.png)

@@ -2,7 +2,9 @@
 slug: partial-updates
 title: "Understanding Partial Updates"
 authors: [giannis]
-image: ./assets/partial_updates/banner.png
+image: ./assets/partial_updates/banner-1200x510.webp
+tags: [engineering, guides]
+description: "Learn how partial updates combine independent data streams into a wide table, reducing the state and complexity of streaming joins."
 ---
 
 ![Banner](assets/partial_updates/banner.png)
