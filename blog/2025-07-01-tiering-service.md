@@ -3,6 +3,8 @@ slug: tiering-service
 title: "Tiering Service Deep Dive"
 authors: [gyang94]
 toc_max_heading_level: 5
+tags: [engineering]
+description: "A deep dive into the Fluss Tiering Service: how Flink moves streaming data into lakehouse storage and commits consistent snapshots."
 ---
 
 # Tiering Service Deep Dive

@@ -3,7 +3,9 @@ slug: fluss-tiering-service-deep-dive-part1
 title: "Tiering Service Deep Dive Part 1: The Mental Model"
 date: 2026-06-04
 authors: [giannis]
-image: ./assets/tiering_service_dd_part1/banner.png
+image: ./assets/tiering_service_dd_part1/banner-1200x510.webp
+tags: [engineering]
+description: "Follow a lake-tiering round from its timer to the committed snapshot, and understand the processes and table states that make it work."
 ---
 
 ![Banner](assets/tiering_service_dd_part1/banner.png)

@@ -16,25 +16,19 @@
 # limitations under the License.
 ################################################################################
 
-releases:
-  label: 'releases'
-  permalink: '/releases'
-  description: 'Content related release announcement.'
-streaming-lakehouse:
-  label: 'Streaming Lakehouse'
-apache-iceberg:
-  label: 'Apache Iceberg'
-real-time-analytics:
-  label: 'Real-time Analytics'
-apache-fluss:
-  label: 'Apache Fluss'
-fluss-rust:
-  label: 'Fluss Rust'
-fluss-rs:
-  label: 'fluss-rs'
-pyfluss:
-  label: 'PyFluss'
-fluss-cpp:
-  label: 'Fluss C++'
-arrow:
-  label: 'Arrow'
+announcement:
+  label: 'Announcement'
+  permalink: '/announcement'
+  description: 'Releases, project milestones, and official announcements.'
+case-study:
+  label: 'Case Study'
+  permalink: '/case-study'
+  description: 'Enterprise case studies and production practices.'
+engineering:
+  label: 'Engineering'
+  permalink: '/engineering'
+  description: 'Architecture, system internals, and technical deep dives.'
+guides:
+  label: 'Guides'
+  permalink: '/guides'
+  description: 'Getting started, how-to guides, application patterns, and best practices.'

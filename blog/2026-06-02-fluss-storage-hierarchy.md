@@ -3,7 +3,9 @@ slug: fluss-storage-hierarchy
 title: "The Storage Hierarchy: Hot, Remote, and Lake"
 date: 2026-06-02
 authors: [giannis]
-image: ./assets/storage_hierarchy/banner.png
+image: ./assets/storage_hierarchy/banner-1200x510.webp
+tags: [engineering]
+description: "Understand the Fluss storage hierarchy: what lives on local disk, in remote object storage, and in the Lakehouse, and how recovery works."
 ---
 
 ![Banner](assets/storage_hierarchy/banner.png)

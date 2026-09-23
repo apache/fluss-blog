@@ -2,6 +2,9 @@
 slug: fluss-open-source
 title: Fluss is Now Open Source
 authors: [jark, giannis]
+tags: [announcement]
+description: "Fluss is now open source: meet the columnar streaming storage system built for real-time analytics and the Lakehouse."
+image: ./assets/fluss_announcement/banner-1200x510.webp
 ---
 
 Earlier this year at Flink Forward 2024 Berlin we [announced Fluss](https://www.ververica.com/blog/introducing-fluss) and today we are thrilled to announce open-sourcing the project.

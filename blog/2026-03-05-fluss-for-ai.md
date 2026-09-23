@@ -3,6 +3,9 @@ slug: fluss-for-ai
 date: 2026-03-05
 title: "What does Apache Fluss mean in the context of AI?"
 authors: [giannis]
+tags: [engineering]
+description: "Explore how Fluss provides fresh features, user profiles, and continuously updated context for real-time intelligent systems."
+image: ./assets/fluss_for_ai/banner-1200x510.webp
 ---
 
 ### The Data Foundation for Real-Time Intelligent Systems

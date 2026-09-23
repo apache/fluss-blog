@@ -3,6 +3,9 @@ slug: unified-streaming-lakehouse
 title: "Towards A Unified Streaming & Lakehouse Architecture"
 sidebar_label: "Toward Streaming Lakehouse"
 authors: [yuxia]
+tags: [engineering]
+description: "How Fluss connects streaming storage with the Lakehouse to combine fresh data, historical analysis, and a unified processing architecture."
+image: ./assets/unified_lake_stream_arch/banner-1200x510.webp
 ---
 
 The unification of Lakehouse and streaming storage represents a major trend in the future development of modern data lakes and streaming storage systems. Designed specifically for real-time analytics, Fluss has embraced a unified Streaming and Lakehouse architecture from its inception, enabling seamless integration into existing Lakehouse architectures. 

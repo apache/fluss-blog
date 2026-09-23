@@ -3,6 +3,9 @@ slug: pk-key-tables-log-cache-streaming
 date: 2025-09-01
 title: "Primary Key Tables: Unifying Log and Cache for 🚀 Streaming"
 authors: [giannis]
+tags: [engineering]
+description: "Inside Fluss primary-key tables: how one storage layer combines a durable log, current-state lookups, and continuous change streams."
+image: ./assets/pk_tables/banner-1200x510.webp
 ---
 
 Modern data platforms have traditionally relied on two foundational components: a **log** for durable, ordered event storage and a **cache** for low-latency access. 

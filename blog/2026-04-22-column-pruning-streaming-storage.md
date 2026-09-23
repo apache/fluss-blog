@@ -3,8 +3,9 @@ slug: column-pruning-streaming-storage
 title: "How Apache Fluss Achieves True Pruning in Streaming Storage"
 date: 2026-04-22
 authors: [yunhongzheng]
-tags: [fluss, column-pruning, arrow, streaming, kafka, performance]
-image: ./assets/column_pruning/banner.png
+tags: [engineering]
+image: ./assets/column_pruning/banner-1200x510.webp
+description: "How Arrow IPC storage, server-side pruning, and client-side batching let Fluss read only the columns that streaming applications need."
 ---
 
 ![Banner](assets/column_pruning/banner.png)

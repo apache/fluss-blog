@@ -4,6 +4,9 @@ date: 2026-02-01
 title: "A fraud detection pipeline with Streamhouse"
 authors: [jacopogardini]
 toc_max_heading_level: 5
+tags: [guides]
+description: "Build a real-time fraud detection pipeline with Fluss, Flink, and Iceberg, combining fast transaction processing with historical analytics."
+image: ./assets/fluss_fraud_detection/banner-1200x510.webp
 ---
 
 # A fraud detection pipeline with Streamhouse.

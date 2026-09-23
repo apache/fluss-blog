@@ -4,8 +4,9 @@ date: 2026-04-06
 title: "Announcing Apache Fluss (Incubating) Rust, Python, and C++ Client 0.1.0 Release"
 authors: [yuxia, keithlee, anton]
 toc_max_heading_level: 5
-tags: [releases, fluss-rust, fluss-rs, pyfluss, fluss-cpp, arrow]
-image: ./assets/fluss_rust_release/banner.png
+tags: [announcement]
+image: ./assets/fluss_rust_release/banner-1200x510.webp
+description: "Introducing the first Fluss Rust, Python, and C++ clients, built on a shared Rust core for native performance and consistent capabilities."
 ---
 
 ![Banner](assets/fluss_rust_release/banner.png)

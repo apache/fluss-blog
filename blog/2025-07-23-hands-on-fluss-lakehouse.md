@@ -2,8 +2,10 @@
 slug: hands-on-fluss-lakehouse
 title: "From Stream to Lake: Hands-On with Fluss Tiering into Paimon on Minio"
 authors: [gyang94]
-image: ./assets/hands_on_fluss_lakehouse/streamhouse.png
+image: ./assets/hands_on_fluss_lakehouse/banner-1200x510.webp
 toc_max_heading_level: 5
+tags: [guides]
+description: "Set up Fluss tiering into Paimon on MinIO and try unified queries across real-time streams and historical lakehouse data."
 ---
 
 # From Stream to Lake: Hands-On with Fluss Tiering into Paimon on Minio
