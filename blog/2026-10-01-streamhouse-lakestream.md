@@ -165,5 +165,4 @@ Lakestream supplies the coordinated open table foundation. Streamhouse includes 
 
 This does not remove the need for caches, indexes, or workload-specific stores. Those remain useful when they provide a distinct capability. The goal is to avoid another maintained copy when the shared table already meets the requirement.
 
-A useful test is: 
-> when a new workload arrives, can it reuse the maintained state through the shared table interfaces, or does the architecture require it to reconstruct and synchronize an equivalent representation of that state?
+**A useful test is:** When a new workload arrives, can it reuse the maintained state through the shared table interfaces, or does the architecture require it to reconstruct and synchronize an equivalent representation of that state?
