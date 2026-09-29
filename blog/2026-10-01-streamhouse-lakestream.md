@@ -10,36 +10,38 @@ description: "Shared tables for streaming, serving and analytics"
 ---
 ![Banner](assets/streamhouse/banner.png)
 
-Most streaming architectures are designed around movement: get changes out of a source, process them, and deliver them somewhere useful. That works well until the same data has to support several different workloads. At that point, the architecture is no longer only about moving events, but  also about deciding where a reusable state should live and who should maintain it.
+**Most streaming architectures are designed around movement:** get changes out of a source, process them, and deliver them somewhere useful. That works well until the same data has to support several different workloads. At that point, the architecture is no longer only about moving events, but  also about deciding where a reusable state should live and who should maintain it.
 
-This is the problem behind Streamhouse. It organizes workloads around shared logical tables rather than around a collection of independently maintained destinations. Lakestream provides the stream–lake storage foundation underneath that model, coordinating fresh streaming data and historical lakehouse data as parts of one logical table.
+**This is the problem behind Streamhouse.** It organizes workloads around **shared logical tables** rather than around a **collection of independently maintained destinations**. 
+
+**Lakestream** provides the stream–lake storage foundation underneath that model, coordinating fresh streaming data and historical lakehouse data as parts of **one logical table.**
 
 <!-- truncate -->
 
 ### Why Streaming Data Platforms Maintain Repeated Copies Of Data
-A common stream can feed several systems that independently maintain equivalent data. Each tracks ingestion progress, applies changes, propagates schemas, and recovers from failures. Their representations can differ in freshness even when they share a source.
+A common stream can feed several systems that independently maintain equivalent data. Each tracks ingestion progress, applies changes, propagates schemas, and recovers from failures. Their representations can differ in freshness **even when they share a source.**
 
 Some copies serve a distinct purpose, such as a specialized index or workload isolation. Others exist because a consumer cannot access maintained data where it already lives. Those copies add repeated reconstruction and synchronization work.
 
-The Streamhouse architecture makes reusable tables a platform resource with an owner and lifecycle. Compatible consumers share maintained data through supported interfaces. Physical replicas, caches, storage tiers, and purpose-built derived tables can still be necessary.
+**The Streamhouse architecture makes reusable tables a platform resource with an owner and lifecycle.** Consumers share maintained data through supported interfaces. Physical replicas, caches, storage tiers, and purpose-built derived tables can still be necessary, if there are some really sophisticated require them.
 
 ![](assets/streamhouse/fig1.png)
 
 ### What Defines The Streamhouse Architecture
 > The Streamhouse architecture is an open, table-centric architecture that brings streaming, operational serving, and analytics onto a shared, lakehouse-native data foundation. It maintains reusable data as logical tables spanning fresh and historical data, so workloads can share maintained data without each reconstructing an equivalent copy.
 
-The scope includes the full architecture: storage, compute engines, transformations, query and serving services, catalogs, governance, and applications. Those components have different responsibilities. Engines run computations; the foundation provides the shared tables on which those computations operate.
+**The scope includes the full architecture:** storage, compute engines, transformations, query and serving services, catalogs, governance, and applications. Those components have different responsibilities. Engines run computations; the foundation provides the shared tables on which those computations operate.
 
 **Open** means that compatible components can participate through documented formats and supported APIs. **Shared** means that multiple workloads can use the same maintained tables. **Table-centric** means that identity, schema, and the meaning of records are defined at the table level. Consumers do not have to invent those interpretations independently.
 
 **Lakehouse-native** describes how streaming and lakehouse storage relate. Historical data remains part of the logical table through coordinated metadata, data movement, and access. Exporting a stream into an unrelated lake table does not, by itself, establish this relationship.
 
-The architectural property to look for is shared maintenance and reuse across fresh and historical data. A diagram containing a stream processor, a serving database, and a lakehouse tells us which technologies are present. We still need to understand whether their workloads share maintained tables or depend on separate copies synchronized by pipelines.
+**The architectural property to look for is shared maintenance and reuse across fresh and historical data.** A diagram containing a stream processor, a serving database, and a lakehouse tells us which technologies are present. We still need to understand whether their workloads share maintained tables or depend on separate copies synchronized by pipelines.
 
 ![](assets/streamhouse/fig2.png)
 
 ### From Topic-centric Movement To Table-centric Access
-A topic-centric architecture organizes data around event movement: producers publish records, and consumers receive or replay them. A table-centric architecture organizes data around shared datasets with schemas, defined row semantics, and supported access paths. The distinction concerns what the foundation makes directly usable by a workload.
+**A topic-centric architecture organizes data around event movement:** producers publish records, and consumers receive or replay them. **A table-centric architecture organizes data around shared datasets** with schemas, defined row semantics, and supported access paths. The distinction concerns what the foundation makes directly usable by a workload.
 
 **Topics provide a distribution abstraction**. They decouple producers from consumers and can retain records for replay. Their core operations concern publishing and consuming records. When a workload needs a queryable current state, it commonly builds that representation in a processing application or downstream store. Sharing the event flow does not automatically share the resulting dataset.
 
@@ -65,15 +67,15 @@ The shift extends beyond the location of state. The platform exposes an identifi
 Changes, current state, and history are distinct access needs. Table type, integration, and retention determine what is available; a lake snapshot does not preserve every intermediate change. Lakestream extends the shared table across fresh streaming and historical lakehouse storage. Streamhouse organizes workloads around that coordinated foundation, making reusable data available throughout its lifecycle.
 
 ### How Storage & Compute Support Applications
-Sources enter through supported writers and connectors. Ingestion establishes how records become table data, including their schema and append, update, or delete semantics. The shared foundation maintains the table and exposes the access paths available for it.
+**Sources** enter through supported writers and connectors. Ingestion establishes how records become table data, including their schema and append, update, or delete semantics. The shared foundation maintains the table and exposes the access paths available for it.
 
-Compute engines read those tables and perform transformations. An ingested table becomes an enriched or aggregated table through an explicit computation. The engine owns that computation; it writes the reusable result back to the foundation. Several layers of derived tables can therefore coexist without making storage itself responsible for business transformations.
+**Compute engines** read those tables and perform transformations. An ingested table becomes an enriched or aggregated table through an explicit computation. The engine owns that computation; it writes the reusable result back to the foundation. Several layers of derived tables can therefore coexist without making storage itself responsible for business transformations.
 
-Query and serving engines access shared tables to answer analytical or application requests. Operational services can also use supported direct table interfaces where those interfaces meet their needs. Shared storage does not automatically supply every index, transaction model, or latency characteristic an application might require.
+**Query and serving engines** access shared tables to answer analytical or application requests. Operational services can also use supported direct table interfaces where those interfaces meet their needs. Shared storage does not automatically supply every index, transaction model, or latency characteristic an application might require.
 
-AI applications participate through the same access layer. Retrieval services or query tools can obtain maintained context from shared tables, including fresher data where the integration supports it. The AI application still owns prompt construction, retrieval policy, decision logging, and any additional indexes it needs. The architectural contribution is reusable data underneath those services.
+**AI applications** participate through the same access layer. Retrieval services or query tools can obtain maintained context from shared tables, including fresher data where the integration supports it. The AI application still owns prompt construction, retrieval policy, decision logging, and any additional indexes it needs. The architectural contribution is reusable data underneath those services.
 
-Catalogs make table identities, schemas, and access information discoverable. Governance establishes ownership and permissions across writers, engines, and storage. These responsibilities span the architecture, even when the individual components deploy and scale independently.
+**Catalogs** make table identities, schemas, and access information discoverable. Governance establishes ownership and permissions across writers, engines, and storage. These responsibilities span the architecture, even when the individual components deploy and scale independently.
 
 ![](assets/streamhouse/fig4.png)
 
