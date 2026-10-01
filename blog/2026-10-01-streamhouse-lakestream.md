@@ -1,11 +1,11 @@
 ---
 slug: streamhouse-lakestream-fluss
-title: "Apache Fluss, the Streamhouse Architecture & Lakestream"
-sidebar_label: "Apache Fluss, the Streamhouse Architecture & Lakestream"
-date: 2026-10-01
+title: "Streamhouse And Lakestream With Apache Fluss"
+sidebar_label: "Streamhouse And Lakestream With Apache Fluss"
+date: 2026-10-05
 authors: [giannis, anton]
-tags: [architecture]
-image: ./assets/rednote_real_time_indexing/banner-1200x510.webp
+tags: [engineering]
+image: ./assets/streamhouse/banner.webp
 description: "Shared tables for streaming, serving and analytics"
 ---
 ![Banner](assets/streamhouse/banner.png)
@@ -121,7 +121,7 @@ The practical promise is that a compatible engine can participate without automa
 ![](assets/streamhouse/fig7.png)
 
 ### How Apache Fluss Enables The Shared Foundation
-Apache Fluss provides the streaming table layer and lakehouse integration for a concrete implementation of this architecture. Within that design, Lakestream names the coordinated stream–lake storage foundation. Fluss is the enabling technology; Streamhouse includes the engines and applications built around it.
+Apache Fluss provides the streaming table layer and lakehouse integration for a concrete implementation of this architecture, as described in the [Streamhouse and Lakestream](https://fluss.apache.org/docs/next/concepts/streamhouse-and-lakestream/) concept page. Within that design, Lakestream names the coordinated stream–lake storage foundation. Fluss is the enabling technology; Streamhouse includes the engines and applications built around it.
 
 Fluss’s [Lakestream](https://fluss.apache.org/docs/next/streaming-lakehouse/overview/) connects streaming tables to open lakehouse storage. Its [tiering service](https://fluss.apache.org/docs/next/streaming-lakehouse/tiering-service/) runs as an Apache Flink job: it reads Fluss data, writes and commits the lake representation, and records the associated progress. This is a storage maintenance responsibility implemented by a running service. Describing Lakestream as a storage foundation does not mean that its maintenance happens without computation.
 
@@ -136,13 +136,13 @@ The wider architectural definition is independent of a product list. A platform 
 ### The Benefits & Responsibilities Of Shared Storage
 Shared maintenance can reduce repeated ingestion, reconstruction of equivalent state, and synchronization between destinations. A maintained transformation becomes more valuable when additional workloads can reuse its output. The amount saved depends on which existing copies the supported access paths can actually replace.
 
-Responsibility also becomes more concentrated. Several consumers may depend on the same storage, metadata, and maintenance services. Capacity management, workload isolation, availability, access control, and recovery therefore become platform concerns. Independently deployed compute can still contend for shared storage resources.
+**Responsibility also becomes more concentrated.** Several consumers may depend on the same storage, metadata, and maintenance services. Capacity management, workload isolation, availability, access control, and recovery therefore become platform concerns. Independently deployed compute can still contend for shared storage resources.
 
-Some responsibilities remain local. A transformation team owns the correctness and recovery of its computation. An application team owns application behavior, query choices, and any justified specialized materializations. The platform owns the shared table services and must make their guarantees understandable to those teams.
+**Some responsibilities remain local.** A transformation team owns the correctness and recovery of its computation. An application team owns application behavior, query choices, and any justified specialized materializations. The platform owns the shared table services and must make their guarantees understandable to those teams.
 
-Freshness deserves its own measurement. A query can return quickly while reading a lake snapshot that trails the streaming layer. Query latency, ingestion progress, tiering progress, and the freshness of a derived table describe different things. A useful service objective should state both how quickly a workload gets an answer and how current that answer must be.
+**Freshness deserves its own measurement.** A query can return quickly while reading a lake snapshot that trails the streaming layer. Query latency, ingestion progress, tiering progress, and the freshness of a derived table describe different things. A useful service objective should state both how quickly a workload gets an answer and how current that answer must be.
 
-Those requirements also determine when a shared representation is not enough on its own. Caches and specialized copies can still improve the design where a workload needs a specific index, lower latency, or stronger isolation. Their purpose should be explicit, together with their refresh or invalidation behavior and ownership. The goal is not to eliminate every copy, but to avoid repeated maintenance where shared access already meets the workload’s needs.
+**Those requirements also determine when a shared representation is not enough on its own.** Caches and specialized copies can still improve the design where a workload needs a specific index, lower latency, or stronger isolation. Their purpose should be explicit, together with their refresh or invalidation behavior and ownership. The goal is not to eliminate every copy, but to avoid repeated maintenance where shared access already meets the workload’s needs.
 
 ![](assets/streamhouse/fig9.png)
 
@@ -167,4 +167,4 @@ Lakestream supplies the coordinated open table foundation. Streamhouse includes 
 
 This does not remove the need for caches, indexes, or workload-specific stores. Those remain useful when they provide a distinct capability. The goal is to avoid another maintained copy when the shared table already meets the requirement.
 
-**A useful test is:** When a new workload arrives, can it reuse the maintained state through the shared table interfaces, or does the architecture require it to reconstruct and synchronize an equivalent representation of that state?
+**A Useful Test:** When a new workload arrives, can it reuse the maintained state through the shared table interfaces, or does the architecture require it to reconstruct and synchronize an equivalent representation of that state?
