@@ -108,15 +108,15 @@ The precise algorithm depends on the implementation and read mode. A streaming r
 ![](assets/streamhouse/fig6.png)
 
 ### How Independent Engines Read & Write Shared Tables
-Openness makes the foundation usable beyond one engine. Open lakehouse formats expose a durable representation, streaming APIs expose supported access to fresh data or changes, and catalog integrations make tables discoverable. Together, these interfaces let teams change or add compute engines without requiring each engine to create and maintain its own copy of the data.
+**Openness makes the foundation usable beyond one engine.** Open lakehouse formats expose a durable representation, streaming APIs expose supported access to fresh data or changes, and catalog integrations make tables discoverable. Together, these interfaces let teams change or add compute engines without requiring each engine to create and maintain its own copy of the data.
 
-The access paths have different capabilities. A streaming consumer can use the streaming interface. A lake-compatible engine can read a committed lake representation. An engine with the required union-read integration can access both layers with their coordination information. Supporting an open lake format alone does not provide that integration.
+**The access paths have different capabilities.** A streaming consumer can use the streaming interface. A lake-compatible engine can read a committed lake representation. An engine with the required union-read integration can access both layers with their coordination information. Supporting an open lake format alone does not provide that integration.
 
-Writing needs the same precision. A supported writer must preserve the table’s update and commit semantics. In a managed stream–lake design, application writes normally enter through the designated table interface, while tiering maintains the corresponding lake representation. Any other write path must be explicitly supported by the implementation.
+**Writing needs the same precision.** A supported writer must preserve the table’s update and commit semantics. In a managed stream–lake design, application writes normally enter through the designated table interface, while tiering maintains the corresponding lake representation. Any other write path must be explicitly supported by the implementation.
 
-This distinction matters for schema evolution as well. Changing a managed lake table independently can invalidate the mapping on which ingestion, tiering, or readers depend. Ownership and permitted operations must be clear even when the underlying format is open.
+**This distinction matters for schema evolution as well.** Changing a managed lake table independently can invalidate the mapping on which ingestion, tiering, or readers depend. Ownership and permitted operations must be clear even when the underlying format is open.
 
-The practical promise is that a compatible engine can participate without automatically creating another engine-owned copy. It is not a promise that all engines support every operation or that arbitrary writes to either physical layer remain coordinated. Engine choice should follow the required access pattern, table semantics, freshness, and performance.
+**The practical promise is that a compatible engine can participate without automatically creating another engine-owned copy.** It is not a promise that all engines support every operation or that arbitrary writes to either physical layer remain coordinated. Engine choice should follow the required access pattern, table semantics, freshness, and performance.
 
 ![](assets/streamhouse/fig7.png)
 
@@ -168,3 +168,7 @@ Lakestream supplies the coordinated open table foundation. Streamhouse includes 
 This does not remove the need for caches, indexes, or workload-specific stores. Those remain useful when they provide a distinct capability. The goal is to avoid another maintained copy when the shared table already meets the requirement.
 
 **A Useful Test:** When a new workload arrives, can it reuse the maintained state through the shared table interfaces, or does the architecture require it to reconstruct and synchronize an equivalent representation of that state?
+
+### Further Reading
+
+**If you are interested in Apache Fluss**, you can find more [in the Fluss whitepaper](https://assets.ververica.com/hubfs/Ververica/Flyers%2c%20One%20Pagers%2c%20and%20Assets/%5BWhitepaper%5D%20Apache%20Fluss-%20The%20Foundation%20of%20the%20Streaming%20Lakehouse.pdf).
