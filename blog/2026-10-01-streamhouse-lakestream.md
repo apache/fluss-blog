@@ -1,6 +1,6 @@
 ---
 slug: streamhouse-lakestream-fluss
-title: "Streamhouse And Lakestream With Apache Fluss"
+title: "The Streamhouse And Lakestream With Apache Fluss"
 sidebar_label: "Streamhouse And Lakestream With Apache Fluss"
 date: 2026-10-05
 authors: [giannis, anton]
@@ -172,3 +172,5 @@ This does not remove the need for caches, indexes, or workload-specific stores. 
 ### Further Reading
 
 **If you are interested in Apache Fluss**, you can find more [in the Fluss whitepaper](https://assets.ververica.com/hubfs/Ververica/Flyers%2c%20One%20Pagers%2c%20and%20Assets/%5BWhitepaper%5D%20Apache%20Fluss-%20The%20Foundation%20of%20the%20Streaming%20Lakehouse.pdf).
+
+And before you go 😊 don’t forget to give Fluss 🌊 some ❤️ via ⭐ on [GitHub](https://github.com/apache/fluss).
