@@ -1,31 +1,150 @@
-import {themes as prismThemes} from 'prism-react-renderer';
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Presentation is synchronized from apache/fluss website/.
+// Keep blog routes local; the rest of the site is served by fluss.apache.org.
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
+import lightTheme from './src/utils/prismLight';
+import darkTheme from './src/utils/prismDark';
+import {prepareBlogPosts} from './src/utils/blogPosts';
 
 const config: Config = {
-  title: 'Apache Fluss Blog',
-  tagline: 'Streaming Storage for Real-Time Analytics & AI',
+  title: 'Apache Fluss™',
+  tagline: 'The streaming storage layer for real-time analytics and the lakehouse',
   favicon: 'img/logo/fluss_favicon.svg',
+
+  headTags: [
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'description',
+        content:
+          'Apache Fluss is an open-source columnar streaming storage system. Sub-second freshness, primary-key tables, first-class Apache Flink integration, and native tiering to Apache Iceberg and Apache Paimon.',
+      },
+    },
+    {
+      tagName: 'meta',
+      attributes: {
+        property: 'og:title',
+        content: 'Apache Fluss · Streaming Storage for the Real-Time Lakehouse',
+      },
+    },
+    {
+      tagName: 'meta',
+      attributes: {
+        property: 'og:description',
+        content:
+          'Open-source columnar streaming storage with sub-second freshness, primary-key tables, Flink integration, and native tiering to Iceberg and Paimon.',
+      },
+    },
+    {
+      tagName: 'meta',
+      attributes: {
+        property: 'og:type',
+        content: 'website',
+      },
+    },
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'twitter:card',
+        content: 'summary_large_image',
+      },
+    },
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'twitter:title',
+        content: 'Apache Fluss · Streaming Storage for the Real-Time Lakehouse',
+      },
+    },
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'twitter:description',
+        content:
+          'Open-source columnar streaming storage with sub-second freshness, primary-key tables, Flink integration, and native tiering to Iceberg and Paimon.',
+      },
+    },
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'theme-color',
+        content: '#102856',
+      },
+    },
+  ],
+
+  // kapa.ai "Ask AI" widget. Modelled on the Apache Doris integration.
+  // Privacy: `data-consent-required` makes kapa show its own consent screen and
+  // withhold all data from its backend until the user explicitly consents (once
+  // per device, remembered by kapa); `data-user-analytics-cookie-enabled=false`
+  // disables analytics cookies. Production CSP allowances are maintained in
+  // the main website's .htaccess, coordinated with the ASF privacy team.
+  scripts: [
+    {
+      src: 'https://widget.kapa.ai/kapa-widget.bundle.js',
+      async: true,
+      'data-website-id': '40ccde97-65ed-46d8-81f2-fe8a8a31f9d9',
+      'data-project-name': 'Apache Fluss',
+      'data-project-color': '#06b6d4',
+      // Icon-only (square) mark: the full wordmark gets cropped to "Fl" in
+      // kapa's small logo slot, so use the notext variant.
+      'data-project-logo': '/img/logo/svg/colored_logo_notext.svg',
+      'data-modal-title': 'Ask Apache Fluss AI',
+      'data-modal-image': '/img/logo/svg/colored_logo_notext.svg',
+      'data-modal-disclaimer':
+        'This is a custom LLM with access to the [Apache Fluss documentation](https://fluss.apache.org/docs/). Answers may be inaccurate — always verify against the official docs.',
+      // Hide kapa's own floating button; open the modal from our navbar pill.
+      'data-button-hide': 'true',
+      'data-modal-override-open-selector': '#navbar-ask-ai-btn',
+      // Privacy hardening (see comment above).
+      'data-consent-required': 'true',
+      'data-user-analytics-cookie-enabled': 'false',
+      // Bot protection uses kapa's default reCAPTCHA (CSP: www.google.com,
+      // www.gstatic.com). Do NOT force 'hcaptcha' unless the kapa project is
+      // provisioned for it in the dashboard, or captcha token fetches fail.
+    },
+  ],
 
   url: 'https://fluss.apache.org/',
   baseUrl: '/',
+  // The static preview server misidentifies dotted directories such as 1.0
+  // as files. Flat HTML output keeps release-post URLs accessible on refresh.
+  trailingSlash: false,
 
+  // Documentation routes are not built by this blog-only preview.
   onBrokenLinks: 'warn',
-
   staticDirectories: ['static', 'blog/static'],
-
-  markdown: {
-    hooks: {
-      onBrokenMarkdownLinks: 'warn',
-      onBrokenMarkdownImages: 'warn',
-    }
-  },
-
 
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
   },
+
+  markdown: {
+    mermaid: true,
+    hooks: {
+      onBrokenMarkdownLinks: 'warn',
+      onBrokenMarkdownImages: 'warn',
+    },
+  },
+  themes: ['@docusaurus/theme-mermaid'],
 
   presets: [
     [
@@ -34,6 +153,9 @@ const config: Config = {
         docs: false,
         blog: {
           showReadingTime: false,
+          // The card index filters the full archive, including older posts.
+          postsPerPage: 'ALL',
+          processBlogPosts: prepareBlogPosts,
           feedOptions: {
             type: ['rss', 'atom'],
             xslt: true,
@@ -52,23 +174,58 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: 'img/logo/png/colored_logo.png',
+    image: 'img/social/fluss-social-card.png',
     colorMode: {
       defaultMode: 'light',
-      disableSwitch: true,
+      disableSwitch: false,
+      respectPrefersColorScheme: false,
     },
     navbar: {
       title: '',
       logo: {
         alt: 'Fluss',
-        src: 'img/logo/svg/colored_logo.svg',
+        src: 'img/logo/svg/white_color_logo.svg',
+        srcDark: 'img/logo/svg/white_color_logo.svg',
+        href: 'https://fluss.apache.org/',
       },
       items: [
+        {
+          to: 'https://fluss.apache.org/docs/',
+          position: 'left',
+          label: 'Docs',
+        },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://fluss.apache.org/',
-          label: 'Main Site',
+          label: 'Learn',
+          position: 'left',
+          type: 'dropdown',
+          items: [
+            {
+              label: 'User Stories',
+              to: 'https://fluss.apache.org/user-stories',
+            },
+            {
+              label: 'Talks',
+              to: 'https://fluss.apache.org/learn/talks',
+            },
+            {
+              label: 'Videos',
+              to: 'https://fluss.apache.org/learn/videos',
+            },
+          ],
+        },
+        {to: 'https://fluss.apache.org/community/welcome', label: 'Community', position: 'left'},
+        {to: 'https://fluss.apache.org/roadmap', label: 'Roadmap', position: 'left'},
+        {to: 'https://fluss.apache.org/downloads', label: 'Downloads', position: 'left'},
+        {
+          // "Ask AI" pill that opens the kapa.ai widget. The kapa bundle
+          // (declared in the top-level `scripts` field above) binds its modal
+          // to this button via `data-modal-override-open-selector`, so a plain
+          // HTML button is all that's needed here.
+          type: 'html',
           position: 'right',
+          value:
+            '<button id="navbar-ask-ai-btn" type="button" class="navbar-ask-ai">Ask AI</button>',
         },
         {
           href: 'https://github.com/apache/fluss',
@@ -80,12 +237,62 @@ const config: Config = {
     },
     footer: {
       style: 'dark',
-      copyright: `<p>Copyright © ${new Date().getFullYear()} The Apache Software Foundation, Licensed under the Apache License, Version 2.0.</p>`,
+      links: [
+        {
+          title: 'Product',
+          items: [
+            {label: 'Documentation', to: 'https://fluss.apache.org/docs/quickstart/flink'},
+            {label: 'Quickstart', to: 'https://fluss.apache.org/docs/quickstart/flink'},
+            {label: 'Roadmap', to: 'https://fluss.apache.org/roadmap'},
+            {label: 'Downloads', to: 'https://fluss.apache.org/downloads'},
+            {label: 'Blog', to: '/blog'},
+          ],
+        },
+        {
+          title: 'Community',
+          items: [
+            {label: 'User Stories', to: 'https://fluss.apache.org/user-stories'},
+            {label: 'GitHub', href: 'https://github.com/apache/fluss'},
+            {label: 'Slack', href: 'https://join.slack.com/t/apache-fluss/shared_invite/zt-473vgmvjr-cmIma~_iAA4cN02o5u2pDQ'},
+            {label: 'Welcome', to: 'https://fluss.apache.org/community/welcome'},
+            {label: 'Contribute', to: 'https://fluss.apache.org/community/welcome'},
+          ],
+        },
+        {
+          title: 'Resources',
+          items: [
+            {label: 'Talks', to: 'https://fluss.apache.org/learn/talks'},
+            {label: 'Videos', to: 'https://fluss.apache.org/learn/videos'},
+            {label: 'Issues', href: 'https://github.com/apache/fluss/issues'},
+            {label: 'Releases', href: 'https://github.com/apache/fluss/releases'},
+          ],
+        },
+        {
+          title: 'Apache',
+          items: [
+            {label: 'Foundation', href: 'https://www.apache.org/'},
+            {label: 'License', href: 'https://www.apache.org/licenses/'},
+            {label: 'Events', href: 'https://events.apache.org'},
+            {label: 'Donate', href: 'https://www.apache.org/foundation/sponsorship.html'},
+            {label: 'Sponsors', href: 'https://www.apache.org/foundation/thanks.html'},
+            {label: 'Security', href: 'https://www.apache.org/security/'},
+            {label: 'Privacy', href: 'https://privacy.apache.org/policies/privacy-policy-public.html'},
+          ],
+        },
+      ],
+      copyright: `<p>Copyright © ${new Date().getFullYear()} The Apache Software Foundation, Licensed under the Apache License, Version 2.0.</p>
+                  <p>Apache, the names of Apache projects, and the feather logo are either registered trademarks or trademarks of the Apache Software Foundation in the United States and/or other countries. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>`,
     },
     prism: {
-      theme: prismThemes.github,
-      darkTheme: prismThemes.dracula,
-      additionalLanguages: ['java', 'bash', 'scala'],
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      additionalLanguages: ['java', 'bash', 'scala', 'rust', 'toml', 'cmake']
+    },
+    algolia: {
+      appId: "X8KSGGLJW1",
+      apiKey: "5d0685995a3cb0052f32a59216ad3d35",
+      indexName: "fluss",
+      contextualSearch: true,
     },
   } satisfies Preset.ThemeConfig,
 };
