@@ -29,7 +29,11 @@ npm install
 npm run start
 ```
 
-The site will be available at `http://localhost:3000`.
+The blog will be available at `http://localhost:3000/blog`; the root URL redirects there.
+
+The preview uses the blog templates, shared CSS, Geist fonts, code highlighting, navigation, and footer from [`apache/fluss/website`](https://github.com/apache/fluss/tree/main/website), synchronized at commit `fd7fd47a5112be99371a3e9b7c906ea43c6b8e0f`. Blog links stay local; links to the rest of the website open `fluss.apache.org`. Search and Ask AI use the same hosted services as the published site and require an internet connection.
+
+When the website design changes, synchronize `src/css/custom.css`, `src/theme/BlogListPage/`, `src/theme/BlogPostPage/`, `src/utils/{blogPosts,prismLight,prismDark}.ts`, and the referenced logo/social-card assets from `fluss/website/`. Also align the presentation settings in `docusaurus.config.ts` and font/theme dependencies in `package.json`, preserving `docs: false`, `trailingSlash: false`, and the local blog routes. The local trailing-slash setting lets `npm run serve` handle release URLs containing version numbers, such as `1.0`. Then run `npm run typecheck` and `npm run build`, and check the list and an article in light/dark mode and at mobile widths.
 
 ## How to Add a Blog Post
 
