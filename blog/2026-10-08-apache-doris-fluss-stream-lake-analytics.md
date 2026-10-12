@@ -37,7 +37,7 @@ under the License.
 
 A campaign's conversion rate has dropped. The team needs to compare it with similar past campaigns before calling it abnormal. In a road test, a rise in human interventions means little without today's test-run count, each vehicle's current state, and records from previous weeks. Both investigations need new events and historical data in the same query.
 
-Fluss keeps event logs and current state in tables. With its Fluss Catalog, Apache Doris 5.0 can query those tables alongside history tiered to Paimon. The read path depends on which portion of the data a query needs.
+Fluss keeps event logs and current state in tables. With its [Fluss Catalog](https://doris.apache.org/docs/dev/lakehouse/catalogs/fluss-catalog/), Apache Doris 5.0 can query those tables alongside history tiered to Paimon. The read path depends on which portion of the data a query needs.
 
 <!-- truncate -->
 
@@ -102,7 +102,7 @@ The tiering service writes log records to Paimon, commits a readable snapshot, a
 
 ![Union Read uses a Paimon lake snapshot and reads each Fluss Bucket from its tiering position to the query's fixed end](assets/apache_doris_fluss_stream_lake_analytics/fluss-lake-log-boundaries.jpg)
 
-For Fluss tables with lake tiering enabled, Doris can use Union Read. At query planning, Doris fixes a Paimon snapshot and the end Offset for each Bucket. Paimon supplies the history covered by the snapshot; Fluss supplies records from the tiering position to the fixed end. Analysts query one logical table. Records that arrive later appear in the next query.
+For Fluss tables with lake tiering enabled, Doris can use [Union Read](https://doris.apache.org/docs/dev/lakehouse/catalogs/fluss-catalog/#tiered-lake-tables-and-union-read). At query planning, Doris fixes a Paimon snapshot and the end Offset for each Bucket. Paimon supplies the history covered by the snapshot; Fluss supplies records from the tiering position to the fixed end. Analysts query one logical table. Records that arrive later appear in the next query.
 
 For append-only events such as interventions, the Offset boundary helps prevent duplicate or missing reads. Analysts can inspect the lake and log separately to check tiering progress. If no readable lake snapshot exists yet, the default query can read only data still retained by Fluss. A task that needs complete history should first confirm that a snapshot is ready and check the log retention range.
 
@@ -127,14 +127,14 @@ Trend analysis needs both history and new events. A baseline report for an archi
 | Query entry point | Read range | Use and limitation |
 | --- | --- | --- |
 | Table name | Normally uses Union Read to cover lake history and untiered changes | Suitable for combined historical and recent analysis; the default mode may change the read path when its conditions are not met |
-| `table$lake` | Only data tiered to Paimon | Checks a historical baseline or tiering result; excludes records not yet in the lake |
-| `table$log` | Only the Fluss log after the readable lake snapshot | Checks increments in an append-only event table; excludes lake history and does not apply to primary-key tables |
+| [`table$lake`](https://doris.apache.org/docs/dev/lakehouse/catalogs/fluss-catalog/#tiered-lake-tables-and-union-read) | Only data tiered to Paimon | Checks a historical baseline or tiering result; excludes records not yet in the lake |
+| [`table$log`](https://doris.apache.org/docs/dev/lakehouse/catalogs/fluss-catalog/#tiered-lake-tables-and-union-read) | Only the Fluss log after the readable lake snapshot | Checks increments in an append-only event table; excludes lake history and does not apply to primary-key tables |
 
 ![The table, table$lake, and table$log entry points cover both sides, only Paimon history, and only the Fluss log tail respectively](assets/apache_doris_fluss_stream_lake_analytics/fluss-three-read-ranges.jpg)
 
 *Figure 6. The table name covers both lake and log. `$lake` reads only the lake; `$log` reads only the append-only log after the readable lake snapshot.*
 
-When querying the table name directly, `fluss.union_read.mode` controls how Doris chooses the read path. The `$lake` and `$log` entry points already identify a specific data segment.
+When querying the table name directly, [`fluss.union_read.mode`](https://doris.apache.org/docs/dev/lakehouse/catalogs/fluss-catalog/#union-read-modes) controls how Doris chooses the read path. The `$lake` and `$log` entry points already identify a specific data segment.
 
 | Mode | Behavior when querying the full table | When to use it |
 | --- | --- | --- |
@@ -146,9 +146,9 @@ When querying the table name directly, `fluss.union_read.mode` controls how Dori
 
 Several factors affect scan cost and the choice of read path:
 
-- The lake side uses Doris's Paimon reader and file cache. Partition filters and selecting only the necessary columns can reduce scanning and decoding. A filter on an ordinary data column gives the right result but may not reduce the data read from the source.
+- The lake side uses Doris's [Paimon reader](https://doris.apache.org/docs/dev/lakehouse/catalogs/paimon-catalog/) and [file cache](https://doris.apache.org/docs/dev/lakehouse/data-cache/). Partition filters and selecting only the necessary columns can reduce scanning and decoding. A filter on an ordinary data column gives the right result but may not reduce the data read from the source.
 - Tiering delays lengthen the primary-key changelog tail that must be merged, increasing memory use. Doris limits the number of tail records for primary-key Union Read. Above that limit, `auto` changes the read path and `required` returns an error.
-- `EXPLAIN` shows whether Union Read is used and the ranges planned for the lake and log. Query Profile shows row counts and time spent on each side. Together, they reveal whether the cost comes from scanning history, reading the log tail, or tiering progress.
+- [`EXPLAIN`](https://doris.apache.org/docs/dev/sql-manual/sql-statements/data-query/EXPLAIN/) shows whether Union Read is used and the ranges planned for the lake and log. [Query Profile](https://doris.apache.org/docs/dev/lakehouse/catalogs/fluss-catalog/#query-profile) shows row counts and time spent on each side. Together, they reveal whether the cost comes from scanning history, reading the log tail, or tiering progress.
 
 Teams can save the results of stable, frequently run queries in Doris internal tables when needed.
 
@@ -190,7 +190,7 @@ We repeated the full-table read without lake auto-compaction on a BE with a 2 GB
 | 160,000 | OOM | 12.2 s |
 | 1.6 million | OOM | 13.5 s |
 
-`enable_jni_heap_admission` is new in Doris 5.0 and defaults to off. When enabled, readers that expect heavy JVM heap use, including the merge readers in this test, declare an estimate before they start. The BE queues a new reader if admitting it would push declared usage beyond half the maximum JVM heap. Readers proceed as earlier ones finish. This prevented OOM in the test, though queueing increased elapsed time.
+[`enable_jni_heap_admission`](https://doris.apache.org/docs/dev/lakehouse/catalogs/fluss-catalog/#jni-heap-admission) is new in Doris 5.0 and defaults to off. When enabled, readers that expect heavy JVM heap use, including the merge readers in this test, declare an estimate before they start. The BE queues a new reader if admitting it would push declared usage beyond half the maximum JVM heap. Readers proceed as earlier ones finish. This prevented OOM in the test, though queueing increased elapsed time.
 
 ## 4. Planned work
 
