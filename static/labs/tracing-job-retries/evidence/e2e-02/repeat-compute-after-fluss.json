@@ -1,0 +1,219 @@
+{
+  "end_offset_exclusive": 16,
+  "kind": "RESULT",
+  "logical": [
+    {
+      "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+      "attempt": 1,
+      "detail": "Synthetic ticket-1042; deterministic inference stand-in",
+      "emitted_at_ms": 1791155846406,
+      "event_id": "live-02/repeat-compute/ticket-1042/1/1",
+      "event_type": "STARTED",
+      "job_id": "live-02/repeat-compute/ticket-1042",
+      "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+      "step": 1
+    },
+    {
+      "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+      "attempt": 1,
+      "detail": "deterministic synthetic classifier",
+      "emitted_at_ms": 1791155846475,
+      "event_id": "live-02/repeat-compute/ticket-1042/1/2",
+      "event_type": "COMPUTE_STARTED",
+      "job_id": "live-02/repeat-compute/ticket-1042",
+      "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+      "step": 2
+    },
+    {
+      "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+      "attempt": 2,
+      "detail": "Synthetic ticket-1042; deterministic inference stand-in",
+      "emitted_at_ms": 1791155850641,
+      "event_id": "live-02/repeat-compute/ticket-1042/2/1",
+      "event_type": "STARTED",
+      "job_id": "live-02/repeat-compute/ticket-1042",
+      "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+      "step": 1
+    },
+    {
+      "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+      "attempt": 2,
+      "detail": "deterministic synthetic classifier",
+      "emitted_at_ms": 1791155850707,
+      "event_id": "live-02/repeat-compute/ticket-1042/2/2",
+      "event_type": "COMPUTE_STARTED",
+      "job_id": "live-02/repeat-compute/ticket-1042",
+      "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+      "step": 2
+    },
+    {
+      "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+      "attempt": 2,
+      "detail": "needs-followup",
+      "emitted_at_ms": 1791155850792,
+      "event_id": "live-02/repeat-compute/ticket-1042/2/3",
+      "event_type": "COMPUTE_FINISHED",
+      "job_id": "live-02/repeat-compute/ticket-1042",
+      "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+      "step": 3
+    },
+    {
+      "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+      "attempt": 2,
+      "detail": "{\"classification\":\"needs-followup\",\"job_id\":\"live-02/repeat-compute/ticket-1042\",\"ticket_id\":\"ticket-1042\",\"title\":\"Follow up synthetic ticket-1042\"}",
+      "emitted_at_ms": 1791155850807,
+      "event_id": "live-02/repeat-compute/ticket-1042/2/4",
+      "event_type": "ACTION_REQUESTED",
+      "job_id": "live-02/repeat-compute/ticket-1042",
+      "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+      "step": 4
+    },
+    {
+      "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+      "attempt": 2,
+      "detail": "{\"action_id\":\"live-02/repeat-compute/ticket-1042/create-followup/v1\",\"committed_at_ms\":1791155850824,\"contract\":\"fixture-atomic-action-id-payload-v1\",\"payload_digest\":\"4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f\",\"receipt_id\":\"followup-8577206e067714a0ce529a13\"}",
+      "emitted_at_ms": 1791155850836,
+      "event_id": "live-02/repeat-compute/ticket-1042/2/5",
+      "event_type": "ACTION_CONFIRMED",
+      "job_id": "live-02/repeat-compute/ticket-1042",
+      "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+      "step": 5
+    },
+    {
+      "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+      "attempt": 2,
+      "detail": "Synthetic follow-up receipt persisted",
+      "emitted_at_ms": 1791155850852,
+      "event_id": "live-02/repeat-compute/ticket-1042/2/6",
+      "event_type": "COMPLETED",
+      "job_id": "live-02/repeat-compute/ticket-1042",
+      "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+      "step": 6
+    }
+  ],
+  "logical_count": 8,
+  "raw": [
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+        "attempt": 1,
+        "detail": "Synthetic ticket-1042; deterministic inference stand-in",
+        "emitted_at_ms": 1791155846406,
+        "event_id": "live-02/repeat-compute/ticket-1042/1/1",
+        "event_type": "STARTED",
+        "job_id": "live-02/repeat-compute/ticket-1042",
+        "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+        "step": 1
+      },
+      "offset": 8
+    },
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+        "attempt": 1,
+        "detail": "deterministic synthetic classifier",
+        "emitted_at_ms": 1791155846475,
+        "event_id": "live-02/repeat-compute/ticket-1042/1/2",
+        "event_type": "COMPUTE_STARTED",
+        "job_id": "live-02/repeat-compute/ticket-1042",
+        "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+        "step": 2
+      },
+      "offset": 9
+    },
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+        "attempt": 2,
+        "detail": "Synthetic ticket-1042; deterministic inference stand-in",
+        "emitted_at_ms": 1791155850641,
+        "event_id": "live-02/repeat-compute/ticket-1042/2/1",
+        "event_type": "STARTED",
+        "job_id": "live-02/repeat-compute/ticket-1042",
+        "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+        "step": 1
+      },
+      "offset": 10
+    },
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+        "attempt": 2,
+        "detail": "deterministic synthetic classifier",
+        "emitted_at_ms": 1791155850707,
+        "event_id": "live-02/repeat-compute/ticket-1042/2/2",
+        "event_type": "COMPUTE_STARTED",
+        "job_id": "live-02/repeat-compute/ticket-1042",
+        "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+        "step": 2
+      },
+      "offset": 11
+    },
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+        "attempt": 2,
+        "detail": "needs-followup",
+        "emitted_at_ms": 1791155850792,
+        "event_id": "live-02/repeat-compute/ticket-1042/2/3",
+        "event_type": "COMPUTE_FINISHED",
+        "job_id": "live-02/repeat-compute/ticket-1042",
+        "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+        "step": 3
+      },
+      "offset": 12
+    },
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+        "attempt": 2,
+        "detail": "{\"classification\":\"needs-followup\",\"job_id\":\"live-02/repeat-compute/ticket-1042\",\"ticket_id\":\"ticket-1042\",\"title\":\"Follow up synthetic ticket-1042\"}",
+        "emitted_at_ms": 1791155850807,
+        "event_id": "live-02/repeat-compute/ticket-1042/2/4",
+        "event_type": "ACTION_REQUESTED",
+        "job_id": "live-02/repeat-compute/ticket-1042",
+        "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+        "step": 4
+      },
+      "offset": 13
+    },
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+        "attempt": 2,
+        "detail": "{\"action_id\":\"live-02/repeat-compute/ticket-1042/create-followup/v1\",\"committed_at_ms\":1791155850824,\"contract\":\"fixture-atomic-action-id-payload-v1\",\"payload_digest\":\"4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f\",\"receipt_id\":\"followup-8577206e067714a0ce529a13\"}",
+        "emitted_at_ms": 1791155850836,
+        "event_id": "live-02/repeat-compute/ticket-1042/2/5",
+        "event_type": "ACTION_CONFIRMED",
+        "job_id": "live-02/repeat-compute/ticket-1042",
+        "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+        "step": 5
+      },
+      "offset": 14
+    },
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+        "attempt": 2,
+        "detail": "Synthetic follow-up receipt persisted",
+        "emitted_at_ms": 1791155850852,
+        "event_id": "live-02/repeat-compute/ticket-1042/2/6",
+        "event_type": "COMPLETED",
+        "job_id": "live-02/repeat-compute/ticket-1042",
+        "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+        "step": 6
+      },
+      "offset": 15
+    }
+  ],
+  "raw_count": 8,
+  "state": "COMPLETED"
+}

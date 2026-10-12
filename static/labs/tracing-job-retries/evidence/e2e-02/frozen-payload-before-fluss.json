@@ -1,0 +1,63 @@
+{
+  "end_offset_exclusive": 26,
+  "kind": "RESULT",
+  "logical": [
+    {
+      "action_id": "live-02/frozen-payload/ticket-1042/create-followup/v1",
+      "attempt": 1,
+      "detail": "Positive persisted-request fixture",
+      "emitted_at_ms": 1791155870138,
+      "event_id": "live-02/frozen-payload/ticket-1042/1/1",
+      "event_type": "STARTED",
+      "job_id": "live-02/frozen-payload/ticket-1042",
+      "payload_digest": "0774163d0e31db176d6a095349896fc79faca3302708341c237c4fb7ecb7ae95",
+      "step": 1
+    },
+    {
+      "action_id": "live-02/frozen-payload/ticket-1042/create-followup/v1",
+      "attempt": 1,
+      "detail": "{\"classification\":\"needs-followup\",\"job_id\":\"live-02/frozen-payload/ticket-1042\",\"ticket_id\":\"ticket-1042\",\"title\":\"Frozen \\\"priority\\\" \\\\ follow-up / ticket-1042\"}",
+      "emitted_at_ms": 1791155870207,
+      "event_id": "live-02/frozen-payload/ticket-1042/1/2",
+      "event_type": "ACTION_REQUESTED",
+      "job_id": "live-02/frozen-payload/ticket-1042",
+      "payload_digest": "cf74b0b56b358a092082d0a1fc8b8a30e65dc09250d53e979380ec9e7b197789",
+      "step": 2
+    }
+  ],
+  "logical_count": 2,
+  "raw": [
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "live-02/frozen-payload/ticket-1042/create-followup/v1",
+        "attempt": 1,
+        "detail": "Positive persisted-request fixture",
+        "emitted_at_ms": 1791155870138,
+        "event_id": "live-02/frozen-payload/ticket-1042/1/1",
+        "event_type": "STARTED",
+        "job_id": "live-02/frozen-payload/ticket-1042",
+        "payload_digest": "0774163d0e31db176d6a095349896fc79faca3302708341c237c4fb7ecb7ae95",
+        "step": 1
+      },
+      "offset": 24
+    },
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "live-02/frozen-payload/ticket-1042/create-followup/v1",
+        "attempt": 1,
+        "detail": "{\"classification\":\"needs-followup\",\"job_id\":\"live-02/frozen-payload/ticket-1042\",\"ticket_id\":\"ticket-1042\",\"title\":\"Frozen \\\"priority\\\" \\\\ follow-up / ticket-1042\"}",
+        "emitted_at_ms": 1791155870207,
+        "event_id": "live-02/frozen-payload/ticket-1042/1/2",
+        "event_type": "ACTION_REQUESTED",
+        "job_id": "live-02/frozen-payload/ticket-1042",
+        "payload_digest": "cf74b0b56b358a092082d0a1fc8b8a30e65dc09250d53e979380ec9e7b197789",
+        "step": 2
+      },
+      "offset": 25
+    }
+  ],
+  "raw_count": 2,
+  "state": "ACTION_REQUESTED"
+}

@@ -1,0 +1,184 @@
+{
+  "files": {
+    "REPRODUCE.md": {
+      "bytes": 13548,
+      "sha256": "5a560ca86e10c71a6a1d4b7bd124dc94432bdfaf30d57027865b83c3ee93f642"
+    },
+    "bootstrap.py": {
+      "bytes": 3405,
+      "sha256": "7866b9e6f4c32b3f45727da15aadbe970b34e70cdcd67aed38586eb6f4f9c215"
+    },
+    "boundaries.py": {
+      "bytes": 1265,
+      "sha256": "44abb0010c325b9cc346927a69f8cefa80e6b6eb5d167d99112eb5bc8593c2b7"
+    },
+    "configuration.py": {
+      "bytes": 5182,
+      "sha256": "1d25f216e62ae6e3e33662f31c5187648bab71baf4cba6a2b3bada36fcebe47b"
+    },
+    "evidence/RUNTIME_README.md": {
+      "bytes": 309,
+      "sha256": "93a2bf6a9fff5c112b3bde0fe5d36e8665d55712664a82abc006fed335ffb015"
+    },
+    "exchange.py": {
+      "bytes": 1629,
+      "sha256": "ff4c767a18c974bfbf313df916b133d2cbc7cb97e8e85bd404416e8fc1958864"
+    },
+    "export.py": {
+      "bytes": 3858,
+      "sha256": "fc4217a4c18ee4177c6b3efbc672a3f3ae32b1a8245cb8f58eebb8ada2221799"
+    },
+    "guards.py": {
+      "bytes": 3730,
+      "sha256": "be75926a424915334c24bd234e5d1a6c0ed3b4b6062ac9a4064dff16872c0487"
+    },
+    "host.py": {
+      "bytes": 2486,
+      "sha256": "0f39b14f8bfe45494a317b32cd61795eeed10e88efcdc43d0e002e868824ce5e"
+    },
+    "inside.py": {
+      "bytes": 10130,
+      "sha256": "8558163ef96f5b8098dc215f7aa304efd2041d407a8da5c9bcc53afa0046f16a"
+    },
+    "operator-authorization.template.json": {
+      "bytes": 1118,
+      "sha256": "db473a5acc07e725966e2347fb5edaec7bfd3e2dcf233dcd30c2208755b865a3"
+    },
+    "operator-config.template.json": {
+      "bytes": 677,
+      "sha256": "9e9b7c0e4abb0a210f30e14e259b7aef0284d8dd3568f9a8c4b974108a1c0255"
+    },
+    "ownership.py": {
+      "bytes": 10269,
+      "sha256": "62f985f45dd6f8437a510515cdf473b4a5f741e0e702673a9e82e7bc8c1596de"
+    },
+    "package_integrity.py": {
+      "bytes": 1820,
+      "sha256": "05b826a9119d3390c23578ce91c7e0b58aa77a75506f1c2c88aa8da266104e1a"
+    },
+    "placement.py": {
+      "bytes": 6821,
+      "sha256": "a2b2bf4ea94d50e8a8b76dcb98c8394545f790f22b332a0ebe91535599999920"
+    },
+    "private_checks.py": {
+      "bytes": 14520,
+      "sha256": "d5231ca90e48d0d46bef4231a2c268dabe206f75c220f73204e3e1082d445d04"
+    },
+    "projection.py": {
+      "bytes": 12223,
+      "sha256": "add33fbd55358f0cd65594d017b322105264cd7aed960324f8d556e79df8632b"
+    },
+    "proof.py": {
+      "bytes": 6264,
+      "sha256": "c20fe3eafd34ba2baabeb778b4c8d05bc97f6d2af4051551641b6117ca72dc8d"
+    },
+    "public_run.py": {
+      "bytes": 8113,
+      "sha256": "9f3274fd53d3bf49e1e8df60ca7e96e0899a902e6814c4d1d6b9de1ca672cc3a"
+    },
+    "public_schema.py": {
+      "bytes": 8781,
+      "sha256": "593e26c8ca99c67f55fade09cd24a4c0021bcff37a0cc1df23254244605df583"
+    },
+    "source-manifest.json": {
+      "bytes": 1497,
+      "sha256": "ee2d837ea24e7513f15e9ac5ccfb433501eeb37a010ccf94db65839c80011be2"
+    },
+    "source/.gitignore": {
+      "bytes": 27,
+      "sha256": "29b8d834b49bb530899defc02f5f20d7f57ed3e142bb8750440c30c75fcb79af"
+    },
+    "source/E2E_SPEC.md": {
+      "bytes": 5739,
+      "sha256": "a5884f952c37aba525d77d6896dbd987aef37cc7553caba20043cf1ffaa11f06"
+    },
+    "source/README.md": {
+      "bytes": 987,
+      "sha256": "97dd4bd7d10f40129703f6ffca855c2fff5270986177fdbe7d0e3ec4b77ba10f"
+    },
+    "source/pom.xml": {
+      "bytes": 2391,
+      "sha256": "39c337f233dcd7f683e7ea05aa1ab2d609647bb7ada858c618906e235a147081"
+    },
+    "source/scripts/e2e.py": {
+      "bytes": 26641,
+      "sha256": "5d4cfdd78ca61cb10ae54e854b718f93a2ba126ab4727e775336b0a1971460e9"
+    },
+    "source/scripts/runtime_manifest.py": {
+      "bytes": 3146,
+      "sha256": "31feb7404998e7f8a6742192aa9b6618e6cb3306a5324735b115b0b013ba9822"
+    },
+    "source/scripts/service.py": {
+      "bytes": 10490,
+      "sha256": "d08ad1a923ce2077f60e49b69747d07773a505159f8bfb5de02b0a0786fa28d5"
+    },
+    "source/src/main/java/lab/retry/ActionRequest.java": {
+      "bytes": 3285,
+      "sha256": "cea53671efcf6a60219f6bb30abe29cb5fb18b212c80bec55fa497d47af5843d"
+    },
+    "source/src/main/java/lab/retry/Event.java": {
+      "bytes": 3199,
+      "sha256": "e1fa5cadb88363aef8d7cd2b2a64f143dbfc82706ea5c2ac1acf4bde4e2fa1b2"
+    },
+    "source/src/main/java/lab/retry/Fixture.java": {
+      "bytes": 4753,
+      "sha256": "419e15c3dcc97d67e85d256d26dcfafd9fd027d1c10c4967667ee24f9259d8a5"
+    },
+    "source/src/main/java/lab/retry/FlussStore.java": {
+      "bytes": 8792,
+      "sha256": "4e755bd8805a029109b0e7a4c6e8a091dc19584bc28114a42ca846fb04c70efa"
+    },
+    "source/src/main/java/lab/retry/History.java": {
+      "bytes": 3348,
+      "sha256": "4278888fdc54d10a1d6fa0778288ddeec7737292e60d595c7dc7096729c8ffd5"
+    },
+    "source/src/main/java/lab/retry/Json.java": {
+      "bytes": 1555,
+      "sha256": "0f1a7fc1189fee95f39f70fadb7ddcf1af0003ecbca9f97635e6f24ef0d81087"
+    },
+    "source/src/main/java/lab/retry/Main.java": {
+      "bytes": 8437,
+      "sha256": "700392ae6fafbc98ff18459fad6758f5eccfcd5c419da8f0342be595ee56d39f"
+    },
+    "source/src/main/java/lab/retry/Worker.java": {
+      "bytes": 4744,
+      "sha256": "289303e0c3073910defd36d8c47827a943ebf7bb071f5b946a5431f23b8088e6"
+    },
+    "stages.py": {
+      "bytes": 8335,
+      "sha256": "c5f6a19087af0f934e39999ec2552bd4206c27effef805dd608f8aa03213558b"
+    },
+    "supervision.py": {
+      "bytes": 9888,
+      "sha256": "6e1df29f66925c2a5b7fc8612081d5a81045db4be267d348659b29478e11b955"
+    },
+    "verification.py": {
+      "bytes": 15691,
+      "sha256": "3c0786110eb24d6a7e8ad18da957d70342f86cdf8bd039d89734e6d162a381b4"
+    },
+    "verify_export.py": {
+      "bytes": 2580,
+      "sha256": "d46c2586b59569555c2bb965094fa43085c42b178e739360ebfb5dfad614c4c1"
+    },
+    "workspace.py": {
+      "bytes": 242,
+      "sha256": "a95dd52fcd9303a49214882d1334909ecd341e98ab1651bc2bd229f7b063a854"
+    }
+  },
+  "projection": {
+    "checker": {
+      "bytes": 15691,
+      "sha256": "3c0786110eb24d6a7e8ad18da957d70342f86cdf8bd039d89734e6d162a381b4"
+    },
+    "privacy_schema": {
+      "bytes": 8781,
+      "sha256": "593e26c8ca99c67f55fade09cd24a4c0021bcff37a0cc1df23254244605df583"
+    },
+    "producer": {
+      "bytes": 12223,
+      "sha256": "add33fbd55358f0cd65594d017b322105264cd7aed960324f8d556e79df8632b"
+    },
+    "schema": "fluss-public-projection-v1"
+  },
+  "schema": "fluss-public-manifest-v3"
+}

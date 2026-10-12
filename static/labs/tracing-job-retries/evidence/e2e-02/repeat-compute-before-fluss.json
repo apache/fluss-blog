@@ -1,0 +1,63 @@
+{
+  "end_offset_exclusive": 10,
+  "kind": "RESULT",
+  "logical": [
+    {
+      "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+      "attempt": 1,
+      "detail": "Synthetic ticket-1042; deterministic inference stand-in",
+      "emitted_at_ms": 1791155846406,
+      "event_id": "live-02/repeat-compute/ticket-1042/1/1",
+      "event_type": "STARTED",
+      "job_id": "live-02/repeat-compute/ticket-1042",
+      "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+      "step": 1
+    },
+    {
+      "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+      "attempt": 1,
+      "detail": "deterministic synthetic classifier",
+      "emitted_at_ms": 1791155846475,
+      "event_id": "live-02/repeat-compute/ticket-1042/1/2",
+      "event_type": "COMPUTE_STARTED",
+      "job_id": "live-02/repeat-compute/ticket-1042",
+      "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+      "step": 2
+    }
+  ],
+  "logical_count": 2,
+  "raw": [
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+        "attempt": 1,
+        "detail": "Synthetic ticket-1042; deterministic inference stand-in",
+        "emitted_at_ms": 1791155846406,
+        "event_id": "live-02/repeat-compute/ticket-1042/1/1",
+        "event_type": "STARTED",
+        "job_id": "live-02/repeat-compute/ticket-1042",
+        "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+        "step": 1
+      },
+      "offset": 8
+    },
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+        "attempt": 1,
+        "detail": "deterministic synthetic classifier",
+        "emitted_at_ms": 1791155846475,
+        "event_id": "live-02/repeat-compute/ticket-1042/1/2",
+        "event_type": "COMPUTE_STARTED",
+        "job_id": "live-02/repeat-compute/ticket-1042",
+        "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+        "step": 2
+      },
+      "offset": 9
+    }
+  ],
+  "raw_count": 2,
+  "state": "COMPUTE_STARTED"
+}
