@@ -1,0 +1,28 @@
+{
+  "audit": [
+    {
+      "action_id": "",
+      "at_ms": 1791155858518,
+      "id": 7,
+      "job_id": "live-02/before-http/ticket-1042",
+      "method": "POST",
+      "path": "/compute",
+      "payload_digest": "",
+      "request_body_hex": "7b226a6f625f6964223a226c6976652d30322f6265666f72652d687474702f7469636b65742d31303432222c22617474656d7074223a312c227469636b65745f6964223a227469636b65742d31303432227d",
+      "request_json": "{\"attempt\":1,\"job_id\":\"live-02/before-http/ticket-1042\",\"ticket_id\":\"ticket-1042\"}",
+      "response_json": "{\"classification\":\"needs-followup\",\"invocation_id\":4,\"invoked_at_ms\":1791155858517,\"stand_in\":\"deterministic synthetic classifier\"}",
+      "status": 200
+    }
+  ],
+  "computations": [
+    {
+      "attempt": 1,
+      "classification": "needs-followup",
+      "id": 4,
+      "invoked_at_ms": 1791155858517,
+      "job_id": "live-02/before-http/ticket-1042",
+      "ticket_id": "ticket-1042"
+    }
+  ],
+  "effects": []
+}

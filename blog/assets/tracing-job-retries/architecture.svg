@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1400" viewBox="0 0 1200 700" role="img" aria-label="Conceptual architecture with independent Fluss history and fixture receipts" aria-labelledby="v3-architecture-title v3-architecture-desc" font-family="Arial, Helvetica, sans-serif" fill="#252b33">
+  <title id="v3-architecture-title">Two independent stores</title>
+  <desc id="v3-architecture-desc">Conceptual diagram, not captured output. Synthetic data enters one serial Java worker per job. The worker appends transitions to Apache Fluss retry_lab.job_events and separately reads that history on recovery. Requests to the independent deterministic HTTP fixture are POST /compute, POST /followups and GET /followups/{action_id}; result or receipt responses return to the worker. POST /compute is separate computation and is not claimed to be idempotent. Under the fixture-only atomic idempotency contract, SQLite stores a follow-up effect and receipt together, bound to a stable action_id and the exact canonical request payload and payload_digest. The receipt binds action_id and payload_digest. The same action_id plus exact canonical payload returns the same receipt; changed content is rejected. There is no connector or shared transaction between Fluss and SQLite. No paid LLM or general provider guarantee is depicted.</desc>
+  <defs><marker id="architecture-v3-arrow" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 8 4 L 0 8 Z" fill="#496d89"/></marker></defs>
+  <rect x="0" y="0" width="1200" height="700" fill="#ffffff"/>
+  <text x="40" y="70" font-size="30">Two independent stores</text>
+  <text x="40" y="253" font-size="30">Synthetic</text>
+  <text x="40" y="287" font-size="30">ticket</text>
+  <path d="M 212 268 H 277" fill="none" stroke="#496d89" stroke-width="2" marker-end="url(#architecture-v3-arrow)"/>
+  <rect x="290" y="213" width="205" height="109" rx="3" fill="#ffffff" stroke="#252b33" stroke-width="2"/>
+  <text x="392.5" y="254" text-anchor="middle" font-size="30">Java worker</text>
+  <text x="392.5" y="290" text-anchor="middle" font-size="24">Serial per job</text>
+  <text x="700" y="125" text-anchor="middle" font-family="monospace" font-size="24">POST /compute</text>
+  <text x="700" y="159" text-anchor="middle" font-family="monospace" font-size="24">POST /followups</text>
+  <text x="700" y="193" text-anchor="middle" font-family="monospace" font-size="24">GET /followups/{action_id}</text>
+  <path d="M 510 237 H 888" fill="none" stroke="#496d89" stroke-width="2" marker-end="url(#architecture-v3-arrow)"/>
+  <path d="M 888 299 H 510" fill="none" stroke="#496d89" stroke-width="2" marker-end="url(#architecture-v3-arrow)"/>
+  <text x="700" y="350" text-anchor="middle" font-size="24">Result / receipt</text>
+  <rect x="900" y="213" width="260" height="109" rx="3" fill="#ffffff" stroke="#252b33" stroke-width="2"/>
+  <text x="1030" y="255" text-anchor="middle" font-size="26">Deterministic</text>
+  <text x="1030" y="289" text-anchor="middle" font-size="26">HTTP fixture</text>
+  <path d="M 330 338 V 473" fill="none" stroke="#496d89" stroke-width="2" marker-end="url(#architecture-v3-arrow)"/>
+  <text x="303" y="403" text-anchor="end" font-size="24">Append</text>
+  <text x="303" y="433" text-anchor="end" font-size="24">transitions</text>
+  <path d="M 470 473 V 338" fill="none" stroke="#496d89" stroke-width="2" marker-end="url(#architecture-v3-arrow)"/>
+  <text x="493" y="403" font-size="24">Read on</text>
+  <text x="493" y="433" font-size="24">recovery</text>
+  <rect x="245" y="485" width="310" height="96" rx="3" fill="#ffffff" stroke="#252b33" stroke-width="2"/>
+  <text x="400" y="525" text-anchor="middle" font-size="30">Apache Fluss</text>
+  <text x="400" y="561" text-anchor="middle" font-family="monospace" font-size="24">retry_lab.job_events</text>
+  <path d="M 970 338 V 473" fill="none" stroke="#496d89" stroke-width="2" marker-end="url(#architecture-v3-arrow)"/>
+  <text x="946" y="403" text-anchor="end" font-size="24">Atomic effect</text>
+  <text x="946" y="433" text-anchor="end" font-size="24">+ receipt</text>
+  <path d="M 1120 473 V 338" fill="none" stroke="#496d89" stroke-width="2" marker-end="url(#architecture-v3-arrow)"/>
+  <text x="1098" y="403" text-anchor="end" font-size="24">Read</text>
+  <text x="1098" y="433" text-anchor="end" font-size="24">receipt</text>
+  <rect x="900" y="485" width="260" height="86" rx="3" fill="#ffffff" stroke="#252b33" stroke-width="2"/>
+  <text x="1030" y="523" text-anchor="middle" font-size="30">SQLite</text>
+  <text x="1030" y="554" text-anchor="middle" font-size="24">Effects + receipts</text>
+  <text x="708" y="538" text-anchor="middle" font-size="24">No shared transaction</text>
+  <text x="980" y="598" text-anchor="middle" font-size="24">Same <tspan font-family="monospace">action_id</tspan> + payload</text>
+  <text x="980" y="626" text-anchor="middle" font-size="24">→ Same follow-up receipt</text>
+  <text x="980" y="654" text-anchor="middle" font-size="24">Changed content rejected</text>
+</svg>

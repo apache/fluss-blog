@@ -1,0 +1,70 @@
+{
+  "audit": [
+    {
+      "action_id": "",
+      "at_ms": 1791155846539,
+      "id": 4,
+      "job_id": "live-02/repeat-compute/ticket-1042",
+      "method": "POST",
+      "path": "/compute",
+      "payload_digest": "",
+      "request_body_hex": "7b227469636b65745f6964223a227469636b65742d31303432222c22617474656d7074223a312c226a6f625f6964223a226c6976652d30322f7265706561742d636f6d707574652f7469636b65742d31303432227d",
+      "request_json": "{\"attempt\":1,\"job_id\":\"live-02/repeat-compute/ticket-1042\",\"ticket_id\":\"ticket-1042\"}",
+      "response_json": "{\"classification\":\"needs-followup\",\"invocation_id\":2,\"invoked_at_ms\":1791155846539,\"stand_in\":\"deterministic synthetic classifier\"}",
+      "status": 200
+    },
+    {
+      "action_id": "",
+      "at_ms": 1791155850763,
+      "id": 5,
+      "job_id": "live-02/repeat-compute/ticket-1042",
+      "method": "POST",
+      "path": "/compute",
+      "payload_digest": "",
+      "request_body_hex": "7b227469636b65745f6964223a227469636b65742d31303432222c226a6f625f6964223a226c6976652d30322f7265706561742d636f6d707574652f7469636b65742d31303432222c22617474656d7074223a327d",
+      "request_json": "{\"attempt\":2,\"job_id\":\"live-02/repeat-compute/ticket-1042\",\"ticket_id\":\"ticket-1042\"}",
+      "response_json": "{\"classification\":\"needs-followup\",\"invocation_id\":3,\"invoked_at_ms\":1791155850763,\"stand_in\":\"deterministic synthetic classifier\"}",
+      "status": 200
+    },
+    {
+      "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+      "at_ms": 1791155850824,
+      "id": 6,
+      "job_id": "live-02/repeat-compute/ticket-1042",
+      "method": "POST",
+      "path": "/followups",
+      "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+      "request_body_hex": "7b22616374696f6e5f6964223a226c6976652d30322f7265706561742d636f6d707574652f7469636b65742d313034322f6372656174652d666f6c6c6f7775702f7631222c227061796c6f61645f646967657374223a2234656230306234373763633961333962343231653837613236316661353830336533343637393036336165646533656438326236316431383031326432613866222c227061796c6f6164223a7b22636c617373696669636174696f6e223a226e656564732d666f6c6c6f777570222c226a6f625f6964223a226c6976652d30322f7265706561742d636f6d707574652f7469636b65742d31303432222c227469636b65745f6964223a227469636b65742d31303432222c227469746c65223a22466f6c6c6f772075702073796e746865746963207469636b65742d31303432227d7d",
+      "request_json": "{\"action_id\":\"live-02/repeat-compute/ticket-1042/create-followup/v1\",\"payload\":{\"classification\":\"needs-followup\",\"job_id\":\"live-02/repeat-compute/ticket-1042\",\"ticket_id\":\"ticket-1042\",\"title\":\"Follow up synthetic ticket-1042\"},\"payload_digest\":\"4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f\"}",
+      "response_json": "{\"action_id\":\"live-02/repeat-compute/ticket-1042/create-followup/v1\",\"committed_at_ms\":1791155850824,\"contract\":\"fixture-atomic-action-id-payload-v1\",\"payload_digest\":\"4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f\",\"receipt_id\":\"followup-8577206e067714a0ce529a13\"}",
+      "status": 201
+    }
+  ],
+  "computations": [
+    {
+      "attempt": 1,
+      "classification": "needs-followup",
+      "id": 2,
+      "invoked_at_ms": 1791155846539,
+      "job_id": "live-02/repeat-compute/ticket-1042",
+      "ticket_id": "ticket-1042"
+    },
+    {
+      "attempt": 2,
+      "classification": "needs-followup",
+      "id": 3,
+      "invoked_at_ms": 1791155850763,
+      "job_id": "live-02/repeat-compute/ticket-1042",
+      "ticket_id": "ticket-1042"
+    }
+  ],
+  "effects": [
+    {
+      "action_id": "live-02/repeat-compute/ticket-1042/create-followup/v1",
+      "committed_at_ms": 1791155850824,
+      "payload_digest": "4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f",
+      "payload_json": "{\"classification\":\"needs-followup\",\"job_id\":\"live-02/repeat-compute/ticket-1042\",\"ticket_id\":\"ticket-1042\",\"title\":\"Follow up synthetic ticket-1042\"}",
+      "receipt_json": "{\"action_id\":\"live-02/repeat-compute/ticket-1042/create-followup/v1\",\"committed_at_ms\":1791155850824,\"contract\":\"fixture-atomic-action-id-payload-v1\",\"payload_digest\":\"4eb00b477cc9a39b421e87a261fa5803e34679063aede3ed82b61d18012d2a8f\",\"receipt_id\":\"followup-8577206e067714a0ce529a13\"}"
+    }
+  ]
+}

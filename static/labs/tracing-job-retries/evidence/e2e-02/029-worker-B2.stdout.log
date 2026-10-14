@@ -1,0 +1,6 @@
+2026-10-05T03:18:36.357832+04:00 {"end_offset_exclusive":40,"kind":"REPLAY","logical":[],"logical_count":0,"raw":[],"raw_count":0,"state":"NEW"}
+2026-10-05T03:18:36.424812+04:00 {"attempt":1,"event_id":"live-02/after-commit/ticket-1042/1/1","event_type":"STARTED","kind":"ACK","pid":2296}
+2026-10-05T03:18:36.436762+04:00 {"attempt":1,"event_id":"live-02/after-commit/ticket-1042/1/2","event_type":"COMPUTE_STARTED","kind":"ACK","pid":2296}
+2026-10-05T03:18:36.519332+04:00 {"attempt":1,"event_id":"live-02/after-commit/ticket-1042/1/3","event_type":"COMPUTE_FINISHED","kind":"ACK","pid":2296}
+2026-10-05T03:18:36.529836+04:00 {"attempt":1,"event_id":"live-02/after-commit/ticket-1042/1/4","event_type":"ACTION_REQUESTED","kind":"ACK","pid":2296}
+2026-10-05T03:18:36.543554+04:00 {"attempt":1,"barrier":"B2","boundary":"Independent service committed; validated receipt received; ACTION_CONFIRMED append not invoked","job_id":"live-02/after-commit/ticket-1042","kind":"BARRIER","pid":2296}

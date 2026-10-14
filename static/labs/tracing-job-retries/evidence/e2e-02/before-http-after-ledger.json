@@ -1,0 +1,62 @@
+{
+  "audit": [
+    {
+      "action_id": "",
+      "at_ms": 1791155858518,
+      "id": 7,
+      "job_id": "live-02/before-http/ticket-1042",
+      "method": "POST",
+      "path": "/compute",
+      "payload_digest": "",
+      "request_body_hex": "7b226a6f625f6964223a226c6976652d30322f6265666f72652d687474702f7469636b65742d31303432222c22617474656d7074223a312c227469636b65745f6964223a227469636b65742d31303432227d",
+      "request_json": "{\"attempt\":1,\"job_id\":\"live-02/before-http/ticket-1042\",\"ticket_id\":\"ticket-1042\"}",
+      "response_json": "{\"classification\":\"needs-followup\",\"invocation_id\":4,\"invoked_at_ms\":1791155858517,\"stand_in\":\"deterministic synthetic classifier\"}",
+      "status": 200
+    },
+    {
+      "action_id": "live-02/before-http/ticket-1042/create-followup/v1",
+      "at_ms": 1791155862755,
+      "id": 8,
+      "job_id": "live-02/before-http/ticket-1042",
+      "method": "GET",
+      "path": "/followups/live-02%2Fbefore-http%2Fticket-1042%2Fcreate-followup%2Fv1",
+      "payload_digest": "",
+      "request_body_hex": "",
+      "request_json": "{}",
+      "response_json": "{\"absent\":true,\"action_id\":\"live-02/before-http/ticket-1042/create-followup/v1\",\"contract\":\"fixture-atomic-action-id-payload-v1\"}",
+      "status": 404
+    },
+    {
+      "action_id": "live-02/before-http/ticket-1042/create-followup/v1",
+      "at_ms": 1791155862798,
+      "id": 9,
+      "job_id": "live-02/before-http/ticket-1042",
+      "method": "POST",
+      "path": "/followups",
+      "payload_digest": "dd5760db6180167b050746f5ee64833df497710cfac34c16c30834b5073ef340",
+      "request_body_hex": "7b22616374696f6e5f6964223a226c6976652d30322f6265666f72652d687474702f7469636b65742d313034322f6372656174652d666f6c6c6f7775702f7631222c227061796c6f61645f646967657374223a2264643537363064623631383031363762303530373436663565653634383333646634393737313063666163333463313663333038333462353037336566333430222c227061796c6f6164223a7b22636c617373696669636174696f6e223a226e656564732d666f6c6c6f777570222c226a6f625f6964223a226c6976652d30322f6265666f72652d687474702f7469636b65742d31303432222c227469636b65745f6964223a227469636b65742d31303432222c227469746c65223a22466f6c6c6f772075702073796e746865746963207469636b65742d31303432227d7d",
+      "request_json": "{\"action_id\":\"live-02/before-http/ticket-1042/create-followup/v1\",\"payload\":{\"classification\":\"needs-followup\",\"job_id\":\"live-02/before-http/ticket-1042\",\"ticket_id\":\"ticket-1042\",\"title\":\"Follow up synthetic ticket-1042\"},\"payload_digest\":\"dd5760db6180167b050746f5ee64833df497710cfac34c16c30834b5073ef340\"}",
+      "response_json": "{\"action_id\":\"live-02/before-http/ticket-1042/create-followup/v1\",\"committed_at_ms\":1791155862797,\"contract\":\"fixture-atomic-action-id-payload-v1\",\"payload_digest\":\"dd5760db6180167b050746f5ee64833df497710cfac34c16c30834b5073ef340\",\"receipt_id\":\"followup-8d093d3801e8231924a05961\"}",
+      "status": 201
+    }
+  ],
+  "computations": [
+    {
+      "attempt": 1,
+      "classification": "needs-followup",
+      "id": 4,
+      "invoked_at_ms": 1791155858517,
+      "job_id": "live-02/before-http/ticket-1042",
+      "ticket_id": "ticket-1042"
+    }
+  ],
+  "effects": [
+    {
+      "action_id": "live-02/before-http/ticket-1042/create-followup/v1",
+      "committed_at_ms": 1791155862797,
+      "payload_digest": "dd5760db6180167b050746f5ee64833df497710cfac34c16c30834b5073ef340",
+      "payload_json": "{\"classification\":\"needs-followup\",\"job_id\":\"live-02/before-http/ticket-1042\",\"ticket_id\":\"ticket-1042\",\"title\":\"Follow up synthetic ticket-1042\"}",
+      "receipt_json": "{\"action_id\":\"live-02/before-http/ticket-1042/create-followup/v1\",\"committed_at_ms\":1791155862797,\"contract\":\"fixture-atomic-action-id-payload-v1\",\"payload_digest\":\"dd5760db6180167b050746f5ee64833df497710cfac34c16c30834b5073ef340\",\"receipt_id\":\"followup-8d093d3801e8231924a05961\"}"
+    }
+  ]
+}

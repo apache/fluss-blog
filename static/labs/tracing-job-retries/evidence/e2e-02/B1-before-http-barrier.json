@@ -1,0 +1,8 @@
+{
+  "attempt": 1,
+  "barrier": "B1",
+  "boundary": "ACTION_REQUESTED future completed; POST /followups not invoked",
+  "job_id": "live-02/before-http/ticket-1042",
+  "kind": "BARRIER",
+  "pid": 1731
+}

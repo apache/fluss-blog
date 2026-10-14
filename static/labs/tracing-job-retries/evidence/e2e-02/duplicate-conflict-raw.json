@@ -1,0 +1,53 @@
+{
+  "end_offset_exclusive": 71,
+  "kind": "RESULT",
+  "raw": [
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "live-02/duplicate-event/ticket-1042/create-followup/v1",
+        "attempt": 1,
+        "detail": "identical application event",
+        "emitted_at_ms": 1700000000000,
+        "event_id": "live-02/duplicate-event/ticket-1042/1/1",
+        "event_type": "STARTED",
+        "job_id": "live-02/duplicate-event/ticket-1042",
+        "payload_digest": "a7da150b8d83893c02f1a13a9f48ded73d2189f4411a317e8ddd9f556db51332",
+        "step": 1
+      },
+      "offset": 68
+    },
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "live-02/duplicate-event/ticket-1042/create-followup/v1",
+        "attempt": 1,
+        "detail": "identical application event",
+        "emitted_at_ms": 1700000000000,
+        "event_id": "live-02/duplicate-event/ticket-1042/1/1",
+        "event_type": "STARTED",
+        "job_id": "live-02/duplicate-event/ticket-1042",
+        "payload_digest": "a7da150b8d83893c02f1a13a9f48ded73d2189f4411a317e8ddd9f556db51332",
+        "step": 1
+      },
+      "offset": 69
+    },
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "live-02/duplicate-event/ticket-1042/create-followup/v1",
+        "attempt": 1,
+        "detail": "changed immutable detail",
+        "emitted_at_ms": 1700000000000,
+        "event_id": "live-02/duplicate-event/ticket-1042/1/1",
+        "event_type": "STARTED",
+        "job_id": "live-02/duplicate-event/ticket-1042",
+        "payload_digest": "a7da150b8d83893c02f1a13a9f48ded73d2189f4411a317e8ddd9f556db51332",
+        "step": 1
+      },
+      "offset": 70
+    }
+  ],
+  "raw_count": 3,
+  "state": "RAW_ONLY"
+}

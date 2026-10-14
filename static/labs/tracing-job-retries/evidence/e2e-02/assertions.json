@@ -1,0 +1,1890 @@
+[
+  {
+    "at_gst": "2026-10-05T03:17:13.834654+04:00",
+    "expected": 0,
+    "name": "java-version exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:14.002259+04:00",
+    "expected": 0,
+    "name": "maven-version exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:14.089157+04:00",
+    "expected": "127.0.0.1",
+    "name": "service localhost",
+    "observed": "127.0.0.1",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:14.122862+04:00",
+    "expected": [
+      200,
+      "fixture-atomic-action-id-payload-v1"
+    ],
+    "name": "service health",
+    "observed": [
+      200,
+      "fixture-atomic-action-id-payload-v1"
+    ],
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:17.544877+04:00",
+    "expected": 0,
+    "name": "init-3 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:17.545213+04:00",
+    "expected": 1,
+    "name": "init single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:21.268475+04:00",
+    "expected": 0,
+    "name": "worker-4 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:21.268794+04:00",
+    "expected": 1,
+    "name": "worker single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:25.292580+04:00",
+    "expected": 0,
+    "name": "inspect-5 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:25.292787+04:00",
+    "expected": 1,
+    "name": "inspect single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:25.294735+04:00",
+    "expected": "COMPLETED",
+    "name": "baseline reduced state",
+    "observed": "COMPLETED",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:25.294910+04:00",
+    "expected": 1,
+    "name": "baseline effect count",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:25.295834+04:00",
+    "expected": 1,
+    "name": "baseline compute count",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:25.296820+04:00",
+    "expected": [
+      "STARTED",
+      "COMPUTE_STARTED",
+      "COMPUTE_FINISHED",
+      "ACTION_REQUESTED",
+      "ACTION_CONFIRMED",
+      "COMPLETED"
+    ],
+    "name": "baseline ordered types",
+    "observed": [
+      "STARTED",
+      "COMPUTE_STARTED",
+      "COMPUTE_FINISHED",
+      "ACTION_REQUESTED",
+      "ACTION_CONFIRMED",
+      "COMPLETED"
+    ],
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:25.297797+04:00",
+    "expected": 1,
+    "name": "baseline HTTP POST count",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:26.568156+04:00",
+    "expected": "A",
+    "name": "A barrier",
+    "observed": "A",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:26.568616+04:00",
+    "expected": 1604,
+    "name": "A worker pid",
+    "observed": 1604,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:26.569922+04:00",
+    "expected": null,
+    "name": "A alive before kill",
+    "observed": null,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:26.586885+04:00",
+    "expected": -9,
+    "name": "A SIGKILL exit",
+    "observed": -9,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:29.559264+04:00",
+    "expected": 0,
+    "name": "inspect-7 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:29.559530+04:00",
+    "expected": 1,
+    "name": "inspect single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:29.561344+04:00",
+    "expected": [
+      "STARTED",
+      "COMPUTE_STARTED"
+    ],
+    "name": "A no completion append",
+    "observed": [
+      "STARTED",
+      "COMPUTE_STARTED"
+    ],
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:29.561557+04:00",
+    "expected": 1,
+    "name": "A independent computed once",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:34.237075+04:00",
+    "expected": 0,
+    "name": "recover-8 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:34.237459+04:00",
+    "expected": 1,
+    "name": "recover single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:34.238429+04:00",
+    "expected": true,
+    "name": "A fresh PID",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:37.311040+04:00",
+    "expected": 0,
+    "name": "inspect-9 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:37.311355+04:00",
+    "expected": 1,
+    "name": "inspect single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:37.313152+04:00",
+    "expected": "COMPLETED",
+    "name": "repeat-compute-after reduced state",
+    "observed": "COMPLETED",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:37.313478+04:00",
+    "expected": 1,
+    "name": "repeat-compute-after effect count",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:37.314544+04:00",
+    "expected": 2,
+    "name": "repeat-compute-after compute count",
+    "observed": 2,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:37.315608+04:00",
+    "expected": [
+      1,
+      2
+    ],
+    "name": "A both attempts",
+    "observed": [
+      1,
+      2
+    ],
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:37.316657+04:00",
+    "expected": 1,
+    "name": "A one action POST",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:38.570121+04:00",
+    "expected": "B1",
+    "name": "B1 barrier",
+    "observed": "B1",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:38.570593+04:00",
+    "expected": 1731,
+    "name": "B1 worker pid",
+    "observed": 1731,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:38.571663+04:00",
+    "expected": null,
+    "name": "B1 alive before kill",
+    "observed": null,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:38.588615+04:00",
+    "expected": -9,
+    "name": "B1 SIGKILL exit",
+    "observed": -9,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:41.609779+04:00",
+    "expected": 0,
+    "name": "inspect-11 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:41.610153+04:00",
+    "expected": 1,
+    "name": "inspect single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:41.611944+04:00",
+    "expected": "ACTION_REQUESTED",
+    "name": "before-http unresolved log",
+    "observed": "ACTION_REQUESTED",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:41.612238+04:00",
+    "expected": 0,
+    "name": "before-http before effects",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:41.613286+04:00",
+    "expected": 0,
+    "name": "before-http before POSTs",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:46.188596+04:00",
+    "expected": 0,
+    "name": "recover-12 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:46.188995+04:00",
+    "expected": 1,
+    "name": "recover single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:46.189889+04:00",
+    "expected": true,
+    "name": "before-http fresh PID",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:49.211391+04:00",
+    "expected": 0,
+    "name": "inspect-13 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:49.211788+04:00",
+    "expected": 1,
+    "name": "inspect single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:49.213790+04:00",
+    "expected": "COMPLETED",
+    "name": "before-http-after reduced state",
+    "observed": "COMPLETED",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:49.214091+04:00",
+    "expected": 1,
+    "name": "before-http-after effect count",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:49.215206+04:00",
+    "expected": 1,
+    "name": "before-http-after compute count",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:49.216190+04:00",
+    "expected": 1,
+    "name": "before-http no second POST",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:49.217211+04:00",
+    "expected": true,
+    "name": "before-http receipt lookup",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:49.218144+04:00",
+    "expected": 404,
+    "name": "before-http receipt status",
+    "observed": 404,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:49.219186+04:00",
+    "expected": [
+      1,
+      2
+    ],
+    "name": "before-http attempts retained",
+    "observed": [
+      1,
+      2
+    ],
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:49.220197+04:00",
+    "expected": true,
+    "name": "before-http reconciled event",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:52.291678+04:00",
+    "expected": 0,
+    "name": "frozen-intent-14 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:52.292110+04:00",
+    "expected": 1,
+    "name": "frozen-intent single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:55.313917+04:00",
+    "expected": 0,
+    "name": "inspect-15 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:55.314409+04:00",
+    "expected": 1,
+    "name": "inspect single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:55.315591+04:00",
+    "expected": "ACTION_REQUESTED",
+    "name": "frozen positive unresolved state",
+    "observed": "ACTION_REQUESTED",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:55.316520+04:00",
+    "expected": "Frozen \"priority\" \\ follow-up / ticket-1042",
+    "name": "frozen positive non-default title",
+    "observed": "Frozen \"priority\" \\ follow-up / ticket-1042",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:55.317593+04:00",
+    "expected": true,
+    "name": "frozen positive differs from default",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:55.318672+04:00",
+    "expected": "cf74b0b56b358a092082d0a1fc8b8a30e65dc09250d53e979380ec9e7b197789",
+    "name": "frozen positive exact digest",
+    "observed": "cf74b0b56b358a092082d0a1fc8b8a30e65dc09250d53e979380ec9e7b197789",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:55.320231+04:00",
+    "expected": 0,
+    "name": "frozen positive no prior computation",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:55.320682+04:00",
+    "expected": 0,
+    "name": "frozen positive no prior effect",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:59.945492+04:00",
+    "expected": 0,
+    "name": "recover-16 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:59.946005+04:00",
+    "expected": 1,
+    "name": "recover single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:17:59.946934+04:00",
+    "expected": true,
+    "name": "frozen positive fresh JVM",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:02.968622+04:00",
+    "expected": 0,
+    "name": "inspect-17 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:02.969097+04:00",
+    "expected": 1,
+    "name": "inspect single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:02.971255+04:00",
+    "expected": "COMPLETED",
+    "name": "frozen-payload-after reduced state",
+    "observed": "COMPLETED",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:02.971748+04:00",
+    "expected": 1,
+    "name": "frozen-payload-after effect count",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:02.973058+04:00",
+    "expected": 0,
+    "name": "frozen-payload-after compute count",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:02.974396+04:00",
+    "expected": 1,
+    "name": "frozen positive one POST",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:02.975785+04:00",
+    "expected": "7b22636c617373696669636174696f6e223a226e656564732d666f6c6c6f777570222c226a6f625f6964223a226c6976652d30322f66726f7a656e2d7061796c6f61642f7469636b65742d31303432222c227469636b65745f6964223a227469636b65742d31303432222c227469746c65223a2246726f7a656e205c227072696f726974795c22205c5c20666f6c6c6f772d7570202f207469636b65742d31303432227d",
+    "name": "frozen positive raw HTTP payload bytes",
+    "observed": "7b22636c617373696669636174696f6e223a226e656564732d666f6c6c6f777570222c226a6f625f6964223a226c6976652d30322f66726f7a656e2d7061796c6f61642f7469636b65742d31303432222c227469636b65745f6964223a227469636b65742d31303432222c227469746c65223a2246726f7a656e205c227072696f726974795c22205c5c20666f6c6c6f772d7570202f207469636b65742d31303432227d",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:02.977039+04:00",
+    "expected": "7b22636c617373696669636174696f6e223a226e656564732d666f6c6c6f777570222c226a6f625f6964223a226c6976652d30322f66726f7a656e2d7061796c6f61642f7469636b65742d31303432222c227469636b65745f6964223a227469636b65742d31303432222c227469746c65223a2246726f7a656e205c227072696f726974795c22205c5c20666f6c6c6f772d7570202f207469636b65742d31303432227d",
+    "name": "frozen positive independent stored bytes",
+    "observed": "7b22636c617373696669636174696f6e223a226e656564732d666f6c6c6f777570222c226a6f625f6964223a226c6976652d30322f66726f7a656e2d7061796c6f61642f7469636b65742d31303432222c227469636b65745f6964223a227469636b65742d31303432222c227469746c65223a2246726f7a656e205c227072696f726974795c22205c5c20666f6c6c6f772d7570202f207469636b65742d31303432227d",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:02.978379+04:00",
+    "expected": "live-02/frozen-payload/ticket-1042/create-followup/v1",
+    "name": "frozen positive receipt action",
+    "observed": "live-02/frozen-payload/ticket-1042/create-followup/v1",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:02.979714+04:00",
+    "expected": "cf74b0b56b358a092082d0a1fc8b8a30e65dc09250d53e979380ec9e7b197789",
+    "name": "frozen positive receipt digest",
+    "observed": "cf74b0b56b358a092082d0a1fc8b8a30e65dc09250d53e979380ec9e7b197789",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:02.981069+04:00",
+    "expected": [
+      "cf74b0b56b358a092082d0a1fc8b8a30e65dc09250d53e979380ec9e7b197789"
+    ],
+    "name": "frozen positive recovered digest propagation",
+    "observed": [
+      "cf74b0b56b358a092082d0a1fc8b8a30e65dc09250d53e979380ec9e7b197789"
+    ],
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:06.053138+04:00",
+    "expected": 0,
+    "name": "invalid-intent-18 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:06.053734+04:00",
+    "expected": 1,
+    "name": "invalid-intent single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:09.476646+04:00",
+    "expected": 1,
+    "name": "recover-19 exit",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:09.477198+04:00",
+    "expected": 1,
+    "name": "missing failure reported",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:09.478173+04:00",
+    "expected": true,
+    "name": "missing rejection reason",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:09.479814+04:00",
+    "expected": 0,
+    "name": "missing no inference on invalid intent",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:09.480434+04:00",
+    "expected": 0,
+    "name": "missing no action POST",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:09.481447+04:00",
+    "expected": [],
+    "name": "missing no effect",
+    "observed": [],
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:12.554138+04:00",
+    "expected": 0,
+    "name": "invalid-intent-20 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:12.554699+04:00",
+    "expected": 1,
+    "name": "invalid-intent single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:15.978058+04:00",
+    "expected": 1,
+    "name": "recover-21 exit",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:15.979050+04:00",
+    "expected": 1,
+    "name": "noncanonical failure reported",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:15.980107+04:00",
+    "expected": true,
+    "name": "noncanonical rejection reason",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:15.981912+04:00",
+    "expected": 0,
+    "name": "noncanonical no inference on invalid intent",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:15.982799+04:00",
+    "expected": 0,
+    "name": "noncanonical no action POST",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:15.983939+04:00",
+    "expected": [],
+    "name": "noncanonical no effect",
+    "observed": [],
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:19.005826+04:00",
+    "expected": 0,
+    "name": "invalid-intent-22 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:19.006406+04:00",
+    "expected": 1,
+    "name": "invalid-intent single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:22.429494+04:00",
+    "expected": 1,
+    "name": "recover-23 exit",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:22.430235+04:00",
+    "expected": 1,
+    "name": "tampered failure reported",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:22.431338+04:00",
+    "expected": true,
+    "name": "tampered rejection reason",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:22.433024+04:00",
+    "expected": 0,
+    "name": "tampered no inference on invalid intent",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:22.433556+04:00",
+    "expected": 0,
+    "name": "tampered no action POST",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:22.434724+04:00",
+    "expected": [],
+    "name": "tampered no effect",
+    "observed": [],
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:25.456832+04:00",
+    "expected": 0,
+    "name": "invalid-intent-24 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:25.457427+04:00",
+    "expected": 1,
+    "name": "invalid-intent single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:28.830250+04:00",
+    "expected": 1,
+    "name": "recover-25 exit",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:28.830880+04:00",
+    "expected": 1,
+    "name": "digest failure reported",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:28.832092+04:00",
+    "expected": true,
+    "name": "digest rejection reason",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:28.833954+04:00",
+    "expected": 0,
+    "name": "digest no inference on invalid intent",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:28.834632+04:00",
+    "expected": 0,
+    "name": "digest no action POST",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:28.835841+04:00",
+    "expected": [],
+    "name": "digest no effect",
+    "observed": [],
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:31.908149+04:00",
+    "expected": 0,
+    "name": "invalid-intent-26 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:31.908976+04:00",
+    "expected": 1,
+    "name": "invalid-intent single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:35.282080+04:00",
+    "expected": 1,
+    "name": "recover-27 exit",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:35.282722+04:00",
+    "expected": 1,
+    "name": "binding failure reported",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:35.283827+04:00",
+    "expected": true,
+    "name": "binding rejection reason",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:35.285703+04:00",
+    "expected": 0,
+    "name": "binding no inference on invalid intent",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:35.286264+04:00",
+    "expected": 0,
+    "name": "binding no action POST",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:35.287388+04:00",
+    "expected": [],
+    "name": "binding no effect",
+    "observed": [],
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:35.288644+04:00",
+    "expected": "dd5760db6180167b050746f5ee64833df497710cfac34c16c30834b5073ef340",
+    "name": "before-http actual payload digest live-02/before-http/ticket-1042/1/1",
+    "observed": "dd5760db6180167b050746f5ee64833df497710cfac34c16c30834b5073ef340",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:35.289777+04:00",
+    "expected": "dd5760db6180167b050746f5ee64833df497710cfac34c16c30834b5073ef340",
+    "name": "before-http actual payload digest live-02/before-http/ticket-1042/1/2",
+    "observed": "dd5760db6180167b050746f5ee64833df497710cfac34c16c30834b5073ef340",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:35.291028+04:00",
+    "expected": "dd5760db6180167b050746f5ee64833df497710cfac34c16c30834b5073ef340",
+    "name": "before-http actual payload digest live-02/before-http/ticket-1042/1/3",
+    "observed": "dd5760db6180167b050746f5ee64833df497710cfac34c16c30834b5073ef340",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:35.292243+04:00",
+    "expected": "dd5760db6180167b050746f5ee64833df497710cfac34c16c30834b5073ef340",
+    "name": "before-http actual payload digest live-02/before-http/ticket-1042/1/4",
+    "observed": "dd5760db6180167b050746f5ee64833df497710cfac34c16c30834b5073ef340",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:35.293492+04:00",
+    "expected": {
+      "classification": "needs-followup",
+      "job_id": "live-02/before-http/ticket-1042",
+      "ticket_id": "ticket-1042",
+      "title": "Follow up synthetic ticket-1042"
+    },
+    "name": "before-http immutable intent detail",
+    "observed": {
+      "classification": "needs-followup",
+      "job_id": "live-02/before-http/ticket-1042",
+      "ticket_id": "ticket-1042",
+      "title": "Follow up synthetic ticket-1042"
+    },
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:36.543663+04:00",
+    "expected": "B2",
+    "name": "B2 barrier",
+    "observed": "B2",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:36.544378+04:00",
+    "expected": 2296,
+    "name": "B2 worker pid",
+    "observed": 2296,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:36.545662+04:00",
+    "expected": null,
+    "name": "B2 alive before kill",
+    "observed": null,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:36.562750+04:00",
+    "expected": -9,
+    "name": "B2 SIGKILL exit",
+    "observed": -9,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:39.533828+04:00",
+    "expected": 0,
+    "name": "inspect-29 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:39.534490+04:00",
+    "expected": 1,
+    "name": "inspect single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:39.536331+04:00",
+    "expected": "ACTION_REQUESTED",
+    "name": "after-commit unresolved log",
+    "observed": "ACTION_REQUESTED",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:39.536960+04:00",
+    "expected": 1,
+    "name": "after-commit before effects",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:39.538074+04:00",
+    "expected": 1,
+    "name": "after-commit before POSTs",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:44.062818+04:00",
+    "expected": 0,
+    "name": "recover-30 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:44.063583+04:00",
+    "expected": 1,
+    "name": "recover single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:44.064732+04:00",
+    "expected": true,
+    "name": "after-commit fresh PID",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:47.088666+04:00",
+    "expected": 0,
+    "name": "inspect-31 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:47.089419+04:00",
+    "expected": 1,
+    "name": "inspect single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:47.091422+04:00",
+    "expected": "COMPLETED",
+    "name": "after-commit-after reduced state",
+    "observed": "COMPLETED",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:47.092049+04:00",
+    "expected": 1,
+    "name": "after-commit-after effect count",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:47.093207+04:00",
+    "expected": 1,
+    "name": "after-commit-after compute count",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:47.094336+04:00",
+    "expected": 1,
+    "name": "after-commit no second POST",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:47.095481+04:00",
+    "expected": true,
+    "name": "after-commit receipt lookup",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:47.096682+04:00",
+    "expected": 200,
+    "name": "after-commit receipt status",
+    "observed": 200,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:47.097779+04:00",
+    "expected": [
+      1,
+      2
+    ],
+    "name": "after-commit attempts retained",
+    "observed": [
+      1,
+      2
+    ],
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:47.099396+04:00",
+    "expected": {
+      "action_id": "live-02/after-commit/ticket-1042/create-followup/v1",
+      "committed_at_ms": 1791155916533,
+      "contract": "fixture-atomic-action-id-payload-v1",
+      "payload_digest": "3d239185b70d29aa0d816a73a5f5dcef8ba33f2f101992b0f5ca964eaba8ac2b",
+      "receipt_id": "followup-d25565ce96a9dd8d9430e94d"
+    },
+    "name": "after-commit recorded original receipt",
+    "observed": {
+      "action_id": "live-02/after-commit/ticket-1042/create-followup/v1",
+      "committed_at_ms": 1791155916533,
+      "contract": "fixture-atomic-action-id-payload-v1",
+      "payload_digest": "3d239185b70d29aa0d816a73a5f5dcef8ba33f2f101992b0f5ca964eaba8ac2b",
+      "receipt_id": "followup-d25565ce96a9dd8d9430e94d"
+    },
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:47.100070+04:00",
+    "expected": true,
+    "name": "after-commit reconciled event",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:47.101293+04:00",
+    "expected": "3d239185b70d29aa0d816a73a5f5dcef8ba33f2f101992b0f5ca964eaba8ac2b",
+    "name": "after-commit actual payload digest live-02/after-commit/ticket-1042/1/1",
+    "observed": "3d239185b70d29aa0d816a73a5f5dcef8ba33f2f101992b0f5ca964eaba8ac2b",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:47.102355+04:00",
+    "expected": "3d239185b70d29aa0d816a73a5f5dcef8ba33f2f101992b0f5ca964eaba8ac2b",
+    "name": "after-commit actual payload digest live-02/after-commit/ticket-1042/1/2",
+    "observed": "3d239185b70d29aa0d816a73a5f5dcef8ba33f2f101992b0f5ca964eaba8ac2b",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:47.103517+04:00",
+    "expected": "3d239185b70d29aa0d816a73a5f5dcef8ba33f2f101992b0f5ca964eaba8ac2b",
+    "name": "after-commit actual payload digest live-02/after-commit/ticket-1042/1/3",
+    "observed": "3d239185b70d29aa0d816a73a5f5dcef8ba33f2f101992b0f5ca964eaba8ac2b",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:47.104722+04:00",
+    "expected": "3d239185b70d29aa0d816a73a5f5dcef8ba33f2f101992b0f5ca964eaba8ac2b",
+    "name": "after-commit actual payload digest live-02/after-commit/ticket-1042/1/4",
+    "observed": "3d239185b70d29aa0d816a73a5f5dcef8ba33f2f101992b0f5ca964eaba8ac2b",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:47.105855+04:00",
+    "expected": {
+      "classification": "needs-followup",
+      "job_id": "live-02/after-commit/ticket-1042",
+      "ticket_id": "ticket-1042",
+      "title": "Follow up synthetic ticket-1042"
+    },
+    "name": "after-commit immutable intent detail",
+    "observed": {
+      "classification": "needs-followup",
+      "job_id": "live-02/after-commit/ticket-1042",
+      "ticket_id": "ticket-1042",
+      "title": "Follow up synthetic ticket-1042"
+    },
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:47.107216+04:00",
+    "expected": [
+      {
+        "bucket": 0,
+        "event": {
+          "action_id": "JOB/create-followup/v1",
+          "attempt": 1,
+          "detail": "Synthetic ticket-1042; deterministic inference stand-in",
+          "emitted_at_ms": "DISPLAY_TIMESTAMP",
+          "event_id": "JOB/1/1",
+          "event_type": "STARTED",
+          "job_id": "JOB",
+          "payload_digest": "a87200753d6fe77fdc49349eac9fce89f66ddc4868f3d28504ad7968a3de1664",
+          "step": 1
+        },
+        "within_job_record": 0
+      },
+      {
+        "bucket": 0,
+        "event": {
+          "action_id": "JOB/create-followup/v1",
+          "attempt": 1,
+          "detail": "deterministic synthetic classifier",
+          "emitted_at_ms": "DISPLAY_TIMESTAMP",
+          "event_id": "JOB/1/2",
+          "event_type": "COMPUTE_STARTED",
+          "job_id": "JOB",
+          "payload_digest": "a87200753d6fe77fdc49349eac9fce89f66ddc4868f3d28504ad7968a3de1664",
+          "step": 2
+        },
+        "within_job_record": 1
+      },
+      {
+        "bucket": 0,
+        "event": {
+          "action_id": "JOB/create-followup/v1",
+          "attempt": 1,
+          "detail": "needs-followup",
+          "emitted_at_ms": "DISPLAY_TIMESTAMP",
+          "event_id": "JOB/1/3",
+          "event_type": "COMPUTE_FINISHED",
+          "job_id": "JOB",
+          "payload_digest": "a87200753d6fe77fdc49349eac9fce89f66ddc4868f3d28504ad7968a3de1664",
+          "step": 3
+        },
+        "within_job_record": 2
+      },
+      {
+        "bucket": 0,
+        "event": {
+          "action_id": "JOB/create-followup/v1",
+          "attempt": 1,
+          "detail": "{\"classification\":\"needs-followup\",\"job_id\":\"JOB\",\"ticket_id\":\"ticket-1042\",\"title\":\"Follow up synthetic ticket-1042\"}",
+          "emitted_at_ms": "DISPLAY_TIMESTAMP",
+          "event_id": "JOB/1/4",
+          "event_type": "ACTION_REQUESTED",
+          "job_id": "JOB",
+          "payload_digest": "a87200753d6fe77fdc49349eac9fce89f66ddc4868f3d28504ad7968a3de1664",
+          "step": 4
+        },
+        "within_job_record": 3
+      }
+    ],
+    "name": "twin action prefixes",
+    "observed": [
+      {
+        "bucket": 0,
+        "event": {
+          "action_id": "JOB/create-followup/v1",
+          "attempt": 1,
+          "detail": "Synthetic ticket-1042; deterministic inference stand-in",
+          "emitted_at_ms": "DISPLAY_TIMESTAMP",
+          "event_id": "JOB/1/1",
+          "event_type": "STARTED",
+          "job_id": "JOB",
+          "payload_digest": "a87200753d6fe77fdc49349eac9fce89f66ddc4868f3d28504ad7968a3de1664",
+          "step": 1
+        },
+        "within_job_record": 0
+      },
+      {
+        "bucket": 0,
+        "event": {
+          "action_id": "JOB/create-followup/v1",
+          "attempt": 1,
+          "detail": "deterministic synthetic classifier",
+          "emitted_at_ms": "DISPLAY_TIMESTAMP",
+          "event_id": "JOB/1/2",
+          "event_type": "COMPUTE_STARTED",
+          "job_id": "JOB",
+          "payload_digest": "a87200753d6fe77fdc49349eac9fce89f66ddc4868f3d28504ad7968a3de1664",
+          "step": 2
+        },
+        "within_job_record": 1
+      },
+      {
+        "bucket": 0,
+        "event": {
+          "action_id": "JOB/create-followup/v1",
+          "attempt": 1,
+          "detail": "needs-followup",
+          "emitted_at_ms": "DISPLAY_TIMESTAMP",
+          "event_id": "JOB/1/3",
+          "event_type": "COMPUTE_FINISHED",
+          "job_id": "JOB",
+          "payload_digest": "a87200753d6fe77fdc49349eac9fce89f66ddc4868f3d28504ad7968a3de1664",
+          "step": 3
+        },
+        "within_job_record": 2
+      },
+      {
+        "bucket": 0,
+        "event": {
+          "action_id": "JOB/create-followup/v1",
+          "attempt": 1,
+          "detail": "{\"classification\":\"needs-followup\",\"job_id\":\"JOB\",\"ticket_id\":\"ticket-1042\",\"title\":\"Follow up synthetic ticket-1042\"}",
+          "emitted_at_ms": "DISPLAY_TIMESTAMP",
+          "event_id": "JOB/1/4",
+          "event_type": "ACTION_REQUESTED",
+          "job_id": "JOB",
+          "payload_digest": "a87200753d6fe77fdc49349eac9fce89f66ddc4868f3d28504ad7968a3de1664",
+          "step": 4
+        },
+        "within_job_record": 3
+      }
+    ],
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:48.343220+04:00",
+    "expected": "B2",
+    "name": "B2 barrier",
+    "observed": "B2",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:48.344469+04:00",
+    "expected": 2423,
+    "name": "B2 worker pid",
+    "observed": 2423,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:48.345912+04:00",
+    "expected": null,
+    "name": "B2 alive before kill",
+    "observed": null,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:48.363095+04:00",
+    "expected": -9,
+    "name": "B2 SIGKILL exit",
+    "observed": -9,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:48.364880+04:00",
+    "expected": 1,
+    "name": "unknown committed first",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:48.374998+04:00",
+    "expected": 200,
+    "name": "control status",
+    "observed": 200,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:48.375948+04:00",
+    "expected": false,
+    "name": "control applied",
+    "observed": false,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:51.948810+04:00",
+    "expected": 0,
+    "name": "recover-33 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:51.949790+04:00",
+    "expected": 1,
+    "name": "recover single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:54.972897+04:00",
+    "expected": 0,
+    "name": "inspect-34 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:54.973880+04:00",
+    "expected": 1,
+    "name": "inspect single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:54.976005+04:00",
+    "expected": "HOLD_UNKNOWN",
+    "name": "unknown HOLD state",
+    "observed": "HOLD_UNKNOWN",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:54.976876+04:00",
+    "expected": 1,
+    "name": "unknown no blind POST",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:54.978040+04:00",
+    "expected": 1,
+    "name": "unknown held effect count",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:54.979253+04:00",
+    "expected": 1,
+    "name": "unknown held compute count",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:54.980431+04:00",
+    "expected": true,
+    "name": "unknown lookup HTTP 503",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:54.990393+04:00",
+    "expected": 200,
+    "name": "control status",
+    "observed": 200,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:54.991258+04:00",
+    "expected": true,
+    "name": "control applied",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:58.564291+04:00",
+    "expected": 0,
+    "name": "recover-35 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:18:58.565332+04:00",
+    "expected": 1,
+    "name": "recover single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:01.537724+04:00",
+    "expected": 0,
+    "name": "inspect-36 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:01.539414+04:00",
+    "expected": 1,
+    "name": "inspect single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:01.542425+04:00",
+    "expected": "COMPLETED",
+    "name": "unknown-after reduced state",
+    "observed": "COMPLETED",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:01.543556+04:00",
+    "expected": 1,
+    "name": "unknown-after effect count",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:01.544863+04:00",
+    "expected": 1,
+    "name": "unknown-after compute count",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:01.546178+04:00",
+    "expected": [
+      {
+        "action_id": "live-02/unknown/ticket-1042/create-followup/v1",
+        "committed_at_ms": 1791155928333,
+        "payload_digest": "0c11c487e0e44e0f6a80891f04123a17ebc6c073fa7ed206d0424392da19eaed",
+        "payload_json": "{\"classification\":\"needs-followup\",\"job_id\":\"live-02/unknown/ticket-1042\",\"ticket_id\":\"ticket-1042\",\"title\":\"Follow up synthetic ticket-1042\"}",
+        "receipt_json": "{\"action_id\":\"live-02/unknown/ticket-1042/create-followup/v1\",\"committed_at_ms\":1791155928333,\"contract\":\"fixture-atomic-action-id-payload-v1\",\"payload_digest\":\"0c11c487e0e44e0f6a80891f04123a17ebc6c073fa7ed206d0424392da19eaed\",\"receipt_id\":\"followup-e5f5fb4f0c66b9e15b52bd7a\"}"
+      }
+    ],
+    "name": "unknown preserved receipt",
+    "observed": [
+      {
+        "action_id": "live-02/unknown/ticket-1042/create-followup/v1",
+        "committed_at_ms": 1791155928333,
+        "payload_digest": "0c11c487e0e44e0f6a80891f04123a17ebc6c073fa7ed206d0424392da19eaed",
+        "payload_json": "{\"classification\":\"needs-followup\",\"job_id\":\"live-02/unknown/ticket-1042\",\"ticket_id\":\"ticket-1042\",\"title\":\"Follow up synthetic ticket-1042\"}",
+        "receipt_json": "{\"action_id\":\"live-02/unknown/ticket-1042/create-followup/v1\",\"committed_at_ms\":1791155928333,\"contract\":\"fixture-atomic-action-id-payload-v1\",\"payload_digest\":\"0c11c487e0e44e0f6a80891f04123a17ebc6c073fa7ed206d0424392da19eaed\",\"receipt_id\":\"followup-e5f5fb4f0c66b9e15b52bd7a\"}"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:01.547437+04:00",
+    "expected": 1,
+    "name": "unknown still one POST",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:02.775481+04:00",
+    "expected": "B2",
+    "name": "B2 barrier",
+    "observed": "B2",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:02.776586+04:00",
+    "expected": 2584,
+    "name": "B2 worker pid",
+    "observed": 2584,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:02.778083+04:00",
+    "expected": null,
+    "name": "B2 alive before kill",
+    "observed": null,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:02.795436+04:00",
+    "expected": -9,
+    "name": "B2 SIGKILL exit",
+    "observed": -9,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:02.805951+04:00",
+    "expected": 200,
+    "name": "wrong-action receipt fault configured",
+    "observed": 200,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:06.379088+04:00",
+    "expected": 1,
+    "name": "recover-38 exit",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:06.380440+04:00",
+    "expected": 1,
+    "name": "wrong-action failure reported",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:06.381650+04:00",
+    "expected": true,
+    "name": "wrong-action rejection reason",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:09.406272+04:00",
+    "expected": 0,
+    "name": "inspect-39 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:09.407345+04:00",
+    "expected": 1,
+    "name": "inspect single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:09.408940+04:00",
+    "expected": 1,
+    "name": "wrong-action effect remains one",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:09.409904+04:00",
+    "expected": 1,
+    "name": "wrong-action computation remains one",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:09.411200+04:00",
+    "expected": 1,
+    "name": "wrong-action no extra POST",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:09.412513+04:00",
+    "expected": false,
+    "name": "wrong-action no successful reconciliation",
+    "observed": false,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:09.413689+04:00",
+    "expected": false,
+    "name": "wrong-action no completion",
+    "observed": false,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:10.652068+04:00",
+    "expected": "B2",
+    "name": "B2 barrier",
+    "observed": "B2",
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:10.653189+04:00",
+    "expected": 2682,
+    "name": "B2 worker pid",
+    "observed": 2682,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:10.654662+04:00",
+    "expected": null,
+    "name": "B2 alive before kill",
+    "observed": null,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:10.671931+04:00",
+    "expected": -9,
+    "name": "B2 SIGKILL exit",
+    "observed": -9,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:10.682108+04:00",
+    "expected": 200,
+    "name": "wrong-digest receipt fault configured",
+    "observed": 200,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:14.204633+04:00",
+    "expected": 1,
+    "name": "recover-41 exit",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:14.205737+04:00",
+    "expected": 1,
+    "name": "wrong-digest failure reported",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:14.206934+04:00",
+    "expected": true,
+    "name": "wrong-digest rejection reason",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:17.179930+04:00",
+    "expected": 0,
+    "name": "inspect-42 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:17.181071+04:00",
+    "expected": 1,
+    "name": "inspect single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:17.182496+04:00",
+    "expected": 1,
+    "name": "wrong-digest effect remains one",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:17.183488+04:00",
+    "expected": 1,
+    "name": "wrong-digest computation remains one",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:17.184748+04:00",
+    "expected": 1,
+    "name": "wrong-digest no extra POST",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:17.185953+04:00",
+    "expected": false,
+    "name": "wrong-digest no successful reconciliation",
+    "observed": false,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:17.187215+04:00",
+    "expected": false,
+    "name": "wrong-digest no completion",
+    "observed": false,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:17.202371+04:00",
+    "expected": 200,
+    "name": "exact duplicate status",
+    "observed": 200,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:17.203480+04:00",
+    "expected": {
+      "action_id": "live-02/baseline/ticket-1042/create-followup/v1",
+      "committed_at_ms": 1791155838868,
+      "contract": "fixture-atomic-action-id-payload-v1",
+      "payload_digest": "676fab4d046bb1ddc6bae6e8e17db2bfc43ea43f66fecddbf398015abd80c0e3",
+      "receipt_id": "followup-47b8a15ca1209cfd0254e6d7"
+    },
+    "name": "exact duplicate receipt",
+    "observed": {
+      "action_id": "live-02/baseline/ticket-1042/create-followup/v1",
+      "committed_at_ms": 1791155838868,
+      "contract": "fixture-atomic-action-id-payload-v1",
+      "payload_digest": "676fab4d046bb1ddc6bae6e8e17db2bfc43ea43f66fecddbf398015abd80c0e3",
+      "receipt_id": "followup-47b8a15ca1209cfd0254e6d7"
+    },
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:20.275545+04:00",
+    "expected": 1,
+    "name": "conflict-action-43 exit",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:20.276768+04:00",
+    "expected": 1,
+    "name": "conflicting worker failure",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:20.278108+04:00",
+    "expected": true,
+    "name": "conflicting HTTP409",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:20.280112+04:00",
+    "expected": 1,
+    "name": "conflicting effect remains one",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:20.281144+04:00",
+    "expected": 409,
+    "name": "conflict recorded independently",
+    "observed": 409,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:20.282364+04:00",
+    "expected": true,
+    "name": "conflict changed digest",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:23.305586+04:00",
+    "expected": 0,
+    "name": "duplicate-event-44 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:23.306757+04:00",
+    "expected": 1,
+    "name": "duplicate-event single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:26.279041+04:00",
+    "expected": 0,
+    "name": "inspect-45 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:26.280315+04:00",
+    "expected": 1,
+    "name": "inspect single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:26.281773+04:00",
+    "expected": 2,
+    "name": "duplicate raw count",
+    "observed": 2,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:26.282898+04:00",
+    "expected": 1,
+    "name": "duplicate logical count",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:26.284109+04:00",
+    "expected": 2,
+    "name": "duplicate distinct offsets",
+    "observed": 2,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:26.285389+04:00",
+    "expected": {
+      "action_id": "live-02/duplicate-event/ticket-1042/create-followup/v1",
+      "attempt": 1,
+      "detail": "identical application event",
+      "emitted_at_ms": 1700000000000,
+      "event_id": "live-02/duplicate-event/ticket-1042/1/1",
+      "event_type": "STARTED",
+      "job_id": "live-02/duplicate-event/ticket-1042",
+      "payload_digest": "a7da150b8d83893c02f1a13a9f48ded73d2189f4411a317e8ddd9f556db51332",
+      "step": 1
+    },
+    "name": "duplicate identical fields",
+    "observed": {
+      "action_id": "live-02/duplicate-event/ticket-1042/create-followup/v1",
+      "attempt": 1,
+      "detail": "identical application event",
+      "emitted_at_ms": 1700000000000,
+      "event_id": "live-02/duplicate-event/ticket-1042/1/1",
+      "event_type": "STARTED",
+      "job_id": "live-02/duplicate-event/ticket-1042",
+      "payload_digest": "a7da150b8d83893c02f1a13a9f48ded73d2189f4411a317e8ddd9f556db51332",
+      "step": 1
+    },
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:29.357527+04:00",
+    "expected": 0,
+    "name": "conflict-event-46 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:29.359612+04:00",
+    "expected": 1,
+    "name": "conflict-event single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:32.281429+04:00",
+    "expected": 1,
+    "name": "inspect-47 exit",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:32.282661+04:00",
+    "expected": 1,
+    "name": "event conflict fails",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:32.283970+04:00",
+    "expected": true,
+    "name": "event identity rejection",
+    "observed": true,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:35.255813+04:00",
+    "expected": 0,
+    "name": "inspect-48 exit",
+    "observed": 0,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:35.257156+04:00",
+    "expected": 1,
+    "name": "inspect single result",
+    "observed": 1,
+    "passed": true
+  },
+  {
+    "at_gst": "2026-10-05T03:19:35.258529+04:00",
+    "expected": 3,
+    "name": "conflict all raw retained",
+    "observed": 3,
+    "passed": true
+  }
+]

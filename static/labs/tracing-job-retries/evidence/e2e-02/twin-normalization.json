@@ -1,0 +1,126 @@
+{
+  "after_commit": [
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "JOB/create-followup/v1",
+        "attempt": 1,
+        "detail": "Synthetic ticket-1042; deterministic inference stand-in",
+        "emitted_at_ms": "DISPLAY_TIMESTAMP",
+        "event_id": "JOB/1/1",
+        "event_type": "STARTED",
+        "job_id": "JOB",
+        "payload_digest": "a87200753d6fe77fdc49349eac9fce89f66ddc4868f3d28504ad7968a3de1664",
+        "step": 1
+      },
+      "within_job_record": 0
+    },
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "JOB/create-followup/v1",
+        "attempt": 1,
+        "detail": "deterministic synthetic classifier",
+        "emitted_at_ms": "DISPLAY_TIMESTAMP",
+        "event_id": "JOB/1/2",
+        "event_type": "COMPUTE_STARTED",
+        "job_id": "JOB",
+        "payload_digest": "a87200753d6fe77fdc49349eac9fce89f66ddc4868f3d28504ad7968a3de1664",
+        "step": 2
+      },
+      "within_job_record": 1
+    },
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "JOB/create-followup/v1",
+        "attempt": 1,
+        "detail": "needs-followup",
+        "emitted_at_ms": "DISPLAY_TIMESTAMP",
+        "event_id": "JOB/1/3",
+        "event_type": "COMPUTE_FINISHED",
+        "job_id": "JOB",
+        "payload_digest": "a87200753d6fe77fdc49349eac9fce89f66ddc4868f3d28504ad7968a3de1664",
+        "step": 3
+      },
+      "within_job_record": 2
+    },
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "JOB/create-followup/v1",
+        "attempt": 1,
+        "detail": "{\"classification\":\"needs-followup\",\"job_id\":\"JOB\",\"ticket_id\":\"ticket-1042\",\"title\":\"Follow up synthetic ticket-1042\"}",
+        "emitted_at_ms": "DISPLAY_TIMESTAMP",
+        "event_id": "JOB/1/4",
+        "event_type": "ACTION_REQUESTED",
+        "job_id": "JOB",
+        "payload_digest": "a87200753d6fe77fdc49349eac9fce89f66ddc4868f3d28504ad7968a3de1664",
+        "step": 4
+      },
+      "within_job_record": 3
+    }
+  ],
+  "before_http": [
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "JOB/create-followup/v1",
+        "attempt": 1,
+        "detail": "Synthetic ticket-1042; deterministic inference stand-in",
+        "emitted_at_ms": "DISPLAY_TIMESTAMP",
+        "event_id": "JOB/1/1",
+        "event_type": "STARTED",
+        "job_id": "JOB",
+        "payload_digest": "a87200753d6fe77fdc49349eac9fce89f66ddc4868f3d28504ad7968a3de1664",
+        "step": 1
+      },
+      "within_job_record": 0
+    },
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "JOB/create-followup/v1",
+        "attempt": 1,
+        "detail": "deterministic synthetic classifier",
+        "emitted_at_ms": "DISPLAY_TIMESTAMP",
+        "event_id": "JOB/1/2",
+        "event_type": "COMPUTE_STARTED",
+        "job_id": "JOB",
+        "payload_digest": "a87200753d6fe77fdc49349eac9fce89f66ddc4868f3d28504ad7968a3de1664",
+        "step": 2
+      },
+      "within_job_record": 1
+    },
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "JOB/create-followup/v1",
+        "attempt": 1,
+        "detail": "needs-followup",
+        "emitted_at_ms": "DISPLAY_TIMESTAMP",
+        "event_id": "JOB/1/3",
+        "event_type": "COMPUTE_FINISHED",
+        "job_id": "JOB",
+        "payload_digest": "a87200753d6fe77fdc49349eac9fce89f66ddc4868f3d28504ad7968a3de1664",
+        "step": 3
+      },
+      "within_job_record": 2
+    },
+    {
+      "bucket": 0,
+      "event": {
+        "action_id": "JOB/create-followup/v1",
+        "attempt": 1,
+        "detail": "{\"classification\":\"needs-followup\",\"job_id\":\"JOB\",\"ticket_id\":\"ticket-1042\",\"title\":\"Follow up synthetic ticket-1042\"}",
+        "emitted_at_ms": "DISPLAY_TIMESTAMP",
+        "event_id": "JOB/1/4",
+        "event_type": "ACTION_REQUESTED",
+        "job_id": "JOB",
+        "payload_digest": "a87200753d6fe77fdc49349eac9fce89f66ddc4868f3d28504ad7968a3de1664",
+        "step": 4
+      },
+      "within_job_record": 3
+    }
+  ]
+}

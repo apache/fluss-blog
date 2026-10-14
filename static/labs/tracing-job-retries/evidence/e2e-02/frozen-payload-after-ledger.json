@@ -1,0 +1,40 @@
+{
+  "audit": [
+    {
+      "action_id": "live-02/frozen-payload/ticket-1042/create-followup/v1",
+      "at_ms": 1791155876526,
+      "id": 10,
+      "job_id": "live-02/frozen-payload/ticket-1042",
+      "method": "GET",
+      "path": "/followups/live-02%2Ffrozen-payload%2Fticket-1042%2Fcreate-followup%2Fv1",
+      "payload_digest": "",
+      "request_body_hex": "",
+      "request_json": "{}",
+      "response_json": "{\"absent\":true,\"action_id\":\"live-02/frozen-payload/ticket-1042/create-followup/v1\",\"contract\":\"fixture-atomic-action-id-payload-v1\"}",
+      "status": 404
+    },
+    {
+      "action_id": "live-02/frozen-payload/ticket-1042/create-followup/v1",
+      "at_ms": 1791155876563,
+      "id": 11,
+      "job_id": "live-02/frozen-payload/ticket-1042",
+      "method": "POST",
+      "path": "/followups",
+      "payload_digest": "cf74b0b56b358a092082d0a1fc8b8a30e65dc09250d53e979380ec9e7b197789",
+      "request_body_hex": "7b22616374696f6e5f6964223a226c6976652d30322f66726f7a656e2d7061796c6f61642f7469636b65742d313034322f6372656174652d666f6c6c6f7775702f7631222c227061796c6f61645f646967657374223a2263663734623062353662333538613039323038326430613166633862386133306536356463303932353064353365393739333830656339653762313937373839222c227061796c6f6164223a7b22636c617373696669636174696f6e223a226e656564732d666f6c6c6f777570222c226a6f625f6964223a226c6976652d30322f66726f7a656e2d7061796c6f61642f7469636b65742d31303432222c227469636b65745f6964223a227469636b65742d31303432222c227469746c65223a2246726f7a656e205c227072696f726974795c22205c5c20666f6c6c6f772d7570202f207469636b65742d31303432227d7d",
+      "request_json": "{\"action_id\":\"live-02/frozen-payload/ticket-1042/create-followup/v1\",\"payload\":{\"classification\":\"needs-followup\",\"job_id\":\"live-02/frozen-payload/ticket-1042\",\"ticket_id\":\"ticket-1042\",\"title\":\"Frozen \\\"priority\\\" \\\\ follow-up / ticket-1042\"},\"payload_digest\":\"cf74b0b56b358a092082d0a1fc8b8a30e65dc09250d53e979380ec9e7b197789\"}",
+      "response_json": "{\"action_id\":\"live-02/frozen-payload/ticket-1042/create-followup/v1\",\"committed_at_ms\":1791155876563,\"contract\":\"fixture-atomic-action-id-payload-v1\",\"payload_digest\":\"cf74b0b56b358a092082d0a1fc8b8a30e65dc09250d53e979380ec9e7b197789\",\"receipt_id\":\"followup-f1f839a0a671a1d8edb1a057\"}",
+      "status": 201
+    }
+  ],
+  "computations": [],
+  "effects": [
+    {
+      "action_id": "live-02/frozen-payload/ticket-1042/create-followup/v1",
+      "committed_at_ms": 1791155876563,
+      "payload_digest": "cf74b0b56b358a092082d0a1fc8b8a30e65dc09250d53e979380ec9e7b197789",
+      "payload_json": "{\"classification\":\"needs-followup\",\"job_id\":\"live-02/frozen-payload/ticket-1042\",\"ticket_id\":\"ticket-1042\",\"title\":\"Frozen \\\"priority\\\" \\\\ follow-up / ticket-1042\"}",
+      "receipt_json": "{\"action_id\":\"live-02/frozen-payload/ticket-1042/create-followup/v1\",\"committed_at_ms\":1791155876563,\"contract\":\"fixture-atomic-action-id-payload-v1\",\"payload_digest\":\"cf74b0b56b358a092082d0a1fc8b8a30e65dc09250d53e979380ec9e7b197789\",\"receipt_id\":\"followup-f1f839a0a671a1d8edb1a057\"}"
+    }
+  ]
+}

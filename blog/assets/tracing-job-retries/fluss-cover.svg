@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1020" viewBox="0 0 2400 1020" role="img" aria-labelledby="fluss-cover-title fluss-cover-desc">
+  <title id="fluss-cover-title">Tracing job retries with Apache Fluss</title>
+  <desc id="fluss-cover-desc">Synthetic example. A worker appends transitions to Fluss and reads the event history on recovery. Separately, it requests an action or looks up its receipt through an independent HTTP service backed by SQLite. The service returns the receipt to the worker. Fluss history and the service's effect receipt are separate records, with no shared transaction. A deterministic classifier stands in for an LLM.</desc>
+  <defs>
+    <marker id="fluss-cover-arrow" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M 0 0 L 12 6 L 0 12 Z" fill="#496d89"/>
+    </marker>
+  </defs>
+  <rect width="2400" height="1020" fill="#ffffff"/>
+  <g fill="#252b33" font-family="Arial">
+    <text x="132" y="240" font-size="120" font-weight="700">Tracing job retries</text>
+    <text x="132" y="366" font-size="120" font-weight="700">with Apache Fluss</text>
+    <g fill="#ffffff" stroke="#707b85" stroke-width="4">
+      <rect x="132" y="470" width="636" height="288" rx="8"/>
+      <rect x="940" y="470" width="500" height="288" rx="8"/>
+      <rect x="1612" y="470" width="656" height="288" rx="8"/>
+    </g>
+    <g text-anchor="middle">
+      <text x="450" y="580" font-size="82">Event history</text>
+      <text x="450" y="695" font-size="82">Fluss</text>
+      <text x="1190" y="580" font-size="88">Worker</text>
+      <text x="1190" y="695" font-size="74">Retry</text>
+      <text x="1940" y="580" font-size="82">Action receipt</text>
+      <text x="1940" y="695" font-size="76">HTTP / SQLite</text>
+    </g>
+    <g fill="none" stroke="#496d89" stroke-width="7" marker-end="url(#fluss-cover-arrow)">
+      <path d="M 920 548 H 788"/>
+      <path d="M 788 680 H 920"/>
+      <path d="M 1460 548 H 1592"/>
+      <path d="M 1592 680 H 1460"/>
+    </g>
+    <text x="132" y="885" font-size="70">Synthetic example. Two independent stores.</text>
+  </g>
+</svg>
