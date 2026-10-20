@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1600" viewBox="0 0 1200 800" role="img" aria-label="Conceptual B1 and B2 worker stops with different service effect counts" aria-labelledby="v3-crash-windows-title v3-crash-windows-desc" font-family="Arial, Helvetica, sans-serif" fill="#252b33">
+  <title id="v3-crash-windows-title">Same unresolved intent, different effects</title>
+  <desc id="v3-crash-windows-desc">Conceptual timeline for a deterministic fixture with synthetic data and one serial worker per job, not captured output. Four milestones are ACK(ACTION_REQUESTED), POST /followups, receipt received and validated, and ACK(ACTION_CONFIRMED). B1 is before the POST. B2 is after receipt reception and validation but before the confirmation append is even initiated, not merely before its final ACK. Both leave unresolved ACTION_REQUESTED without ACTION_CONFIRMED in Fluss; the independent service has zero effects for B1 and one for B2. Same unresolved intent does not mean byte-identical raw traces. Shared recovery first validates the full saved exact canonical request bytes, stable action_id and payload_digest; invalid saved bindings are rejected before any lookup. Then GET /followups/{action_id} looks up the receipt. A 404 permits POST /followups using the saved bytes under the fixture-only atomic idempotency contract, which binds the key, exact payload and digest while storing effect and receipt together. A found receipt must match action_id and payload_digest; invalid receipt bindings are rejected. A valid receipt permits reconciliation, while an unavailable lookup yields HOLD_UNKNOWN with no repost. These worker-death positions exclude lost-response or timeout experiments, host loss, concurrent workers, and universal exactly-once guarantees.</desc>
+  <defs><marker id="crash-windows-v3-arrow" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 8 4 L 0 8 Z" fill="#496d89"/></marker></defs>
+  <rect x="0" y="0" width="1200" height="800" fill="#ffffff"/>
+  <text x="40" y="70" font-size="30">Same unresolved intent, different effects</text>
+  <text x="175" y="116" text-anchor="middle" font-family="monospace" font-size="24">ACK(</text>
+  <text x="175" y="144" text-anchor="middle" font-family="monospace" font-size="24">ACTION_REQUESTED)</text>
+  <text x="450" y="130" text-anchor="middle" font-family="monospace" font-size="24">POST /followups</text>
+  <text x="730" y="116" text-anchor="middle" font-size="24">Receipt received</text>
+  <text x="730" y="144" text-anchor="middle" font-size="24">and validated</text>
+  <text x="1030" y="116" text-anchor="middle" font-family="monospace" font-size="24">ACK(</text>
+  <text x="1030" y="144" text-anchor="middle" font-family="monospace" font-size="24">ACTION_CONFIRMED)</text>
+  <circle cx="175" cy="190" r="7" fill="#252b33"/>
+  <circle cx="450" cy="190" r="7" fill="#252b33"/>
+  <circle cx="730" cy="190" r="7" fill="#252b33"/>
+  <circle cx="1030" cy="190" r="7" fill="#252b33"/>
+  <path d="M 192 190 H 433" fill="none" stroke="#496d89" stroke-width="2" marker-end="url(#crash-windows-v3-arrow)"/>
+  <path d="M 467 190 H 713" fill="none" stroke="#496d89" stroke-width="2" marker-end="url(#crash-windows-v3-arrow)"/>
+  <path d="M 747 190 H 1013" fill="none" stroke="#496d89" stroke-width="2" marker-end="url(#crash-windows-v3-arrow)"/>
+  <path d="M 310 179 V 209 M 310 221 V 251" fill="none" stroke="#496d89" stroke-width="2"/>
+  <path d="M 865 179 V 209 M 865 221 V 251" fill="none" stroke="#496d89" stroke-width="2"/>
+  <text x="310" y="281" text-anchor="middle" font-size="26" fill="#496d89">B1</text>
+  <text x="310" y="313" text-anchor="middle" font-size="24">Before POST</text>
+  <text x="865" y="281" text-anchor="middle" font-size="26" fill="#496d89">B2</text>
+  <text x="865" y="313" text-anchor="middle" font-size="24">After validation</text>
+  <text x="865" y="343" text-anchor="middle" font-size="24">Before confirmation append</text>
+  <path d="M 40 369 H 1160 M 40 421 H 1160 M 40 519 H 1160 M 200 421 V 519 M 940 421 V 519 M 40 470 H 200 M 940 470 H 1160" fill="none" stroke="#d5dbe0" stroke-width="2"/>
+  <text x="88" y="400" font-size="24">Stop</text>
+  <text x="230" y="400" font-size="24">Fluss history</text>
+  <text x="1050" y="400" text-anchor="middle" font-size="24">Service effects</text>
+  <text x="88" y="455" font-size="26" fill="#496d89">B1</text>
+  <text x="88" y="504" font-size="26" fill="#496d89">B2</text>
+  <text x="230" y="454" font-family="monospace" font-size="24">ACTION_REQUESTED</text>
+  <text x="230" y="492" font-size="24">Unresolved; no <tspan font-family="monospace">ACTION_CONFIRMED</tspan></text>
+  <text x="1050" y="457" text-anchor="middle" font-size="30" fill="#496d89">0</text>
+  <text x="1050" y="506" text-anchor="middle" font-size="30" fill="#496d89">1</text>
+  <text x="40" y="557" font-size="26">Shared recovery</text>
+  <text x="40" y="591" font-size="24">Validate saved canonical bytes</text>
+  <text x="40" y="623" font-size="24">+ <tspan font-family="monospace">action_id</tspan> + <tspan font-family="monospace">payload_digest</tspan></text>
+  <path d="M 450 601 H 493" fill="none" stroke="#496d89" stroke-width="2" marker-end="url(#crash-windows-v3-arrow)"/>
+  <text x="510" y="609" font-family="monospace" font-size="24">GET /followups/{action_id}</text>
+  <text x="220" y="663" text-anchor="middle" font-size="24" fill="#496d89">404</text>
+  <text x="625" y="663" text-anchor="middle" font-size="24" fill="#496d89">Valid receipt</text>
+  <text x="1030" y="663" text-anchor="middle" font-size="24" fill="#496d89">Unavailable</text>
+  <path d="M 220 675 V 695" fill="none" stroke="#496d89" stroke-width="2" marker-end="url(#crash-windows-v3-arrow)"/>
+  <path d="M 625 675 V 695" fill="none" stroke="#496d89" stroke-width="2" marker-end="url(#crash-windows-v3-arrow)"/>
+  <path d="M 1030 675 V 695" fill="none" stroke="#496d89" stroke-width="2" marker-end="url(#crash-windows-v3-arrow)"/>
+  <text x="220" y="727" text-anchor="middle" font-family="monospace" font-size="24">POST /followups</text>
+  <text x="625" y="727" text-anchor="middle" font-size="26">Reconcile</text>
+  <text x="1030" y="727" text-anchor="middle" font-family="monospace" font-size="24">HOLD_UNKNOWN</text>
+  <text x="40" y="750" font-size="24">Saved bytes; fixture contract only</text>
+</svg>
